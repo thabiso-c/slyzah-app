@@ -3,38 +3,23 @@ node_modules/
 .pnp
 .pnp.js
 
-# Expo
+# Production
 .expo/
 dist/
 web-build/
 
-# Native Builds
+# Environment variables
+.env
+.env*.local
+
+# Native Build
 android/app/build/
 android/.gradle/
 ios/Pods/
 ios/build/
 
-# Environment Variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDEs
-.idea/
-.vscode/
+# Misc
 .DS_Store
-
-# Certificates & Keys (Recommended to keep private)
 *.jks
 *.keystore
-*.p12
-*.key
-# google-services.json
-# GoogleService-Info.plist
+*.pem

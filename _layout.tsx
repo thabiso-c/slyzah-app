@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from './firebaseConfig';
 
 const THEME = {
     navy: '#001f3f',

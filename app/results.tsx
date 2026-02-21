@@ -90,6 +90,28 @@ const sendResendEmail = async (to: string, vendorName: string, customerName: str
     }
 };
 
+const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
+    try {
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: expoPushToken,
+                sound: 'default',
+                title: title,
+                body: body,
+                data: data,
+            }),
+        });
+    } catch (error) {
+        console.error("Error sending push:", error);
+    }
+};
+
 // --- Request Quote Modal Component ---
 const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, initialData }: any) => {
     const [formData, setFormData] = useState(initialData);
@@ -187,6 +209,11 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                             await new Promise(resolve => setTimeout(resolve, 1000));
                         } else {
                             console.warn(`No email address found for vendor ${vendorId}`);
+                        }
+
+                        // Send Push Notification to Vendor
+                        if (vendorData?.expoPushToken) {
+                            await sendPushNotification(vendorData.expoPushToken, "New Lead Available! 🚀", `New request for ${category} in ${formData.town}`, { leadId: docRef.id });
                         }
 
                         console.log(`Creating dashboard notification for ${vendorId}`);

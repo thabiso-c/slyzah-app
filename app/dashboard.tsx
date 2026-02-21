@@ -78,6 +78,28 @@ const sendAwardEmail = async (to: string, vendorName: string, customerName: stri
     }
 };
 
+const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
+    try {
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: expoPushToken,
+                sound: 'default',
+                title: title,
+                body: body,
+                data: data,
+            }),
+        });
+    } catch (error) {
+        console.error("Error sending push:", error);
+    }
+};
+
 export default function UserDashboard() {
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
@@ -233,11 +255,17 @@ export default function UserDashboard() {
             const winningQuote = lead.quotes?.[selectedWinnerId];
             let vendorEmail = winningQuote?.vendorEmail;
 
-            // Fallback: If email is missing in the quote, fetch it from profile
-            if (!vendorEmail && selectedWinnerId) {
+            // Fetch Vendor Profile for Email fallback AND Push Token
+            if (selectedWinnerId) {
                 const vendorSnap = await getDoc(doc(db, "professionals", selectedWinnerId));
                 if (vendorSnap.exists()) {
-                    vendorEmail = vendorSnap.data().email;
+                    const vData = vendorSnap.data();
+                    if (!vendorEmail) vendorEmail = vData.email;
+
+                    // Send Push Notification
+                    if (vData.expoPushToken) {
+                        await sendPushNotification(vData.expoPushToken, "You Won a Job! 🏆", `Customer selected you for: ${lead.category}`, { leadId: selectedLeadId });
+                    }
                 }
             }
 

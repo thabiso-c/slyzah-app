@@ -31,7 +31,7 @@ const THEME = {
 };
 
 const LOCATION_MAPPING: Record<string, string[]> = {
-  "Western Cape": ["Cape Town CBD", "Northern Suburbs", "Southern Suburbs", "Atlantic Seaboard", "South Peninsula", "Cape Helderberg", "Cape Winelands", "Paarl/Wellington", "Stellenbosch", "Garden Route", "George/Knysna", "West Coast", "Overberg", "Central Karoo"],
+  "Western Cape": ["Cape Town CBD", "Northern Suburbs", "Southern Suburbs", "Atlantic Seaboard", "Western Seaboard", "South Peninsula", "Cape Helderberg", "Cape Winelands", "Paarl/Wellington", "Stellenbosch", "Garden Route", "George/Knysna", "West Coast", "Overberg", "Central Karoo"],
   "Gauteng": ["Johannesburg CBD", "Sandton/Rivonia", "Randburg", "Roodepoort", "Soweto", "Midrand", "Pretoria/Tshwane CBD", "Centurion", "Pretoria East", "Pretoria North", "Ekurhuleni (East Rand)", "Kempton Park", "Brakpan/Benoni", "Sedibeng", "West Rand"],
   "Kwa Zulu Natal": ["Durban Central", "Umhlanga/Ballito", "Durban North", "Durban South", "Pinetown/Westville", "Amanzimtoti", "Pietermaritzburg", "uMgungundlovu", "King Cetshwayo/Richards Bay", "iLembe", "Ugu (South Coast)", "Newcastle"],
   "Eastern Cape": ["Gqeberha (Port Elizabeth)", "East London (Buffalo City)", "Mthatha", "Sarah Baartman", "Amatole", "Chris Hani", "Joe Gqabi"],
@@ -46,20 +46,21 @@ const SUBURB_TO_REGION_MAP: Record<string, string> = {
   // Western Cape
   "brackenfell": "Northern Suburbs", "bellville": "Northern Suburbs", "durbanville": "Northern Suburbs",
   "parow": "Northern Suburbs", "goodwood": "Northern Suburbs", "kraaifontein": "Northern Suburbs",
-  "kuils river": "Northern Suburbs", "milnerton": "Northern Suburbs", "table view": "Northern Suburbs",
-  "blouberg": "Northern Suburbs", "century city": "Northern Suburbs", "edgemead": "Northern Suburbs",
+  "kuils river": "Northern Suburbs", "century city": "Northern Suburbs", "edgemead": "Northern Suburbs",
   "bothasig": "Northern Suburbs", "monte vista": "Northern Suburbs", "plattekloof": "Northern Suburbs",
   "scottdene": "Northern Suburbs", "scottsdene": "Northern Suburbs", "northpine": "Northern Suburbs",
   "wallacedene": "Northern Suburbs", "bloekombos": "Northern Suburbs", "belmont park": "Northern Suburbs",
   "tyger valley": "Northern Suburbs", "welgemoed": "Northern Suburbs", "loevenstein": "Northern Suburbs",
+  "morgen industria": "Northern Suburbs",
+  "milnerton": "Western Seaboard", "table view": "Western Seaboard", "blouberg": "Western Seaboard",
+  "parklands": "Western Seaboard", "sunningdale": "Western Seaboard", "west beach": "Western Seaboard", "big bay": "Western Seaboard", "sunset beach": "Western Seaboard", "melkbosstrand": "Western Seaboard",
   "claremont": "Southern Suburbs", "rondebosch": "Southern Suburbs", "newlands": "Southern Suburbs",
   "wynberg": "Southern Suburbs", "kenilworth": "Southern Suburbs", "observatory": "Southern Suburbs",
   "mowbray": "Southern Suburbs", "pinelands": "Southern Suburbs", "tokai": "Southern Suburbs",
   "constantia": "Southern Suburbs", "bergvliet": "Southern Suburbs", "plumstead": "Southern Suburbs",
   "sea point": "Atlantic Seaboard", "camps bay": "Atlantic Seaboard", "clifton": "Atlantic Seaboard",
   "green point": "Atlantic Seaboard", "hout bay": "Atlantic Seaboard", "mouille point": "Atlantic Seaboard",
-  "cape town": "Cape Town CBD", "gardens": "Cape Town CBD", "vredehoek": "Cape Town CBD",
-  "oranjezicht": "Cape Town CBD", "tamboerskloof": "Cape Town CBD", "woodstock": "Cape Town CBD",
+  "gardens": "Cape Town CBD", "vredehoek": "Cape Town CBD",
   "fish hoek": "South Peninsula", "simon's town": "South Peninsula", "muizenberg": "South Peninsula",
   "noordhoek": "South Peninsula", "kommetjie": "South Peninsula", "kalk bay": "South Peninsula",
   "somerset west": "Cape Helderberg", "strand": "Cape Helderberg", "gordon's bay": "Cape Helderberg",
@@ -71,13 +72,12 @@ const SUBURB_TO_REGION_MAP: Record<string, string> = {
   "randburg": "Randburg", "ferndale": "Randburg", "northcliff": "Randburg", "cresta": "Randburg",
   "midrand": "Midrand", "halfway house": "Midrand", "kyalami": "Midrand", "waterfall": "Midrand",
   "centurion": "Centurion", "lyttelton": "Centurion", "irene": "Centurion",
-  "pretoria": "Pretoria/Tshwane CBD", "menlyn": "Pretoria East", "hatfield": "Pretoria East",
   "kempton park": "Kempton Park", "benoni": "Brakpan/Benoni", "brakpan": "Brakpan/Benoni",
   "boksburg": "Ekurhuleni (East Rand)", "germiston": "Ekurhuleni (East Rand)", "alberton": "Ekurhuleni (East Rand)",
   "edenvale": "Ekurhuleni (East Rand)", "bedfordview": "Ekurhuleni (East Rand)",
   "roodepoort": "Roodepoort", "florida": "Roodepoort", "weltevreden park": "Roodepoort", "ruimsig": "Roodepoort", "little falls": "Roodepoort",
   "soweto": "Soweto", "diepkloof": "Soweto", "orlando": "Soweto", "dobsonville": "Soweto", "protea glen": "Soweto", "pimville": "Soweto", "jabulani": "Soweto",
-  "johannesburg": "Johannesburg CBD", "braamfontein": "Johannesburg CBD", "newtown": "Johannesburg CBD", "marshalltown": "Johannesburg CBD", "hillbrow": "Johannesburg CBD",
+  "braamfontein": "Johannesburg CBD", "newtown": "Johannesburg CBD", "marshalltown": "Johannesburg CBD", "hillbrow": "Johannesburg CBD",
   "faerie glen": "Pretoria East", "garsfontein": "Pretoria East", "lynnwood": "Pretoria East", "menlo park": "Pretoria East", "waterkloof": "Pretoria East",
   "montana": "Pretoria North", "sinoville": "Pretoria North", "wonderboom": "Pretoria North", "akamasia": "Pretoria North",
   "krugersdorp": "West Rand", "randfontein": "West Rand", "muldersdrift": "West Rand", "mogale city": "West Rand",
@@ -89,7 +89,6 @@ const SUBURB_TO_REGION_MAP: Record<string, string> = {
   "westville": "Pinetown/Westville", "pinetown": "Pinetown/Westville", "hillcrest": "Pinetown/Westville",
   "kloof": "Pinetown/Westville", "berea": "Durban Central", "glenwood": "Durban Central",
   "amanzimtoti": "Amanzimtoti", "kingsburgh": "Amanzimtoti",
-  "durban": "Durban Central",
   "bluff": "Durban South", "chatsworth": "Durban South", "isipingo": "Durban South", "yellowwood park": "Durban South", "queensburgh": "Durban South",
   "pietermaritzburg": "Pietermaritzburg", "scottsville": "Pietermaritzburg", "northdale": "Pietermaritzburg", "hilton": "uMgungundlovu", "howick": "uMgungundlovu",
   "richards bay": "King Cetshwayo/Richards Bay", "empangeni": "King Cetshwayo/Richards Bay",
@@ -97,33 +96,32 @@ const SUBURB_TO_REGION_MAP: Record<string, string> = {
   "newcastle": "Newcastle", "madadeni": "Newcastle",
 
   // Eastern Cape
-  "port elizabeth": "Gqeberha (Port Elizabeth)", "gqeberha": "Gqeberha (Port Elizabeth)", "summerstrand": "Gqeberha (Port Elizabeth)", "walmer": "Gqeberha (Port Elizabeth)", "newton park": "Gqeberha (Port Elizabeth)", "lorraine": "Gqeberha (Port Elizabeth)",
-  "east london": "East London (Buffalo City)", "beacon bay": "East London (Buffalo City)", "gonubie": "East London (Buffalo City)", "vincent": "East London (Buffalo City)", "nahoon": "East London (Buffalo City)",
+  "gqeberha": "Gqeberha (Port Elizabeth)", "summerstrand": "Gqeberha (Port Elizabeth)", "walmer": "Gqeberha (Port Elizabeth)", "newton park": "Gqeberha (Port Elizabeth)", "lorraine": "Gqeberha (Port Elizabeth)",
+  "beacon bay": "East London (Buffalo City)", "gonubie": "East London (Buffalo City)", "vincent": "East London (Buffalo City)", "nahoon": "East London (Buffalo City)",
   "mthatha": "Mthatha",
-  "jeffreys bay": "Sarah Baartman", "grahamstown": "Sarah Baartman", "makhanda": "Sarah Baartman",
+  "jeffreys bay": "Sarah Baartman", "makhanda": "Sarah Baartman",
 
   // Free State
-  "bloemfontein": "Bloemfontein (Mangaung)", "universitas": "Bloemfontein (Mangaung)", "langenhoven park": "Bloemfontein (Mangaung)", "fichardt park": "Bloemfontein (Mangaung)",
+  "universitas": "Bloemfontein (Mangaung)", "langenhoven park": "Bloemfontein (Mangaung)", "fichardt park": "Bloemfontein (Mangaung)",
   "welkom": "Welkom", "sasolburg": "Sasolburg", "bethlehem": "Bethlehem", "parys": "Fezile Dabi",
 
   // Limpopo
-  "polokwane": "Polokwane (Capricorn)", "bendor": "Polokwane (Capricorn)", "flora park": "Polokwane (Capricorn)", "seshego": "Polokwane (Capricorn)",
+  "bendor": "Polokwane (Capricorn)", "flora park": "Polokwane (Capricorn)", "seshego": "Polokwane (Capricorn)",
   "thohoyandou": "Thohoyandou (Vhembe)", "tzaneen": "Tzaneen (Mopani)", "phalaborwa": "Tzaneen (Mopani)",
-  "bela-bela": "Bela-Bela", "warmbaths": "Bela-Bela", "modimolle": "Waterberg", "lephalale": "Waterberg",
+  "bela-bela": "Bela-Bela", "modimolle": "Waterberg", "lephalale": "Waterberg",
 
   // Mpumalanga
-  "nelspruit": "Nelspruit (Ehlanzeni)", "mbombela": "Nelspruit (Ehlanzeni)", "west acres": "Nelspruit (Ehlanzeni)", "sonheuwel": "Nelspruit (Ehlanzeni)",
-  "witbank": "Witbank (Nkangala)", "emalahleni": "Witbank (Nkangala)", "reyno ridge": "Witbank (Nkangala)",
+  "mbombela": "Nelspruit (Ehlanzeni)", "west acres": "Nelspruit (Ehlanzeni)", "sonheuwel": "Nelspruit (Ehlanzeni)",
+  "emalahleni": "Witbank (Nkangala)", "reyno ridge": "Witbank (Nkangala)",
   "secunda": "Secunda (Gert Sibande)", "middelburg": "Middelburg", "white river": "White River",
 
   // North West
-  "rustenburg": "Rustenburg (Bojanala)", "geelhoutpark": "Rustenburg (Bojanala)",
-  "mahikeng": "Mahikeng", "mafikeng": "Mahikeng",
-  "potchefstroom": "Potchefstroom (Dr Kenneth Kaunda)", "baillie park": "Potchefstroom (Dr Kenneth Kaunda)",
+  "geelhoutpark": "Rustenburg (Bojanala)",
+  "baillie park": "Potchefstroom (Dr Kenneth Kaunda)",
   "klerksdorp": "Klerksdorp", "brits": "Brits", "hartbeespoort": "Brits",
 
   // Northern Cape
-  "kimberley": "Kimberley (Frances Baard)", "royldene": "Kimberley (Frances Baard)", "monument heights": "Kimberley (Frances Baard)",
+  "royldene": "Kimberley (Frances Baard)", "monument heights": "Kimberley (Frances Baard)",
   "upington": "Upington", "kathu": "John Taolo Gaetsewe", "kuruman": "John Taolo Gaetsewe", "springbok": "Namakwa", "de aar": "Pixley ka Seme",
 
   // General
@@ -138,8 +136,8 @@ const POSTAL_CODE_TO_REGION_MAP: Record<string, string> = {
   "7500": "Northern Suburbs", // Parow
   "7460": "Northern Suburbs", // Goodwood
   "7580": "Northern Suburbs", // Kuils River
-  "7441": "Northern Suburbs", // Milnerton, Table View
-  "7446": "Northern Suburbs", // Blouberg
+  "7441": "Western Seaboard", // Milnerton, Table View, Parklands
+  "7446": "Western Seaboard", // Blouberg
   "7530": "Northern Suburbs", // Bellville
   "7535": "Northern Suburbs", // Bellville (Stikland)
   "8001": "Cape Town CBD",
@@ -153,6 +151,55 @@ const POSTAL_CODE_TO_REGION_MAP: Record<string, string> = {
   "7140": "Cape Helderberg", // Strand
   "7600": "Stellenbosch",
   "7646": "Paarl/Wellington", // Paarl
+
+  // Cape Winelands (Excluding Paarl/Stellenbosch which have their own keys)
+  "6850": "Cape Winelands", // Worcester
+  "6835": "Cape Winelands", // Ceres
+  "6705": "Cape Winelands", // Robertson
+  "6720": "Cape Winelands", // Montagu
+  "6875": "Cape Winelands", // De Doorns
+  "6880": "Cape Winelands", // Touws River
+
+  // West Coast
+  "7357": "West Coast", // Langebaan
+  "7380": "West Coast", // Vredenburg
+  "7395": "West Coast", // Saldanha
+  "7300": "West Coast", // Malmesbury
+  "7351": "West Coast", // Yzerfontein
+  "7345": "West Coast", // Darling
+  "7310": "West Coast", // Moorreesburg
+  "8160": "West Coast", // Vredendal
+
+  // Garden Route
+  "6500": "Garden Route", // Mossel Bay
+  "6520": "Garden Route", // Hartenbos
+  "6670": "Garden Route", // Riversdale
+  "6674": "Garden Route", // Stilbaai
+  "6665": "Garden Route", // Heidelberg
+
+  // George/Knysna
+  "6529": "George/Knysna", // George
+  "6530": "George/Knysna", // George
+  "6560": "George/Knysna", // Wilderness
+  "6570": "George/Knysna", // Knysna
+  "6571": "George/Knysna", // Knysna
+  "6573": "George/Knysna", // Sedgefield
+  "6600": "George/Knysna", // Plettenberg Bay
+
+  // Overberg
+  "7200": "Overberg", // Hermanus
+  "7230": "Overberg", // Caledon
+  "7280": "Overberg", // Bredasdorp
+  "6740": "Overberg", // Swellendam
+  "7220": "Overberg", // Gansbaai
+  "7215": "Overberg", // Kleinmond
+  "7160": "Overberg", // Grabouw
+  "7170": "Overberg", // Villiersdorp
+
+  // Central Karoo
+  "6970": "Central Karoo", // Beaufort West
+  "6930": "Central Karoo", // Prince Albert
+  "6900": "Central Karoo", // Laingsburg
 
   // Gauteng
   "2000": "Johannesburg CBD",
@@ -207,6 +254,34 @@ const POSTAL_CODE_TO_REGION_MAP: Record<string, string> = {
   "0299": "Rustenburg (Bojanala)",
   "2745": "Mahikeng",
   "2531": "Potchefstroom (Dr Kenneth Kaunda)",
+
+  // Limpopo
+  "0699": "Polokwane (Capricorn)",
+  "0700": "Polokwane (Capricorn)",
+  "0950": "Thohoyandou (Vhembe)",
+  "0850": "Tzaneen (Mopani)",
+  "1390": "Tzaneen (Mopani)", // Phalaborwa
+  "0480": "Bela-Bela",
+  "0510": "Waterberg", // Modimolle
+  "0555": "Waterberg", // Lephalale
+  "1120": "Sekhukhune", // Burgersfort
+
+  // Mpumalanga
+  "1200": "Nelspruit (Ehlanzeni)",
+  "1201": "Nelspruit (Ehlanzeni)",
+  "1035": "Witbank (Nkangala)",
+  "1034": "Witbank (Nkangala)",
+  "2302": "Secunda (Gert Sibande)",
+  "1050": "Middelburg",
+  "1240": "White River",
+
+  // Northern Cape
+  "8301": "Kimberley (Frances Baard)",
+  "8300": "Kimberley (Frances Baard)",
+  "8801": "Upington",
+  "8460": "John Taolo Gaetsewe", // Kuruman
+  "8240": "Namakwa", // Springbok
+  "7000": "Pixley ka Seme", // De Aar
 };
 
 export default function HomeScreen() {
@@ -252,7 +327,6 @@ export default function HomeScreen() {
         return true;
       }
 
-      return false;
     });
   }, [featuredVendors, locationCity, locationProvince]);
   /**

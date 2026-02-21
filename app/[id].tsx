@@ -36,6 +36,28 @@ const THEME = {
     placeholder: '#9CA3AF',
 };
 
+const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
+    try {
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: expoPushToken,
+                sound: 'default',
+                title: title,
+                body: body,
+                data: data,
+            }),
+        });
+    } catch (error) {
+        console.error("Error sending push:", error);
+    }
+};
+
 export default function UnifiedChatPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
@@ -190,6 +212,15 @@ export default function UnifiedChatPage() {
                     createdAt: serverTimestamp(),
                     chatId: chatId
                 });
+
+                // Send Push Notification to Vendor
+                const vendorSnap = await getDoc(doc(db, "professionals", chatMeta.vendorId));
+                if (vendorSnap.exists()) {
+                    const vData = vendorSnap.data();
+                    if (vData.expoPushToken) {
+                        await sendPushNotification(vData.expoPushToken, `New Message from ${user.displayName || "Customer"}`, text, { chatId: chatId });
+                    }
+                }
             }
         } catch (error) {
             console.error("Error sending:", error);

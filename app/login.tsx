@@ -5,7 +5,6 @@ import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
     onAuthStateChanged,
-    sendPasswordResetEmail,
     signInWithCredential,
     signInWithEmailAndPassword,
     signOut,
@@ -156,21 +155,8 @@ export default function LoginScreen() {
         }
     };
 
-    const handleForgotPassword = async () => {
-        if (!email) {
-            Alert.alert("Enter Email", "Please enter your email address to reset your password.");
-            return;
-        }
-        setLoading(true);
-        try {
-            await sendPasswordResetEmail(auth, email);
-            Alert.alert("Password Reset Sent", "If an account exists for this email, a password reset link has been sent.");
-        } catch (error: any) {
-            // For security, don't reveal if the user exists or not.
-            Alert.alert("Password Reset Sent", "If an account exists for this email, a password reset link has been sent.");
-        } finally {
-            setLoading(false);
-        }
+    const handleForgotPassword = () => {
+        router.push('/forgot-password');
     };
 
     if (initializing) {
