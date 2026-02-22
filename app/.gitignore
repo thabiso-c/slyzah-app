@@ -23,3 +23,6 @@ ios/build/
 *.jks
 *.keystore
 *.pem
+
+# Secrets
+*-firebase-adminsdk-*.json
