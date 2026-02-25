@@ -41,3 +41,8 @@ app-example
 # generated native folders
 /ios
 /android
+app/secrets.ts
+
+# Secrets
+google-services.json
+slyzah-10d1c-firebase-adminsdk-fbsvc-b689545265.json

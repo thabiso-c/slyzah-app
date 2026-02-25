@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import {
@@ -23,6 +23,8 @@ import {
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
+import { GOOGLE_MAPS_API_KEY } from './secrets';
+import { sendPushNotification, sendResendEmail } from './services';
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,88 +37,13 @@ const THEME = {
     text: '#001f3f'
 };
 
-const sendResendEmail = async (to: string, vendorName: string, customerName: string, category: string, issue: string, address: string, town: string, leadId: string, vendorId: string, imageUrl?: string) => {
-    try {
-        // Corrected Vercel link based on user feedback
-        const webReplyLink = `https://slyzah-web.vercel.app/submit-quote?leadId=${leadId}&vendorId=${vendorId}`;
-
-        await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer re_ie1miiFB_3ExUN5jDYkMFCqT98sqKL7vq',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                from: 'Slyzah Official <noreply@slyzah.co.za>',
-                to: [to], // Ensure 'to' is an array for better compatibility
-                subject: `🚨 [Job Alert] New Request: ${category}`,
-                headers: {
-                    "X-Entity-Ref-ID": leadId,
-                },
-                html: `
-                    <div style="background-color: #f4f7f9; padding: 40px 0; font-family: sans-serif;">
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                        <tr><td style="background-color: #001f3f; padding: 12px; text-align: center;"><span style="color: #ffffff; font-size: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">Slyzah Official</span></td></tr>
-                        <tr><td style="background-color: #001f3f; padding: 20px; text-align: center;"><img src="https://slyzah-web.vercel.app/logo.png" alt="Slyzah" width="120" style="display: block; margin: 0 auto; border: 0;" /></td></tr>
-                        <tr>
-                          <td style="padding: 40px;">
-                            <h2 style="color: #001f3f; margin: 0 0 20px 0; font-size: 24px;">Submit Your Quote</h2>
-                            <p style="color: #333; font-size: 16px;">Hi <strong>${vendorName}</strong>,</p>
-                            <p style="color: #555; font-size: 15px;">A customer has requested a quote for <strong>${category}</strong>.</p>
-                            
-                            <div style="background-color: #f9f9f9; border-radius: 12px; padding: 20px; margin: 25px 0; border: 1px solid #eee;">
-                                <table width="100%" style="font-size: 14px;">
-                                    <tr><td width="35%" style="font-weight: bold;">Location:</td><td>${address}</td></tr>
-                                    <tr><td style="font-weight: bold;">Area:</td><td>${town}</td></tr>
-                                    <tr><td style="font-weight: bold;">Description:</td><td>${issue}</td></tr>
-                                </table>
-                                ${imageUrl ? `<div style="margin-top: 15px; text-align: center;"><img src="${imageUrl}" style="max-width: 100%; border-radius: 8px; border: 1px solid #ddd;" alt="Attached Image" /></div>` : ''}
-                            </div>
-                    
-                            <div style="text-align: center; margin-top: 30px;">
-                              <a href="${webReplyLink}" style="background-color: #BF953F; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Open Quote Form</a>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr><td style="padding: 20px; text-align: center; color: #aaa; font-size: 11px;">© 2025 Slyzah. Connecting local pros.</td></tr>
-                      </table>
-                    </div>
-                `
-            })
-        });
-        console.log('Resend email sent successfully');
-    } catch (error) {
-        console.error('Resend Error:', error);
-    }
-};
-
-const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
-    try {
-        await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Accept-encoding': 'gzip, deflate',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                to: expoPushToken,
-                sound: 'default',
-                title: title,
-                body: body,
-                data: data,
-            }),
-        });
-    } catch (error) {
-        console.error("Error sending push:", error);
-    }
-};
-
 // --- Request Quote Modal Component ---
-const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, initialData }: any) => {
+const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, initialData, availableVendors }: any) => {
     const [formData, setFormData] = useState(initialData);
     const [submitting, setSubmitting] = useState(false);
     const [imageUri, setImageUri] = useState<string | null>(null);
+    const [urgency, setUrgency] = useState<'urgent' | 'standard' | 'comparing'>('standard');
+
     const router = useRouter();
 
     const pickImage = async () => {
@@ -163,6 +90,7 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                 issueDescription: formData.issue, // Aligned with Web
                 address: formData.address,        // Aligned with Web
                 imageUrl: imageUrl,
+                urgency: urgency,
                 town: formData.town,
                 vendorIds: selectedVendorIds,
                 status: "open",                   // Aligned with Web
@@ -179,16 +107,20 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                 for (const vendorId of selectedVendorIds) {
                     try {
                         console.log(`Processing vendor ID: ${vendorId}`);
-                        // Fetch Vendor Details for Email
-                        const vendorSnap = await getDoc(doc(db, "professionals", vendorId));
+                        // Optimization: Use passed vendor data if available, else fetch
+                        let vendorData = availableVendors?.find((v: any) => v.id === vendorId);
 
-                        if (!vendorSnap.exists()) {
-                            console.error(`Vendor document not found for ID: ${vendorId}`);
-                            continue;
+                        if (!vendorData) {
+                            const vendorSnap = await getDoc(doc(db, "professionals", vendorId));
+                            if (vendorSnap.exists()) {
+                                vendorData = vendorSnap.data();
+                            }
                         }
 
-                        const vendorData = vendorSnap.data();
-                        console.log(`Vendor data found for ${vendorId}. Email: ${vendorData?.email}`);
+                        if (!vendorData) {
+                            console.warn(`Vendor data not found for ID: ${vendorId}`);
+                            continue;
+                        };
 
                         // Send Email via Resend
                         if (vendorData?.email) {
@@ -202,21 +134,12 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                                 formData.town,
                                 docRef.id,
                                 vendorId,
-                                imageUrl
+                                imageUrl,
+                                urgency
                             );
-
-                            // Add a delay between emails to ensure reliable delivery
-                            await new Promise(resolve => setTimeout(resolve, 1000));
-                        } else {
-                            console.warn(`No email address found for vendor ${vendorId}`);
                         }
 
-                        // Send Push Notification to Vendor
-                        if (vendorData?.expoPushToken) {
-                            await sendPushNotification(vendorData.expoPushToken, "New Lead Available! 🚀", `New request for ${category} in ${formData.town}`, { leadId: docRef.id });
-                        }
-
-                        console.log(`Creating dashboard notification for ${vendorId}`);
+                        // Create dashboard notification
                         await addDoc(collection(db, "professionals", vendorId, "notifications"), {
                             type: "lead",
                             notificationMessage: `New Request: ${formData.issue} in ${formData.town}`,
@@ -224,7 +147,12 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                             createdAt: serverTimestamp(),
                             leadId: docRef.id
                         });
-                        console.log(`Notification created for ${vendorId}`);
+
+                        // Send Push Notification
+                        if (vendorData.expoPushToken) {
+                            await sendPushNotification(vendorData.expoPushToken, `New Lead: ${category}`, formData.issue, { leadId: docRef.id, urgency: urgency });
+                        }
+
                     } catch (e) {
                         console.error("Error notifying vendor:", vendorId, e);
                     }
@@ -294,6 +222,25 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                             placeholderTextColor={THEME.placeholder}
                             multiline
                         />
+                        <Text style={styles.label}>How urgently do you need this service?</Text>
+                        <View style={styles.urgencyContainer}>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'urgent' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('urgent')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'urgent' && styles.urgencyButtonTextActive]}>Need service urgently</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'standard' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('standard')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'standard' && styles.urgencyButtonTextActive]}>Service not needed urgently</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'comparing' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('comparing')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'comparing' && styles.urgencyButtonTextActive]}>Just comparing quotes</Text>
+                            </TouchableOpacity>
+                        </View>
+
                         <Text style={styles.label}>Address / Area</Text>
                         <View style={{ zIndex: 5000, elevation: 5000 }}>
                             <GooglePlacesAutocomplete
@@ -317,7 +264,7 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                                     setFormData({ ...formData, address, town: town || formData.town });
                                 }}
                                 query={{
-                                    key: 'AIzaSyDeOynOUHE-VzLhFlgnDju30Jx0PTpETPI',
+                                    key: GOOGLE_MAPS_API_KEY,
                                     language: 'en',
                                     components: 'country:za',
                                 }}
@@ -462,7 +409,8 @@ export default function ResultsScreen() {
                     word.replace(/(ing|er|ers|s)$/, "").trim()
                 ).filter(word => word.length > 2);
 
-                const q = query(collection(db, "professionals"));
+                // Optimization: Limit to 100 to prevent reading entire DB
+                const q = query(collection(db, "professionals"), limit(100));
                 const querySnapshot = await getDocs(q);
                 let allVendorsFromDb = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
 
@@ -762,6 +710,7 @@ export default function ResultsScreen() {
                 category={category}
                 selectedVendorIds={selectedForQuote}
                 initialData={formData}
+                availableVendors={vendors}
             />
         </SafeAreaView>
     );
@@ -895,6 +844,27 @@ const styles = StyleSheet.create({
     formScroll: { paddingBottom: 20 },
     label: { fontSize: 12, fontWeight: 'bold', color: THEME.navy, marginBottom: 6, marginTop: 12 },
     input: { backgroundColor: THEME.gray, borderRadius: 12, padding: 12, fontSize: 14, color: THEME.navy },
+    urgencyContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10,
+        marginBottom: 12,
+    },
+    urgencyButton: {
+        flex: 1,
+        paddingVertical: 16,
+        paddingHorizontal: 8,
+        borderRadius: 12,
+        backgroundColor: THEME.gray,
+        alignItems: 'center',
+    },
+    urgencyButtonActive: {
+        backgroundColor: THEME.navy,
+    },
+    urgencyButtonText: { fontWeight: 'bold', color: THEME.navy, fontSize: 10, textAlign: 'center' },
+    urgencyButtonTextActive: {
+        color: THEME.white,
+    },
     submitButton: { backgroundColor: THEME.gold, padding: 16, borderRadius: 20, alignItems: 'center', marginTop: 24 },
     submitButtonText: { color: THEME.navy, fontWeight: '900', fontSize: 14 },
     imageUpload: {

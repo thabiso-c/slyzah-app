@@ -3,7 +3,7 @@ import { useAssets } from 'expo-asset';
 import { ResizeMode, Video } from 'expo-av';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
-import { addDoc, collection, doc, limit, onSnapshot, query } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, limit, onSnapshot, query } from 'firebase/firestore';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert, Dimensions,
@@ -390,8 +390,9 @@ export default function HomeScreen() {
 
   // 2. Fetch Featured Vendors
   useEffect(() => {
-    const q = query(collection(db, "professionals"), limit(100));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const fetchFeatured = async () => {
+      const q = query(collection(db, "professionals"), limit(100));
+      const snapshot = await getDocs(q);
       const allPros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
       const targetTiers = ["multi-province", "provincial", "three regions", "one region"];
@@ -416,8 +417,8 @@ export default function HomeScreen() {
       });
 
       setFeaturedVendors(sortedFeatured);
-    });
-    return unsubscribe;
+    };
+    fetchFeatured();
   }, []);
 
   // 3. Geolocation Logic

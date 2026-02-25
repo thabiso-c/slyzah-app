@@ -21,6 +21,8 @@ import {
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
+import { GOOGLE_MAPS_API_KEY } from './secrets';
+import { sendResendEmail } from './services';
 
 const { width } = Dimensions.get('window');
 
@@ -30,59 +32,6 @@ const THEME = {
     white: '#FFFFFF',
     gray: '#F3F4F6',
     placeholder: '#9CA3AF',
-};
-
-const sendResendEmail = async (to: string, vendorName: string, customerName: string, category: string, issue: string, address: string, town: string, leadId: string, vendorId: string) => {
-    try {
-        // Corrected Vercel link based on user feedback
-        const webReplyLink = `https://slyzah-web.vercel.app/submit-quote?leadId=${leadId}&vendorId=${vendorId}`;
-
-        await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer re_ie1miiFB_3ExUN5jDYkMFCqT98sqKL7vq',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                from: 'Slyzah Official <noreply@slyzah.co.za>',
-                to: [to], // Ensure 'to' is an array
-                subject: `🚨 [Job Alert] New Request: ${category}`,
-                headers: {
-                    "X-Entity-Ref-ID": leadId,
-                },
-                html: `
-                    <div style="background-color: #f4f7f9; padding: 40px 0; font-family: sans-serif;">
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                        <tr><td style="background-color: #001f3f; padding: 12px; text-align: center;"><span style="color: #ffffff; font-size: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">Slyzah Official</span></td></tr>
-                        <tr>
-                          <td style="padding: 40px;">
-                            <h2 style="color: #001f3f; margin: 0 0 20px 0; font-size: 24px;">Submit Your Quote</h2>
-                            <p style="color: #333; font-size: 16px;">Hi <strong>${vendorName}</strong>,</p>
-                            <p style="color: #555; font-size: 15px;">A customer has requested a quote for <strong>${category}</strong>.</p>
-                            
-                            <div style="background-color: #f9f9f9; border-radius: 12px; padding: 20px; margin: 25px 0; border: 1px solid #eee;">
-                                <table width="100%" style="font-size: 14px;">
-                                    <tr><td width="35%" style="font-weight: bold;">Location:</td><td>${address}</td></tr>
-                                    <tr><td style="font-weight: bold;">Area:</td><td>${town}</td></tr>
-                                    <tr><td style="font-weight: bold;">Description:</td><td>${issue}</td></tr>
-                                </table>
-                            </div>
-                    
-                            <div style="text-align: center; margin-top: 30px;">
-                              <a href="${webReplyLink}" style="background-color: #BF953F; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Open Quote Form</a>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr><td style="padding: 20px; text-align: center; color: #aaa; font-size: 11px;">© 2025 Slyzah. Connecting local pros.</td></tr>
-                      </table>
-                    </div>
-                `
-            })
-        });
-        console.log('Resend email sent successfully');
-    } catch (error) {
-        console.error('Resend Error:', error);
-    }
 };
 
 export default function RequestQuoteForm() {
@@ -110,6 +59,7 @@ export default function RequestQuoteForm() {
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [loading, setLoading] = useState(false);
     const [imageUri, setImageUri] = useState<string | null>(null);
+    const [urgency, setUrgency] = useState<'urgent' | 'standard' | 'comparing'>('standard');
 
     const [formData, setFormData] = useState({
         name: auth.currentUser?.displayName || "",
@@ -176,6 +126,7 @@ export default function RequestQuoteForm() {
                 town: formData.town,
                 category,
                 region: userRegion,
+                urgency: urgency,
                 vendorIds: selectedVendorIds,
                 status: "open",
                 createdAt: serverTimestamp(),
@@ -224,7 +175,9 @@ export default function RequestQuoteForm() {
                                 formData.address,
                                 formData.town,
                                 docRef.id,
-                                vendorId
+                                vendorId,
+                                imageUrl,
+                                urgency
                             );
 
                             // Add a delay between emails to ensure reliable delivery
@@ -337,7 +290,7 @@ export default function RequestQuoteForm() {
                                 setFormData(prev => ({ ...prev, address, town: town || prev.town }));
                             }}
                             query={{
-                                key: 'AIzaSyDeOynOUHE-VzLhFlgnDju30Jx0PTpETPI',
+                                key: GOOGLE_MAPS_API_KEY,
                                 language: 'en',
                                 components: 'country:za',
                             }}
@@ -368,6 +321,27 @@ export default function RequestQuoteForm() {
                             placeholder="Sandton"
                             placeholderTextColor={THEME.placeholder}
                         />
+                    </View>
+
+                    <View style={styles.fieldContainer}>
+                        <Text style={styles.label}>HOW URGENTLY DO YOU NEED THIS?</Text>
+                        <View style={styles.urgencyContainer}>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'urgent' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('urgent')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'urgent' && styles.urgencyButtonTextActive]}>Need service urgently</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'standard' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('standard')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'standard' && styles.urgencyButtonTextActive]}>Service not needed urgently</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.urgencyButton, urgency === 'comparing' && styles.urgencyButtonActive]}
+                                onPress={() => setUrgency('comparing')}>
+                                <Text style={[styles.urgencyButtonText, urgency === 'comparing' && styles.urgencyButtonTextActive]}>Just comparing quotes</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     <View style={styles.fieldContainer}>
@@ -491,6 +465,30 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
         color: THEME.navy,
+    },
+    urgencyContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10,
+    },
+    urgencyButton: {
+        flex: 1,
+        paddingVertical: 16,
+        paddingHorizontal: 8,
+        borderRadius: 16,
+        backgroundColor: THEME.gray,
+        alignItems: 'center',
+    },
+    urgencyButtonActive: {
+        backgroundColor: THEME.navy,
+    },
+    urgencyButtonText: {
+        fontWeight: 'bold',
+        color: THEME.navy,
+        fontSize: 10,
+    },
+    urgencyButtonTextActive: {
+        color: THEME.white,
     },
     textArea: {
         height: 100,

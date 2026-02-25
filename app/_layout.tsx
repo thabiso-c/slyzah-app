@@ -7,7 +7,11 @@ import { usePathname, useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import * as TaskManager from 'expo-task-manager';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+<<<<<<< HEAD
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+=======
+import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+>>>>>>> 7a13816 (Update app assets, fix background notifications, and improve SEO)
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -111,6 +115,7 @@ export default function RootLayout() {
   // Register for Push Notifications
   useEffect(() => {
     if (user) {
+<<<<<<< HEAD
       registerForPushNotificationsAsync().then(token => {
         if (token) {
           console.log("Push Token obtained:", token);
@@ -120,6 +125,20 @@ export default function RootLayout() {
             expoPushToken: token,
             lastTokenUpdate: new Date()
           }, { merge: true }).catch(err => console.log("Error saving push token:", err));
+=======
+      registerForPushNotificationsAsync().then(async (token) => {
+        if (token) {
+          const userRef = doc(db, "users", user.uid);
+          try {
+            const userSnap = await getDoc(userRef);
+            // Check if token changed before writing to save costs
+            if (!userSnap.exists() || userSnap.data()?.expoPushToken !== token) {
+              await setDoc(userRef, { expoPushToken: token, lastTokenUpdate: new Date() }, { merge: true });
+            }
+          } catch (err) {
+            console.log("Error saving push token:", err);
+          }
+>>>>>>> 7a13816 (Update app assets, fix background notifications, and improve SEO)
         }
       });
     }

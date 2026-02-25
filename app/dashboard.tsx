@@ -31,6 +31,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../firebaseConfig';
+import { sendAwardEmail, sendPushNotification } from './services';
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,64 +41,6 @@ const THEME = {
     white: '#FFFFFF',
     gray: '#F3F4F6',
     placeholder: '#9CA3AF',
-};
-
-const sendAwardEmail = async (to: string, vendorName: string, customerName: string, customerPhone: string, customerEmail: string, address: string, category: string) => {
-    try {
-        console.log(`Sending award email to ${to} via Resend...`);
-        await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer re_ie1miiFB_3ExUN5jDYkMFCqT98sqKL7vq',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                from: 'Slyzah <noreply@slyzah.co.za>',
-                to: [to],
-                subject: `You Won! New Job: ${category}`,
-                html: `
-                    <div style="font-family: sans-serif; color: #001f3f; padding: 20px;">
-                        <h2 style="color: #FFD700;">Congratulations ${vendorName}!</h2>
-                        <p><strong>${customerName}</strong> has selected your quote for the <strong>${category}</strong> job.</p>
-                        
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                            <h3 style="margin-top: 0; color: #001f3f;">Customer Details</h3>
-                            <p><strong>Name:</strong> ${customerName}</p>
-                            <p><strong>Phone:</strong> ${customerPhone}</p>
-                            <p><strong>Email:</strong> ${customerEmail}</p>
-                            <p><strong>Address:</strong> ${address}</p>
-                        </div>
-
-                        <p>Please contact the customer immediately to arrange the service.</p>
-                    </div>
-                `
-            })
-        });
-    } catch (error) {
-        console.error('Award Email Error:', error);
-    }
-};
-
-const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
-    try {
-        await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Accept-encoding': 'gzip, deflate',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                to: expoPushToken,
-                sound: 'default',
-                title: title,
-                body: body,
-                data: data,
-            }),
-        });
-    } catch (error) {
-        console.error("Error sending push:", error);
-    }
 };
 
 export default function UserDashboard() {
@@ -491,10 +434,13 @@ export default function UserDashboard() {
                                                 )}
                                                 {lead.status === "open" && (
                                                     <TouchableOpacity
-                                                        style={styles.selectButton}
+                                                        style={[styles.selectButton, lead.urgency === 'comparing' && styles.disabledButton]}
                                                         onPress={() => initiateSelectWinner(lead.id, vId, quote.vendorName)}
+                                                        disabled={lead.urgency === 'comparing'}
                                                     >
-                                                        <Text style={styles.selectButtonText}>Select Winner</Text>
+                                                        <Text style={styles.selectButtonText}>
+                                                            {lead.urgency === 'comparing' ? 'Comparing Only' : 'Select Winner'}
+                                                        </Text>
                                                     </TouchableOpacity>
                                                 )}
                                             </View>
@@ -705,6 +651,10 @@ const styles = StyleSheet.create({
     quoteMessage: { fontSize: 11, fontStyle: 'italic', color: '#666', marginVertical: 5 },
     selectButton: { backgroundColor: THEME.gold, padding: 8, borderRadius: 8, alignItems: 'center', marginTop: 5 },
     selectButtonText: { color: THEME.navy, fontWeight: 'bold', fontSize: 10, textTransform: 'uppercase' },
+    disabledButton: {
+        backgroundColor: '#ccc',
+        opacity: 0.7,
+    },
     textArea: { backgroundColor: '#f0f0f0', borderRadius: 12, padding: 10, height: 100, textAlignVertical: 'top', marginVertical: 10 },
     modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
     modalContent: { backgroundColor: THEME.white, borderRadius: 20, padding: 20 },
