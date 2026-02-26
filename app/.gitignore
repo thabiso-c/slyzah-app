@@ -26,3 +26,4 @@ ios/build/
 
 # Secrets
 *-firebase-adminsdk-*.json
+secrets.ts

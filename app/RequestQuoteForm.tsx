@@ -22,7 +22,11 @@ import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 're
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
 import { GOOGLE_MAPS_API_KEY } from './secrets';
+<<<<<<< HEAD
 import { sendResendEmail } from './services';
+=======
+import { sendPushNotification, sendResendEmail } from './services';
+>>>>>>> 6ea35de (feat: Secure API keys and fix module resolution)
 
 const { width } = Dimensions.get('window');
 
@@ -194,6 +198,11 @@ export default function RequestQuoteForm() {
                             createdAt: serverTimestamp(),
                             leadId: docRef.id
                         });
+
+                        // Send Push Notification
+                        if (vendorData.expoPushToken) {
+                            await sendPushNotification(vendorData.expoPushToken, `New Lead: ${category}`, formData.issue, { leadId: docRef.id, urgency: urgency });
+                        }
                         console.log(`Notification created for ${vendorId}`);
                     } catch (innerError) {
                         console.error(`Error processing vendor ${vendorId}:`, innerError);
@@ -334,12 +343,20 @@ export default function RequestQuoteForm() {
                             <TouchableOpacity
                                 style={[styles.urgencyButton, urgency === 'standard' && styles.urgencyButtonActive]}
                                 onPress={() => setUrgency('standard')}>
+<<<<<<< HEAD
                                 <Text style={[styles.urgencyButtonText, urgency === 'standard' && styles.urgencyButtonTextActive]}>Service not needed urgently</Text>
+=======
+                                <Text style={[styles.urgencyButtonText, urgency === 'standard' && styles.urgencyButtonTextActive]}>Not Urgent</Text>
+>>>>>>> 6ea35de (feat: Secure API keys and fix module resolution)
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.urgencyButton, urgency === 'comparing' && styles.urgencyButtonActive]}
                                 onPress={() => setUrgency('comparing')}>
+<<<<<<< HEAD
                                 <Text style={[styles.urgencyButtonText, urgency === 'comparing' && styles.urgencyButtonTextActive]}>Just comparing quotes</Text>
+=======
+                                <Text style={[styles.urgencyButtonText, urgency === 'comparing' && styles.urgencyButtonTextActive]}>Comparing Quotes</Text>
+>>>>>>> 6ea35de (feat: Secure API keys and fix module resolution)
                             </TouchableOpacity>
                         </View>
                     </View>

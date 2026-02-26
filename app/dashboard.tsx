@@ -647,7 +647,7 @@ const styles = StyleSheet.create({
     quoteItem: { backgroundColor: THEME.white, padding: 10, borderRadius: 10, marginBottom: 8, borderWidth: 1, borderColor: '#eee' },
     quoteWinner: { borderColor: THEME.gold, borderWidth: 2 },
     quoteVendor: { fontSize: 12, fontWeight: '900', color: THEME.navy, flex: 1, marginRight: 10 },
-    quotePrice: { fontSize: 12, fontWeight: 'bold', color: THEME.gold },
+    quotePrice: { fontSize: 14, fontWeight: '900', color: THEME.navy },
     quoteMessage: { fontSize: 11, fontStyle: 'italic', color: '#666', marginVertical: 5 },
     selectButton: { backgroundColor: THEME.gold, padding: 8, borderRadius: 8, alignItems: 'center', marginTop: 5 },
     selectButtonText: { color: THEME.navy, fontWeight: 'bold', fontSize: 10, textTransform: 'uppercase' },

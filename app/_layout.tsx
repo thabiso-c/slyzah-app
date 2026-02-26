@@ -7,11 +7,7 @@ import { usePathname, useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import * as TaskManager from 'expo-task-manager';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-<<<<<<< HEAD
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-=======
 import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
->>>>>>> 7a13816 (Update app assets, fix background notifications, and improve SEO)
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -115,17 +111,6 @@ export default function RootLayout() {
   // Register for Push Notifications
   useEffect(() => {
     if (user) {
-<<<<<<< HEAD
-      registerForPushNotificationsAsync().then(token => {
-        if (token) {
-          console.log("Push Token obtained:", token);
-          // Use setDoc with merge to ensure it saves even if doc is missing fields
-          // and to ensure the latest token is always active
-          setDoc(doc(db, "users", user.uid), {
-            expoPushToken: token,
-            lastTokenUpdate: new Date()
-          }, { merge: true }).catch(err => console.log("Error saving push token:", err));
-=======
       registerForPushNotificationsAsync().then(async (token) => {
         if (token) {
           const userRef = doc(db, "users", user.uid);
@@ -138,7 +123,6 @@ export default function RootLayout() {
           } catch (err) {
             console.log("Error saving push token:", err);
           }
->>>>>>> 7a13816 (Update app assets, fix background notifications, and improve SEO)
         }
       });
     }

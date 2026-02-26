@@ -43,7 +43,6 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
     const [submitting, setSubmitting] = useState(false);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [urgency, setUrgency] = useState<'urgent' | 'standard' | 'comparing'>('standard');
-
     const router = useRouter();
 
     const pickImage = async () => {
