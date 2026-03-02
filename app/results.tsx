@@ -11,6 +11,7 @@ import {
     FlatList,
     Image,
     KeyboardAvoidingView,
+    Linking,
     Modal,
     Platform,
     ScrollView,
@@ -35,6 +36,88 @@ const THEME = {
     gray: '#F3F4F6',
     placeholder: '#9CA3AF',
     text: '#001f3f'
+};
+
+const CREDENTIAL_MAPPING: Record<string, { label: string; field: string }> = {
+    "Plumber": { label: "PIRB Licensed", field: "pirbNumber" },
+    "Electrician": { label: "Wireman's License", field: "wiremanNumber" },
+    "Panel Beater": { label: "RMI Member", field: "rmiNumber" },
+    "Builder": { label: "NHBRC Reg", field: "nhbrcNumber" },
+    "Gas": { label: "SAQCC Gas", field: "saqccNumber" },
+    "Air Conditioning": { label: "SARACCA", field: "saraccaNumber" },
+    "CCTV & Security": { label: "PSiRA Reg", field: "psiraNumber" },
+    "Pest Control": { label: "PCO Reg", field: "pcoNumber" },
+    "Appliance Repairs": { label: "Trade Cert", field: "tradeCertNumber" },
+    "Locksmith": { label: "LASA Member", field: "lasaNumber" },
+    "Roofing": { label: "PRA Member", field: "praNumber" },
+    "Gate Motors": { label: "Certified Installer", field: "installerNumber" },
+    "Handyman": { label: "Liability Insurance", field: "liabilityPolicyNumber" },
+    "Solar/Power": { label: "PV Green Card", field: "pvGreenCardNumber" },
+    "Cleaning": { label: "NCCA Member", field: "nccaNumber" },
+    "Automotive": { label: "RMI / MIWA", field: "rmiMiwaNumber" },
+    "Carpenter": { label: "Trade Cert", field: "tradeCertNumber" },
+    "Solar": { label: "PV GreenCard", field: "pvGreenCardNumber" },
+    "Fire Protection": { label: "SAQCC Fire", field: "fireRegNumber" },
+    "Movers": { label: "PMA Member", field: "pmaNumber" },
+    "Mechanic": { label: "MIWA/RMI Member", field: "miwaNumber" },
+    "Auto Glass": { label: "SAGGA Member", field: "saggaNumber" },
+    "Borehole": { label: "BWA Member", field: "bwaNumber" },
+    "Pool Services": { label: "NSPI Member", field: "nspiNumber" },
+    "Tree Felling": { label: "Public Liability", field: "insuranceNumber" },
+    "Solar / EV": { label: "PV GreenCard / EV Cert", field: "pvGreenCardNumber" },
+    "Cybersecurity": { label: "IT Security Cert", field: "itSecurityCertNumber" },
+    "Accountant": { label: "SAIPA / SARS No.", field: "saipaNumber" },
+    "Childcare": { label: "First Aid / Background Check", field: "childcareCertNumber" }
+};
+
+const resolveCredentialMapping = (categoryInput: string) => {
+    if (!categoryInput) return null;
+
+    // 1. Exact Match
+    if (CREDENTIAL_MAPPING[categoryInput]) return CREDENTIAL_MAPPING[categoryInput];
+
+    // 2. Fuzzy / Keyword Match
+    const normalized = categoryInput.toLowerCase();
+
+    const keywords: Record<string, string> = {
+        "plumb": "Plumber",
+        "electr": "Electrician",
+        "carpent": "Carpenter",
+        "build": "Builder",
+        "gas": "Gas",
+        "air": "Air Conditioning",
+        "condition": "Air Conditioning",
+        "security": "CCTV & Security",
+        "cctv": "CCTV & Security",
+        "pest": "Pest Control",
+        "appliance": "Appliance Repairs",
+        "lock": "Locksmith",
+        "roof": "Roofing",
+        "gate": "Gate Motors",
+        "solar": "Solar/Power",
+        "power": "Solar/Power",
+        "clean": "Cleaning",
+        "auto": "Automotive",
+        "mechanic": "Automotive",
+        "panel": "Panel Beater",
+        "beat": "Panel Beater",
+        "handy": "Handyman",
+        "ev": "Solar / EV",
+        "cyber": "Cybersecurity",
+        "account": "Accountant",
+        "tax": "Accountant",
+        "child": "Childcare",
+        "baby": "Childcare",
+        "nanny": "Childcare"
+    };
+
+    for (const [keyword, mapKey] of Object.entries(keywords)) {
+        if (normalized.includes(keyword)) {
+            return CREDENTIAL_MAPPING[mapKey];
+        }
+    }
+
+    return null;
 };
 
 // --- Request Quote Modal Component ---
@@ -448,6 +531,9 @@ export default function ResultsScreen() {
                         else if (provinceMatch) score += 50;
                         else if (isNational) score += 25;
 
+                        // 3. Rapid Responder Boost (Anti-Ghosting Guarantee)
+                        if (v.rapidResponder) score += 500;
+
                         // 3. Rating Tie-Breaker
                         score += (v.rating || 0);
 
@@ -463,15 +549,49 @@ export default function ResultsScreen() {
                         .map(item => item.v);
                 };
 
-                // Check local presence
-                const hasLocalPresence = matchedVendors.some(v =>
-                    (Array.isArray(v.regions) && v.regions.some((r: string) => r.toLowerCase() === userRegion?.toLowerCase())) ||
-                    (Array.isArray(v.provinces) && v.provinces.some((p: string) => p.toLowerCase() === userProvince?.toLowerCase()))
-                );
+                // 2. Geo-Location Filtering & Prioritization
+                const clean = (str: any) => String(str || "").toLowerCase().trim();
+                const uReg = clean(userRegion);
+                const uProv = clean(userProvince);
 
-                if (matchedVendors.length > 0) {
-                    setVendors(processAndSort(matchedVendors));
-                    setSearchStatus(hasLocalPresence ? "local" : "global");
+                // STRICT: No matching without geo-location
+                if (!uReg && !uProv) {
+                    console.log("No user location provided for matching.");
+                    setVendors([]);
+                    setSearchStatus("none");
+                    setLoading(false);
+                    return;
+                }
+
+                // A. Exact Region Matches (Priority)
+                const regionMatches = matchedVendors.filter(v => {
+                    const vReg = clean(v.region);
+                    const vRegions = Array.isArray(v.regions) ? v.regions.map(clean) : [];
+                    return (uReg && (vReg === uReg || vRegions.includes(uReg)));
+                });
+
+                // B. Nearby/Province Matches (Fallback)
+                const provinceMatches = matchedVendors.filter(v => {
+                    const vProv = clean(v.province);
+                    const vProvs = Array.isArray(v.provinces) ? v.provinces.map(clean) : [];
+                    return (uProv && (vProv === uProv || vProvs.includes(uProv)));
+                });
+
+                let finalSet: any[] = [];
+                let status: "local" | "global" | "none" = "none";
+
+                if (regionMatches.length > 0) {
+                    finalSet = regionMatches;
+                    status = "local";
+                } else if (provinceMatches.length > 0) {
+                    // Fallback to nearby regions (Province level) if no exact region matches
+                    finalSet = provinceMatches;
+                    status = "global";
+                }
+
+                if (finalSet.length > 0) {
+                    setVendors(processAndSort(finalSet));
+                    setSearchStatus(status);
                 } else {
                     setVendors([]);
                     setSearchStatus("none");
@@ -509,6 +629,7 @@ export default function ResultsScreen() {
     const renderVendor = ({ item }: { item: any }) => {
         const isSponsored = ["One Region", "Three Regions", "Provincial", "Multi-Province"].includes(item.tier);
         const isSelected = selectedForQuote.includes(item.id);
+        const credentialInfo = resolveCredentialMapping(item.category);
 
         return (
             <TouchableOpacity
@@ -559,6 +680,11 @@ export default function ResultsScreen() {
                         <Text style={styles.locationText}>
                             {item.tier === "Multi-Province" ? "🌍 National Coverage" : `📍 ${item.region || item.town || "Verified Area"}`}
                         </Text>
+                        {credentialInfo && item[credentialInfo.field] && (
+                            <View style={styles.credentialBadge}>
+                                <Text style={styles.credentialText}>🛡️ {credentialInfo.label}: {item[credentialInfo.field]}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
 
@@ -567,14 +693,28 @@ export default function ResultsScreen() {
                 </Text>
 
                 <View style={styles.cardFooter}>
-                    <TouchableOpacity onPress={() => fetchReviews(item)}>
-                        <Text style={styles.reviewsLink}>SEE REVIEWS</Text>
-                    </TouchableOpacity>
-                    {isSponsored && (
-                        <View style={styles.verifiedBadge}>
-                            <Text style={styles.verifiedText}>✅ VERIFIED PRO</Text>
-                        </View>
-                    )}
+                    <View style={{ flexDirection: 'row', gap: 15 }}>
+                        <TouchableOpacity onPress={() => fetchReviews(item)}>
+                            <Text style={styles.reviewsLink}>REVIEWS</Text>
+                        </TouchableOpacity>
+                        {item.website && (
+                            <TouchableOpacity onPress={() => Linking.openURL(item.website)}>
+                                <Text style={styles.reviewsLink}>WEBSITE</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                    <View style={{ flexDirection: 'row', gap: 5 }}>
+                        {item.rapidResponder && (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#26C6DA' }]}>
+                                <Text style={[styles.verifiedText, { color: '#006064' }]}>⚡ 15m RESPONSE</Text>
+                            </View>
+                        )}
+                        {isSponsored && (
+                            <View style={styles.verifiedBadge}>
+                                <Text style={styles.verifiedText}>✅ VERIFIED PRO</Text>
+                            </View>
+                        )}
+                    </View>
                 </View>
             </TouchableOpacity>
         );
@@ -785,6 +925,8 @@ const styles = StyleSheet.create({
     ratingBadge: { backgroundColor: '#FFF9C4', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8 },
     ratingText: { fontSize: 10, fontWeight: 'bold', color: '#F57F17' },
     locationText: { fontSize: 10, color: '#888', fontWeight: 'bold', marginTop: 2, textTransform: 'uppercase' },
+    credentialBadge: { backgroundColor: '#E3F2FD', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, alignSelf: 'flex-start', marginTop: 4 },
+    credentialText: { fontSize: 9, fontWeight: 'bold', color: '#1565C0', textTransform: 'uppercase' },
     description: { fontSize: 12, color: '#555', fontStyle: 'italic', marginBottom: 12, lineHeight: 18 },
     cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     reviewsLink: { fontSize: 12, fontWeight: '900', color: THEME.navy, textDecorationLine: 'underline' },

@@ -30,6 +30,85 @@ const THEME = {
   placeholder: '#9CA3AF',
 };
 
+const CREDENTIAL_MAPPING: Record<string, { label: string; field: string }> = {
+  "Plumber": { label: "PIRB Licensed", field: "pirbNumber" },
+  "Electrician": { label: "Wireman's License", field: "wiremanNumber" },
+  "Panel Beater": { label: "RMI Member", field: "rmiNumber" },
+  "Builder": { label: "NHBRC Reg", field: "nhbrcNumber" },
+  "Gas": { label: "SAQCC Gas", field: "saqccNumber" },
+  "Air Conditioning": { label: "SARACCA", field: "saraccaNumber" },
+  "CCTV & Security": { label: "PSiRA Reg", field: "psiraNumber" },
+  "Pest Control": { label: "PCO Reg", field: "pcoNumber" },
+  "Appliance Repairs": { label: "Trade Cert", field: "tradeCertNumber" },
+  "Locksmith": { label: "LASA Member", field: "lasaNumber" },
+  "Roofing": { label: "PRA Member", field: "praNumber" },
+  "Gate Motors": { label: "Certified Installer", field: "installerNumber" },
+  "Carpenter": { label: "Trade Cert", field: "tradeCertNumber" },
+  "Solar": { label: "PV GreenCard", field: "pvGreenCardNumber" },
+  "Fire Protection": { label: "SAQCC Fire", field: "fireRegNumber" },
+  "Movers": { label: "PMA Member", field: "pmaNumber" },
+  "Mechanic": { label: "MIWA/RMI Member", field: "miwaNumber" },
+  "Auto Glass": { label: "SAGGA Member", field: "saggaNumber" },
+  "Borehole": { label: "BWA Member", field: "bwaNumber" },
+  "Cleaning": { label: "NCCA Member", field: "nccaNumber" },
+  "Pool Services": { label: "NSPI Member", field: "nspiNumber" },
+  "Tree Felling": { label: "Public Liability", field: "insuranceNumber" },
+  "Solar / EV": { label: "PV GreenCard / EV Cert", field: "pvGreenCardNumber" },
+  "Cybersecurity": { label: "IT Security Cert", field: "itSecurityCertNumber" },
+  "Accountant": { label: "SAIPA / SARS No.", field: "saipaNumber" },
+  "Childcare": { label: "First Aid / Background Check", field: "childcareCertNumber" }
+};
+
+const resolveCredentialMapping = (categoryInput: string) => {
+  if (!categoryInput) return null;
+
+  // 1. Exact Match
+  if (CREDENTIAL_MAPPING[categoryInput]) return CREDENTIAL_MAPPING[categoryInput];
+
+  // 2. Fuzzy / Keyword Match
+  const normalized = categoryInput.toLowerCase();
+
+  const keywords: Record<string, string> = {
+    "plumb": "Plumber",
+    "electr": "Electrician",
+    "carpent": "Carpenter",
+    "build": "Builder",
+    "gas": "Gas",
+    "air": "Air Conditioning",
+    "condition": "Air Conditioning",
+    "security": "CCTV & Security",
+    "cctv": "CCTV & Security",
+    "pest": "Pest Control",
+    "appliance": "Appliance Repairs",
+    "lock": "Locksmith",
+    "roof": "Roofing",
+    "gate": "Gate Motors",
+    "solar": "Solar/Power",
+    "power": "Solar/Power",
+    "clean": "Cleaning",
+    "auto": "Automotive",
+    "mechanic": "Automotive",
+    "panel": "Panel Beater",
+    "beat": "Panel Beater",
+    "handy": "Handyman",
+    "ev": "Solar / EV",
+    "cyber": "Cybersecurity",
+    "account": "Accountant",
+    "tax": "Accountant",
+    "child": "Childcare",
+    "baby": "Childcare",
+    "nanny": "Childcare"
+  };
+
+  for (const [keyword, mapKey] of Object.entries(keywords)) {
+    if (normalized.includes(keyword)) {
+      return CREDENTIAL_MAPPING[mapKey];
+    }
+  }
+
+  return null;
+};
+
 const LOCATION_MAPPING: Record<string, string[]> = {
   "Western Cape": ["Cape Town CBD", "Northern Suburbs", "Southern Suburbs", "Atlantic Seaboard", "Western Seaboard", "South Peninsula", "Cape Helderberg", "Cape Winelands", "Paarl/Wellington", "Stellenbosch", "Garden Route", "George/Knysna", "West Coast", "Overberg", "Central Karoo"],
   "Gauteng": ["Johannesburg CBD", "Sandton/Rivonia", "Randburg", "Roodepoort", "Soweto", "Midrand", "Pretoria/Tshwane CBD", "Centurion", "Pretoria East", "Pretoria North", "Ekurhuleni (East Rand)", "Kempton Park", "Brakpan/Benoni", "Sedibeng", "West Rand"],
@@ -652,7 +731,12 @@ export default function HomeScreen() {
                     </View>
                     <View style={styles.vendorInfo}>
                       <Text style={styles.vendorName} numberOfLines={1}>{vendor.name || "Professional"}</Text>
-                      <Text style={styles.vendorRegion}>{vendor.region || "Verified Pro"}</Text>
+                      <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap', marginBottom: 4, alignItems: 'center' }}>
+                        <Text style={styles.vendorRegion}>{vendor.region || "Verified Pro"}</Text>
+                        {vendor.rapidResponder && (
+                          <Text style={{ fontSize: 8, fontWeight: '900', color: '#006064', backgroundColor: '#E0F7FA', paddingHorizontal: 4, paddingVertical: 2, borderRadius: 4, overflow: 'hidden' }}>⚡ 15m</Text>
+                        )}
+                      </View>
                       <View style={styles.vendorFooter}>
                         <Text style={styles.rating}>★ {vendor.rating || "5.0"}</Text>
                         <View style={styles.viewProfileBtn}>
@@ -713,7 +797,27 @@ export default function HomeScreen() {
                   {selectedVendor?.province ? `, ${selectedVendor.province}` : ''}
                 </Text>
 
+                {(() => {
+                  const mapping = selectedVendor ? resolveCredentialMapping(selectedVendor.category) : null;
+                  if (selectedVendor && mapping && selectedVendor[mapping.field]) {
+                    return (
+                      <View style={{ marginTop: 15 }}>
+                        <Text style={styles.modalSectionTitle}>Credentials</Text>
+                        <View style={styles.verifiedBadge}>
+                          <Text style={styles.verifiedText}>🛡️ {mapping.label}: {selectedVendor[mapping.field]}</Text>
+                        </View>
+                      </View>
+                    );
+                  }
+                  return null;
+                })()}
+
                 <View style={styles.modalBadges}>
+                  {selectedVendor?.rapidResponder && (
+                    <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#26C6DA' }]}>
+                      <Text style={[styles.verifiedText, { color: '#006064' }]}>⚡ RAPID RESPONDER</Text>
+                    </View>
+                  )}
                   <View style={styles.verifiedBadge}>
                     <Text style={styles.verifiedText}>✅ VERIFIED PRO</Text>
                   </View>
