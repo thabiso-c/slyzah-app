@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert, Dimensions,
   Image,
+  Linking,
   Modal,
   ScrollView,
   StyleSheet,
@@ -797,6 +798,15 @@ export default function HomeScreen() {
                   {selectedVendor?.province ? `, ${selectedVendor.province}` : ''}
                 </Text>
 
+                {selectedVendor?.website && (
+                  <>
+                    <Text style={styles.modalSectionTitle}>Website</Text>
+                    <TouchableOpacity onPress={() => Linking.openURL(selectedVendor.website)}>
+                      <Text style={[styles.modalText, { color: THEME.navy, textDecorationLine: 'underline' }]}>{selectedVendor.website}</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+
                 {(() => {
                   const mapping = selectedVendor ? resolveCredentialMapping(selectedVendor.category) : null;
                   if (selectedVendor && mapping && selectedVendor[mapping.field]) {
@@ -816,6 +826,11 @@ export default function HomeScreen() {
                   {selectedVendor?.rapidResponder && (
                     <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#26C6DA' }]}>
                       <Text style={[styles.verifiedText, { color: '#006064' }]}>⚡ RAPID RESPONDER</Text>
+                    </View>
+                  )}
+                  {selectedVendor?.cipcVerified && (
+                    <View style={[styles.verifiedBadge, { backgroundColor: '#E8F5E9', borderColor: '#4CAF50' }]}>
+                      <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>✅ CIPC VERIFIED</Text>
                     </View>
                   )}
                   <View style={styles.verifiedBadge}>

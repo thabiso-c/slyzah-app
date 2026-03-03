@@ -24,6 +24,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    Linking,
     View
 } from 'react-native';
 // Import the centralized auth instance
@@ -311,6 +312,16 @@ export default function LoginScreen() {
                             <Image source={require('../assets/facebook-logo.png')} style={styles.socialIcon} />
                             <Text style={styles.socialButtonText}>Sign in with Facebook</Text>
                         </TouchableOpacity>
+
+                        {/* Vendor Registration Link */}
+                        <TouchableOpacity
+                            style={styles.vendorLink}
+                            onPress={() => Linking.openURL("https://slyzah-web.vercel.app/select-plan")}
+                        >
+                            <Text style={styles.vendorLinkText}>
+                                Are you a Service Pro? <Text style={styles.vendorLinkHighlight}>Register Your Business</Text>
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -470,5 +481,19 @@ const styles = StyleSheet.create({
     },
     googleButtonText: {
         color: '#5f6368', // Google's standard text color
+    },
+    vendorLink: {
+        marginTop: 24,
+        alignItems: 'center',
+        paddingBottom: 20,
+    },
+    vendorLinkText: {
+        color: THEME.white,
+        fontSize: 12,
+        fontWeight: '700',
+    },
+    vendorLinkHighlight: {
+        color: THEME.gold,
+        textDecorationLine: 'underline',
     },
 });

@@ -535,7 +535,7 @@ export default function ResultsScreen() {
                         if (v.rapidResponder) score += 500;
 
                         // 3. Rating Tie-Breaker
-                        score += (v.rating || 0);
+                        if (!isPaid) score += (v.rating || 0);
 
                         return score;
                     };
@@ -703,15 +703,20 @@ export default function ResultsScreen() {
                             </TouchableOpacity>
                         )}
                     </View>
-                    <View style={{ flexDirection: 'row', gap: 5 }}>
+                    <View style={{ flexDirection: 'row', gap: 5, flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1 }}>
                         {item.rapidResponder && (
-                            <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#26C6DA' }]}>
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#80DEEA' }]}>
                                 <Text style={[styles.verifiedText, { color: '#006064' }]}>⚡ 15m RESPONSE</Text>
                             </View>
                         )}
+                        {item.cipcVerified && (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>✅ CIPC VERIFIED</Text>
+                            </View>
+                        )}
                         {isSponsored && (
-                            <View style={styles.verifiedBadge}>
-                                <Text style={styles.verifiedText}>✅ VERIFIED PRO</Text>
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#FFF9C4', borderColor: '#FFF176' }]}>
+                                <Text style={[styles.verifiedText, { color: '#F57F17' }]}>✅ VERIFIED PRO</Text>
                             </View>
                         )}
                     </View>
@@ -930,8 +935,16 @@ const styles = StyleSheet.create({
     description: { fontSize: 12, color: '#555', fontStyle: 'italic', marginBottom: 12, lineHeight: 18 },
     cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     reviewsLink: { fontSize: 12, fontWeight: '900', color: THEME.navy, textDecorationLine: 'underline' },
-    verifiedBadge: { flexDirection: 'row', alignItems: 'center' },
-    verifiedText: { fontSize: 9, fontWeight: '900', color: 'green' },
+    verifiedBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 6,
+        paddingVertical: 3,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#B2F5EA' // Default border color
+    },
+    verifiedText: { fontSize: 8, fontWeight: '900' }, // Default text style
 
     // Empty & Load More
     emptyContainer: { padding: 40, alignItems: 'center', borderStyle: 'dashed', borderWidth: 1, borderColor: '#ccc', borderRadius: 20 },
