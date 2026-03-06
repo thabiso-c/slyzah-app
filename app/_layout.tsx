@@ -307,6 +307,23 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        {/* Additional hidden screens to remove from drawer */}
+        <Drawer.Screen
+          name="api_client"
+          options={{ drawerItemStyle: { display: 'none' }, headerShown: false }}
+        />
+        <Drawer.Screen
+          name="secrets"
+          options={{ drawerItemStyle: { display: 'none' }, headerShown: false }}
+        />
+        <Drawer.Screen
+          name="services"
+          options={{ drawerItemStyle: { display: 'none' }, headerShown: false }}
+        />
+        <Drawer.Screen
+          name="service.examples"
+          options={{ drawerItemStyle: { display: 'none' }, headerShown: false }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );
