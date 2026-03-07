@@ -24,7 +24,18 @@ if (process.env.EAS_BUILD) {
         throw new Error("Build failed: Missing resendapikey in EAS secrets for this profile.");
     }
     if (!expopublicfirebaseapikey) {
-        throw new Error("Build failed: Missing expopublicfirebaseapikey in EAS secrets for this profile.");
+        throw new Error("Build failed: Missing a Firebase API key in EAS secrets for this profile.");
+    }
+    // Add checks for all other required Firebase keys
+    const requiredFirebaseKeys = [
+        'expopublicfirebaseauthdomain', 'expopublicfirebaseprojectid',
+        'expopublicfirebasestoragebucket', 'expopublicfirebasemessagingsenderid',
+        'expopublicfirebaseappid', 'expopublicfirebasemeasurementid'
+    ];
+    for (const key of requiredFirebaseKeys) {
+        if (!process.env[key]) {
+            throw new Error(`Build failed: Missing ${key} in EAS secrets for this profile.`);
+        }
     }
 }
 
