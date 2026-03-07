@@ -115,4 +115,3 @@ export const sendAwardEmail = async (to: string, vendorName: string, customerNam
         console.error('Award Email Error:', error);
     }
 };
-
