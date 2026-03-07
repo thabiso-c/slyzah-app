@@ -34,6 +34,7 @@ if (process.env.EAS_BUILD) {
     ];
     for (const key of requiredFirebaseKeys) {
         if (!process.env[key]) {
+            console.error(`❌ Missing secret: ${key}`);
             throw new Error(`Build failed: Missing ${key} in EAS secrets for this profile.`);
         }
     }
