@@ -34,10 +34,10 @@ if (GOOGLE_SERVICES_JSON) {
 if (GOOGLE_MAPS_API_KEY) {
     try {
         const content = `export const GOOGLE_MAPS_API_KEY = '${GOOGLE_MAPS_API_KEY}';`;
-        fs.writeFileSync(path.join(process.cwd(), 'app', 'secrets.ts'), content);
-        console.log('✅ Created app/secrets.ts');
+        fs.writeFileSync(path.join(process.cwd(), 'lib', 'secrets.ts'), content);
+        console.log('✅ Created lib/secrets.ts');
     } catch (error) {
-        console.error('❌ Error creating app/secrets.ts:', error);
+        console.error('❌ Error creating lib/secrets.ts:', error);
         process.exit(1);
     }
 }

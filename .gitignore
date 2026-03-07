@@ -41,7 +41,7 @@ app-example
 # generated native folders
 /ios
 /android
-app/secrets.ts
+lib/secrets.ts
 
 # Secrets
 google-services.json

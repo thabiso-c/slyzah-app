@@ -22,8 +22,8 @@ import {
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
-import { GOOGLE_MAPS_API_KEY } from './secrets';
-import { sendPushNotification, sendResendEmail } from './services';
+import { GOOGLE_MAPS_API_KEY } from '../lib/secrets';
+import { sendPushNotification, sendResendEmail } from '../lib/services';
 
 const { width } = Dimensions.get('window');
 
