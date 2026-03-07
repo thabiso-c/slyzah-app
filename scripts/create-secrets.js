@@ -3,6 +3,16 @@ const path = require('path');
 
 const { GOOGLE_SERVICES_JSON, GOOGLE_SERVICE_INFO_PLIST, GOOGLE_MAPS_API_KEY, RESEND_API_KEY } = process.env;
 
+// During an EAS build, all secrets must be present.
+if (process.env.EAS_BUILD) {
+    if (!GOOGLE_MAPS_API_KEY) {
+        throw new Error("Build failed: Missing GOOGLE_MAPS_API_KEY in EAS secrets for this profile.");
+    }
+    if (!RESEND_API_KEY) {
+        throw new Error("Build failed: Missing RESEND_API_KEY in EAS secrets for this profile.");
+    }
+}
+
 if (GOOGLE_SERVICES_JSON) {
     try {
         const decoded = Buffer.from(GOOGLE_SERVICES_JSON, 'base64').toString('utf8');

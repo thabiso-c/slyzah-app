@@ -18,6 +18,16 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+// Validate that all required environment variables are present
+const missingKeys = Object.entries(firebaseConfig).filter(([, value]) => !value);
+if (missingKeys.length > 0) {
+    const errorMessage = `Missing Firebase config keys: ${missingKeys.map(([key]) => key).join(', ')}. Please set them in your EAS secrets for the 'preview' profile.`;
+    // In a build environment, we must throw an error to fail the build clearly.
+    if (process.env.EAS_BUILD) {
+        throw new Error(errorMessage);
+    }
+}
+
 // 2. Initialize Firebase App
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
