@@ -605,6 +605,18 @@ export default function HomeScreen() {
     const finalCat = searchCat || category;
     if (!finalCat) return;
 
+    // Check if location is set before searching
+    if (!locationCity && !locationProvince) {
+      Alert.alert(
+        "Location Required",
+        "Please tap 'Detect Location' first to find professionals near you.",
+        [
+          { text: "OK" }
+        ]
+      );
+      return;
+    }
+
     // Navigate to Results
     router.push({
       pathname: "/results",

@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { addDoc, collection, doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -16,7 +16,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    findNodeHandle
 } from 'react-native';
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,6 +39,7 @@ export default function RequestQuoteForm() {
     const router = useRouter();
     const params = useLocalSearchParams();
     const insets = useSafeAreaInsets();
+    const scrollViewRef = useRef<ScrollView>(null);
 
     // Extract params safely
     const category = Array.isArray(params.category) ? params.category[0] : params.category || "";
@@ -61,6 +63,13 @@ export default function RequestQuoteForm() {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [urgency, setUrgency] = useState<'urgent' | 'standard' | 'comparing'>('standard');
 
+    const nameInputRef = useRef<TextInput>(null);
+    const phoneInputRef = useRef<TextInput>(null);
+    const emailInputRef = useRef<TextInput>(null);
+    const addressInputContainerRef = useRef<View>(null);
+    const townInputRef = useRef<TextInput>(null);
+    const issueInputRef = useRef<TextInput>(null);
+
     const [formData, setFormData] = useState({
         name: auth.currentUser?.displayName || "",
         phone: "",
@@ -69,6 +78,20 @@ export default function RequestQuoteForm() {
         address: "",
         town: userRegion
     });
+
+    const handleFocus = (ref: React.RefObject<View | TextInput | null>) => {
+        if (ref.current && scrollViewRef.current) {
+            const node = findNodeHandle(scrollViewRef.current);
+            if (node) {
+                ref.current.measureLayout(
+                    node,
+                    (x, y) => {
+                        scrollViewRef.current?.scrollTo({ y: y - 20, animated: true });
+                    }
+                );
+            }
+        }
+    };
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -233,7 +256,11 @@ export default function RequestQuoteForm() {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={{ flex: 1 }}
             >
-                <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+                <ScrollView
+                    ref={scrollViewRef}
+                    contentContainerStyle={styles.content}
+                    keyboardShouldPersistTaps="handled"
+                >
                     {/* Form Fields */}
                     <View style={styles.fieldContainer}>
                         <Text style={styles.label}>FULL NAME</Text>
@@ -243,6 +270,8 @@ export default function RequestQuoteForm() {
                             onChangeText={(t) => setFormData({ ...formData, name: t })}
                             placeholder="John Doe"
                             placeholderTextColor={THEME.placeholder}
+                            ref={nameInputRef}
+                            onFocus={() => handleFocus(nameInputRef)}
                         />
                     </View>
 
@@ -256,6 +285,8 @@ export default function RequestQuoteForm() {
                                 keyboardType="phone-pad"
                                 placeholder="082 123 4567"
                                 placeholderTextColor={THEME.placeholder}
+                                ref={phoneInputRef}
+                                onFocus={() => handleFocus(phoneInputRef)}
                             />
                         </View>
                         <View style={[styles.fieldContainer, { flex: 1 }]}>
@@ -268,11 +299,13 @@ export default function RequestQuoteForm() {
                                 autoCapitalize="none"
                                 placeholder="john@example.com"
                                 placeholderTextColor={THEME.placeholder}
+                                ref={emailInputRef}
+                                onFocus={() => handleFocus(emailInputRef)}
                             />
                         </View>
                     </View>
 
-                    <View style={[styles.fieldContainer, { zIndex: 100, elevation: 100 }]}>
+                    <View ref={addressInputContainerRef} style={[styles.fieldContainer, { zIndex: 100, elevation: 100 }]}>
                         <Text style={styles.label}>STREET ADDRESS</Text>
                         <GooglePlacesAutocomplete
                             placeholder='Search Address'
@@ -310,6 +343,7 @@ export default function RequestQuoteForm() {
                             }}
                             enablePoweredByContainer={false}
                             textInputProps={{
+                                onFocus: () => handleFocus(addressInputContainerRef),
                                 placeholderTextColor: THEME.placeholder,
                                 onChangeText: (text) => setFormData(prev => ({ ...prev, address: text })),
                                 returnKeyType: "search"
@@ -325,6 +359,8 @@ export default function RequestQuoteForm() {
                             onChangeText={(t) => setFormData({ ...formData, town: t })}
                             placeholder="Sandton"
                             placeholderTextColor={THEME.placeholder}
+                            ref={townInputRef}
+                            onFocus={() => handleFocus(townInputRef)}
                         />
                     </View>
 
@@ -378,6 +414,8 @@ export default function RequestQuoteForm() {
                             numberOfLines={4}
                             placeholder="Describe your issue..."
                             placeholderTextColor={THEME.placeholder}
+                            ref={issueInputRef}
+                            onFocus={() => handleFocus(issueInputRef)}
                         />
                     </View>
 
