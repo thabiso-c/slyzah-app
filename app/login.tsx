@@ -18,17 +18,18 @@ import {
     Dimensions,
     Image,
     KeyboardAvoidingView,
+    Linking,
     Platform,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    Linking,
     View
 } from 'react-native';
 // Import the centralized auth instance
 import { auth, db } from '../firebaseConfig';
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '../lib/secrets';
 
 // This is necessary for the auth session to work correctly on web and mobile.
 WebBrowser.maybeCompleteAuthSession();
@@ -59,9 +60,8 @@ export default function LoginScreen() {
 
     // Google Auth Hook
     const [request, response, promptAsync] = Google.useAuthRequest({
-        // Replace with your actual client IDs from Google Cloud Console
-        iosClientId: "YOUR_IOS_CLIENT_ID.apps.googleusercontent.com",
-        androidClientId: "YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com",
+        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
     });
 
     useEffect(() => {

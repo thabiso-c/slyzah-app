@@ -24,8 +24,8 @@ import {
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
-import { GOOGLE_MAPS_API_KEY } from './secrets';
-import { sendPushNotification, sendResendEmail } from './services';
+import { GOOGLE_MAPS_API_KEY } from '../lib/secrets';
+import { sendPushNotification, sendResendEmail } from '../lib/services';
 
 const { width, height } = Dimensions.get('window');
 
@@ -486,22 +486,46 @@ export default function ResultsScreen() {
             if (!category) return;
             setLoading(true);
             console.log(`🔍 Searching for: "${category}" in Region: "${userRegion}", Province: "${userProvince}"`);
+
+            // Early exit if no location is provided. This prevents an unnecessary broad query
+            // that might fail due to Firestore security rules if location is required for access.
+            if (!userRegion && !userProvince) {
+                console.log("No user location provided for matching. Aborting search.");
+                setVendors([]);
+                setSearchStatus("none");
+                setLoading(false);
+                return;
+            }
+
             try {
                 const searchKeywords = category.toLowerCase().split(" ").map(word =>
                     word.replace(/(ing|er|ers|s)$/, "").trim()
                 ).filter(word => word.length > 2);
 
-                // Optimization: Limit to 100 to prevent reading entire DB
-                const q = query(collection(db, "professionals"), limit(100));
-                const querySnapshot = await getDocs(q);
-                let allVendorsFromDb = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+                // This is much more efficient and secure than fetching all and filtering on the client.
+                // This will require creating composite indexes in Firestore.
+                const professionalsRef = collection(db, "professionals");
+                let q;
 
-                // 1. Filter by Keyword
-                let matchedVendors = allVendorsFromDb.filter(vendor => {
-                    const vendorCat = (vendor.category || "").toLowerCase();
-                    const vendorDesc = (vendor.fullCategoryDescription || "").toLowerCase();
-                    return searchKeywords.some(keyword => vendorCat.includes(keyword) || vendorDesc.includes(keyword));
-                });
+                const clean = (str: any) => String(str || "").toLowerCase().trim();
+                const uReg = clean(userRegion);
+                const uProv = clean(userProvince);
+
+                // Build a query based on available location data and keywords.
+                // Note: Firestore's `array-contains-any` is limited to 10 values.
+                const queryKeywords = searchKeywords.slice(0, 10);
+
+                if (uReg && queryKeywords.length > 0) {
+                    q = query(professionalsRef, where("regions", "array-contains", uReg), where("keywords", "array-contains-any", queryKeywords), limit(50));
+                } else if (uProv && queryKeywords.length > 0) {
+                    q = query(professionalsRef, where("province", "==", uProv), where("keywords", "array-contains-any", queryKeywords), limit(50));
+                } else {
+                    // Fallback or broader search if needed, but the initial check should prevent this.
+                    q = query(professionalsRef, where("keywords", "array-contains-any", queryKeywords), limit(50));
+                }
+
+                const querySnapshot = await getDocs(q);
+                let matchedVendors = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
 
                 const processAndSort = (vendorList: any[]) => {
                     const clean = (str: any) => String(str || "").toLowerCase().trim();
@@ -550,18 +574,6 @@ export default function ResultsScreen() {
                 };
 
                 // 2. Geo-Location Filtering & Prioritization
-                const clean = (str: any) => String(str || "").toLowerCase().trim();
-                const uReg = clean(userRegion);
-                const uProv = clean(userProvince);
-
-                // STRICT: No matching without geo-location
-                if (!uReg && !uProv) {
-                    console.log("No user location provided for matching.");
-                    setVendors([]);
-                    setSearchStatus("none");
-                    setLoading(false);
-                    return;
-                }
 
                 // A. Exact Region Matches (Priority)
                 const regionMatches = matchedVendors.filter(v => {
@@ -630,6 +642,7 @@ export default function ResultsScreen() {
         const isSponsored = ["One Region", "Three Regions", "Provincial", "Multi-Province"].includes(item.tier);
         const isSelected = selectedForQuote.includes(item.id);
         const credentialInfo = resolveCredentialMapping(item.category);
+        const additionalCerts = Array.isArray(item.additionalCertifications) ? item.additionalCertifications : [];
 
         return (
             <TouchableOpacity
@@ -714,6 +727,11 @@ export default function ResultsScreen() {
                                 <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>✅ CIPC VERIFIED</Text>
                             </View>
                         )}
+                        {additionalCerts.map((cert: any, index: number) => (
+                            <View key={`cert-${index}`} style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>📜 {cert.name}</Text>
+                            </View>
+                        ))}
                         {isSponsored && (
                             <View style={[styles.verifiedBadge, { backgroundColor: '#FFF9C4', borderColor: '#FFF176' }]}>
                                 <Text style={[styles.verifiedText, { color: '#F57F17' }]}>✅ VERIFIED PRO</Text>
