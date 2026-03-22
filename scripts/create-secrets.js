@@ -11,21 +11,23 @@ if (fs.existsSync(path.join(process.cwd(), '.env'))) {
     }
 }
 
-const {
-    GOOGLE_SERVICES_JSON,
-    GOOGLE_SERVICE_INFO_PLIST,
-    googlemapsapikey,
-    resendapikey,
-    googleiosclientid,
-    googleandroidclientid,
-    expopublicfirebaseapikey,
-    expopublicfirebaseauthdomain,
-    expopublicfirebaseprojectid,
-    expopublicfirebasestoragebucket,
-    expopublicfirebasemessagingsenderid,
-    expopublicfirebaseappid,
-    expopublicfirebasemeasurementid
-} = process.env;
+// Map UPPERCASE environment variables (from EAS/Expo) to internal variables
+const GOOGLE_SERVICES_JSON = process.env.GOOGLE_SERVICES_JSON;
+const GOOGLE_SERVICE_INFO_PLIST = process.env.GOOGLE_SERVICE_INFO_PLIST;
+
+const googlemapsapikey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.googlemapsapikey;
+const resendapikey = process.env.EXPO_RESEND_API_KEY || process.env.resendapikey;
+const googleiosclientid = process.env.GOOGLE_IOS_CLIENT_ID || process.env.googleiosclientid;
+const googleandroidclientid = process.env.GOOGLE_ANDROID_CLIENT_ID || process.env.googleandroidclientid;
+
+// Firebase Variables
+const expopublicfirebaseapikey = process.env.EXPO_PUBLIC_FIREBASE_API_KEY || process.env.expopublicfirebaseapikey;
+const expopublicfirebaseauthdomain = process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || process.env.expopublicfirebaseauthdomain;
+const expopublicfirebaseprojectid = process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || process.env.expopublicfirebaseprojectid;
+const expopublicfirebasestoragebucket = process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || process.env.expopublicfirebasestoragebucket;
+const expopublicfirebasemessagingsenderid = process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || process.env.expopublicfirebasemessagingsenderid;
+const expopublicfirebaseappid = process.env.EXPO_PUBLIC_FIREBASE_APP_ID || process.env.expopublicfirebaseappid;
+const expopublicfirebasemeasurementid = process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID || process.env.expopublicfirebasemeasurementid;
 
 // During an EAS build, all secrets must be present.
 if (process.env.EAS_BUILD) {
@@ -44,18 +46,13 @@ if (process.env.EAS_BUILD) {
     if (!expopublicfirebaseapikey) {
         throw new Error("Build failed: Missing a Firebase API key in EAS secrets for this profile.");
     }
-    // Add checks for all other required Firebase keys
-    const requiredFirebaseKeys = [
-        'expopublicfirebaseauthdomain', 'expopublicfirebaseprojectid',
-        'expopublicfirebasestoragebucket', 'expopublicfirebasemessagingsenderid',
-        'expopublicfirebaseappid', 'expopublicfirebasemeasurementid'
-    ];
-    for (const key of requiredFirebaseKeys) {
-        if (!process.env[key]) {
-            console.error(`❌ Missing secret: ${key}`);
-            throw new Error(`Build failed: Missing ${key} in EAS secrets for this profile.`);
-        }
-    }
+
+    // Validate other Firebase keys
+    if (!expopublicfirebaseauthdomain) throw new Error("Missing EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN");
+    if (!expopublicfirebaseprojectid) throw new Error("Missing EXPO_PUBLIC_FIREBASE_PROJECT_ID");
+    if (!expopublicfirebasestoragebucket) throw new Error("Missing EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET");
+    if (!expopublicfirebasemessagingsenderid) throw new Error("Missing EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID");
+    if (!expopublicfirebaseappid) throw new Error("Missing EXPO_PUBLIC_FIREBASE_APP_ID");
 }
 
 if (GOOGLE_SERVICES_JSON) {
