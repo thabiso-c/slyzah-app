@@ -1,6 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
+// Attempt to load .env for local development security
+// This ensures secrets are loaded from .env instead of being hardcoded
+if (fs.existsSync(path.join(process.cwd(), '.env'))) {
+    try {
+        require('dotenv').config();
+    } catch (error) {
+        // dotenv might not be installed, proceed without it
+    }
+}
+
 const {
     GOOGLE_SERVICES_JSON,
     GOOGLE_SERVICE_INFO_PLIST,
