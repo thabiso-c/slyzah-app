@@ -31,6 +31,14 @@ const expopublicfirebasemeasurementid = process.env.EXPO_PUBLIC_FIREBASE_MEASURE
 
 // During an EAS build, all secrets must be present.
 if (process.env.EAS_BUILD) {
+    // Ensure native config files are present for the specific platform
+    if (process.env.EAS_BUILD_PLATFORM === 'android' && !GOOGLE_SERVICES_JSON) {
+        throw new Error("Build failed: Missing GOOGLE_SERVICES_JSON in EAS secrets for Android build.");
+    }
+    if (process.env.EAS_BUILD_PLATFORM === 'ios' && !GOOGLE_SERVICE_INFO_PLIST) {
+        throw new Error("Build failed: Missing GOOGLE_SERVICE_INFO_PLIST in EAS secrets for iOS build.");
+    }
+
     if (!googlemapsapikey) {
         throw new Error("Build failed: Missing googlemapsapikey in EAS secrets for this profile.");
     }
