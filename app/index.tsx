@@ -834,6 +834,19 @@ export default function HomeScreen() {
                   return null;
                 })()}
 
+                {selectedVendor?.additionalCertifications && Array.isArray(selectedVendor.additionalCertifications) && selectedVendor.additionalCertifications.length > 0 && (
+                  <View style={{ marginTop: 15 }}>
+                    <Text style={styles.modalSectionTitle}>Additional Certifications</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                      {selectedVendor.additionalCertifications.map((cert: any, index: number) => (
+                        <View key={index} style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                          <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>📜 {cert.name}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+
                 <View style={styles.modalBadges}>
                   {selectedVendor?.rapidResponder && (
                     <View style={[styles.verifiedBadge, { backgroundColor: '#E0F7FA', borderColor: '#26C6DA' }]}>

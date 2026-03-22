@@ -128,6 +128,10 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
     const [urgency, setUrgency] = useState<'urgent' | 'standard' | 'comparing'>('standard');
     const router = useRouter();
 
+    if (!GOOGLE_MAPS_API_KEY) {
+        console.error("CRITICAL: GOOGLE_MAPS_API_KEY is missing in lib/secrets.ts");
+    }
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -760,11 +764,13 @@ export default function ResultsScreen() {
             <View style={styles.subHeader}>
                 <Text style={styles.instructionText}>Select up to 4 to receive private quotes</Text>
                 {searchStatus === "global" && (
-                    <View style={styles.globalBadge}>
-                        <Text style={styles.globalBadgeText}>Showing nearby matches</Text>
+                    <View style={styles.warningContainer}>
+                        <Text style={styles.warningText}>
+                            We could not find matching vendors in {userRegion || "your region"}. Showing professionals from nearby areas in {userProvince || "your province"}.
+                        </Text>
                     </View>
                 )}
-                {(userRegion || userProvince) ? (
+                {(userRegion || userProvince) && searchStatus !== "global" ? (
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                         <Text style={{ color: THEME.gold, fontSize: 10, marginRight: 4 }}>📍</Text>
                         <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#666', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -893,8 +899,19 @@ const styles = StyleSheet.create({
     headerSubtitle: { color: THEME.gold, fontSize: 12, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },
     subHeader: { padding: 16, paddingBottom: 0 },
     instructionText: { fontSize: 10, fontWeight: 'bold', color: '#666', textTransform: 'uppercase', letterSpacing: 1 },
-    globalBadge: { backgroundColor: THEME.navy, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10, alignSelf: 'flex-start', marginTop: 8 },
-    globalBadgeText: { color: THEME.white, fontSize: 9, fontWeight: '900', textTransform: 'uppercase' },
+    warningContainer: {
+        backgroundColor: '#FFF3E0',
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: '#FFE0B2'
+    },
+    warningText: {
+        color: '#E65100',
+        fontSize: 11,
+        fontWeight: 'bold',
+    },
     center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     listContent: { padding: 16, paddingBottom: 100 },
 

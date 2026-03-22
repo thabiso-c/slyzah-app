@@ -58,6 +58,10 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
     const [initializing, setInitializing] = useState(true);
 
+    if (!GOOGLE_IOS_CLIENT_ID || !GOOGLE_ANDROID_CLIENT_ID) {
+        console.warn("Google Client IDs are missing in lib/secrets.ts. Social login will fail.");
+    }
+
     // Google Auth Hook
     const [request, response, promptAsync] = Google.useAuthRequest({
         iosClientId: GOOGLE_IOS_CLIENT_ID,
