@@ -69,10 +69,11 @@ export const sendPushNotification = async (expoPushToken: string, title: string,
             },
             body: JSON.stringify({
                 to: expoPushToken,
-                sound: 'default',
+                sound: 'slyzah_alert.mp3',
                 title: title,
                 body: body,
                 data: data,
+                channelId: 'slyzah_alert',
             }),
         });
     } catch (error) {

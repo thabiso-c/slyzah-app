@@ -120,8 +120,10 @@ export default function UserDashboard() {
                                     content: {
                                         title: `New Message from ${data.vendorName || 'Pro'}`,
                                         body: data.lastMessage,
-                                        sound: 'default',
+                                        sound: 'slyzah_alert.mp3',
                                         data: { chatId: data.id },
+                                        // @ts-ignore: channelId is supported on Android
+                                        channelId: 'slyzah_alert',
                                     },
                                     trigger: null,
                                 });
