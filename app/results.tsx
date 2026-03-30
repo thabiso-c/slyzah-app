@@ -221,7 +221,8 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                                 docRef.id,
                                 vendorId,
                                 imageUrl,
-                                urgency
+                                urgency,
+                                "thabilet@slyza.co.za" // Pass the custom reply-to address
                             );
                         }
 
