@@ -5,21 +5,21 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
         // Corrected Vercel link based on user feedback
         const webReplyLink = `https://slyzah-web.vercel.app/submit-quote?leadId=${leadId}&vendorId=${vendorId}`;
 
-            await fetch('https://api.resend.com/emails', {
-                method: 'POST',
+        await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'Slyzah Official <noreply@slyzah.co.za>',
+                to: [to], // Ensure 'to' is an array
+                reply_to: replyTo,
+                subject: `🚨 [Job Alert] New Request: ${category}`,
                 headers: {
-                    'Authorization': `Bearer ${RESEND_API_KEY}`,
-                    'Content-Type': 'application/json'
+                    "X-Entity-Ref-ID": leadId,
                 },
-                body: JSON.stringify({
-                    from: 'Slyzah Official <noreply@slyzah.co.za>',
-                    to: [to], // Ensure 'to' is an array
-                    reply_to: replyTo,
-                    subject: `🚨 [Job Alert] New Request: ${category}`,
-                    headers: {
-                        "X-Entity-Ref-ID": leadId,
-                    },
-                    html: `
+                html: `
                     <div style="background-color: #f4f7f9; padding: 40px 0; font-family: sans-serif;">
                       <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                         <tr><td style="background-color: #001f3f; padding: 12px; text-align: center;"><span style="color: #ffffff; font-size: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">Slyzah Official</span></td></tr>
@@ -32,9 +32,9 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
                                 <table width="100%" style="font-size: 14px; line-height: 1.8;">
                                     <tr><td width="35%" style="font-weight: bold;">Urgency:</td><td style="font-weight: bold; color: ${urgency === 'urgent' ? '#D32F2F' : urgency === 'standard' ? '#388E3C' : '#666'};">
                                         ${urgency === 'urgent' ? 'Need service urgently' :
-                            urgency === 'standard' ? 'Service not needed urgently' :
-                                'Just comparing quotes'
-                        }
+                        urgency === 'standard' ? 'Service not needed urgently' :
+                            'Just comparing quotes'
+                    }
                                     </td></tr>
                                     <tr><td width="35%" style="font-weight: bold;">Location:</td><td>${address}</td></tr>
                                     <tr><td style="font-weight: bold;">Area:</td><td>${town}</td></tr>
@@ -51,51 +51,51 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
                       </table>
                     </div>
                 `
-                })
-            });
-            console.log('Resend email sent successfully');
-        } catch (error) {
-            console.error('Resend Error:', error);
-        }
-    };
+            })
+        });
+        console.log('Resend email sent successfully');
+    } catch (error) {
+        console.error('Resend Error:', error);
+    }
+};
 
-    export const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
-        try {
-            await fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Accept-encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    to: expoPushToken,
-                    sound: 'slyzah_alert.mp3',
-                    title: title,
-                    body: body,
-                    data: data,
-                    channelId: 'slyzah_alert',
-                }),
-            });
-        } catch (error) {
-            console.error("Error sending push:", error);
-        }
-    };
+export const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
+    try {
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: expoPushToken,
+                sound: 'slyzah_alert.mp3',
+                title: title,
+                body: body,
+                data: data,
+                channelId: 'slyzah_alert',
+            }),
+        });
+    } catch (error) {
+        console.error("Error sending push:", error);
+    }
+};
 
-    export const sendAwardEmail = async (to: string, vendorName: string, customerName: string, customerPhone: string, customerEmail: string, address: string, category: string) => {
-        try {
-            console.log(`Sending award email to ${to} via Resend...`);
-            await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${RESEND_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    from: 'Slyzah <noreply@slyzah.co.za>',
-                    to: [to],
-                    subject: `You Won! New Job: ${category}`,
-                    html: `
+export const sendAwardEmail = async (to: string, vendorName: string, customerName: string, customerPhone: string, customerEmail: string, address: string, category: string) => {
+    try {
+        console.log(`Sending award email to ${to} via Resend...`);
+        await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'Slyzah <noreply@slyzah.co.za>',
+                to: [to],
+                subject: `You Won! New Job: ${category}`,
+                html: `
                     <div style="font-family: sans-serif; color: #001f3f; padding: 20px;">
                         <h2 style="color: #FFD700;">Congratulations ${vendorName}!</h2>
                         <p><strong>${customerName}</strong> has selected your quote for the <strong>${category}</strong> job.</p>
@@ -111,26 +111,26 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
                         <p>Please contact the customer immediately to arrange the service.</p>
                     </div>
                 `
-                })
-            });
-        } catch (error) {
-            console.error('Award Email Error:', error);
-        }
-    };
+            })
+        });
+    } catch (error) {
+        console.error('Award Email Error:', error);
+    }
+};
 
-    export const sendBetaInviteEmail = async (to: string, vendorName: string) => {
-        try {
-            await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${RESEND_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    from: 'Thabiso Letsoko | Slyzah <thabiso@slyzah.co.za>',
-                    to: [to],
-                    subject: 'Stop Chasing Cold Leads. Start Closing with Slyzah. 🇿🇦',
-                    html: `
+export const sendBetaInviteEmail = async (to: string, vendorName: string) => {
+    try {
+        await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'Thabiso Letsoko | Slyzah <thabiso@slyzah.co.za>',
+                to: [to],
+                subject: 'StopYour Business on the Go with Slyzah Pro 🇿🇦',
+                html: `
                     <div style="background-color: #f4f7f9; padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,31,63,0.1);">
                             <!-- Header -->
@@ -145,62 +145,38 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
                             <tr>
                                 <td style="padding: 40px;">
                                     <h2 style="color: #001f3f; font-size: 22px; margin-top: 0; font-weight: 900;">Hi ${vendorName},</h2>
-                                    <p style="font-size: 16px; line-height: 1.6; color: #555;">
-                                        Most platforms charge you to "maybe" get a job. At <strong>Slyzah</strong>, we’ve built a system that ensures you spend less time on paperwork and more time on-site.
+                                    <p style="font-size: 16px; line-height: 1.7; color: #555;">
+                                        Most platforms charge you to "maybe" get a job. At <strong>Slyzah Pro</strong>, we’ve built a system that lets you run your business on the go, effectively becoming a <strong>one-man band</strong>.
                                     </p>
                                     
-                                    <p style="font-size: 16px; line-height: 1.6; color: #555;">
-                                        I’m Thabiso Letsoko, founder of Slyzah. We are launching in September, and we are onboarding a select group of <strong>"Founding Pros"</strong> to our live website before the mobile apps go live.
-                                    </p>
-                                    <p style="font-size: 16px; line-height: 1.6; color: #555;">
-                                        As a Founding Pro, you can start on our <strong>Free Basic Tier</strong> or test our <strong>One Region Tier</strong> for 30 days at no cost.
-                                    </p>
-
-                                    <h3 style="color: #001f3f; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 30px;">Why Slyzah works for your business:</h3>
-                                    <ul style="padding-left: 20px; color: #555; font-size: 15px; line-height: 2;">
-                                        <li><strong>No More Manual Quotes:</strong> Our Quick-Link tool generates professional quotes for you instantly.</li>
-                                        <li><strong>Urgency Indicators:</strong> Know immediately if it's a burst geyser emergency or just a price comparison.</li>
-                                        <li><strong>Smart Matching:</strong> We match you to customers based on your <strong>Specific Suburb</strong>.</li>
+                                    <h3 style="color: #001f3f; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 30px;">Benefits of Slyzah Pro:</h3>
+                                    <ul style="padding-left: 20px; color: #555; font-size: 15px; line-height: 1.8;">
+                                        <li><strong>Zero Lead Fees:</strong> You do not pay for leads.</li>
+                                        <li><strong>Inbound Power:</strong> No chasing leads, leads come to you.</li>
+                                        <li><strong>Targeted Reach:</strong> All leads are in your chosen regions of service.</li>
+                                        <li><strong>Urgency Indicators:</strong> See if it's urgent, standard, or just a comparison.</li>
+                                        <li><strong>Instant Quoting:</strong> Generate professional quotations on the app.</li>
+                                        <li><strong>Hired Alerts:</strong> Get notified immediately on the app if you have been hired.</li>
+                                        <li><strong>Secure Chat:</strong> Communicate with clients directly inside the app.</li>
+                                        <li><strong>Verified Reviews:</strong> Get rated and reviewed for your service for others to see.</li>
                                     </ul>
 
-                                    <!-- Pricing Table -->
-                                    <div style="margin: 35px 0; border: 1px solid #eee; border-radius: 12px; overflow: hidden;">
-                                        <table width="100%" cellpadding="12" cellspacing="0" style="font-size: 14px; text-align: left;">
-                                            <tr style="background-color: #001f3f; color: #FFD700;">
-                                                <th style="font-weight: 900; text-transform: uppercase;">Plan</th>
-                                                <th style="font-weight: 900; text-transform: uppercase;">Benefits</th>
-                                                <th style="font-weight: 900; text-transform: uppercase;">Price</th>
-                                            </tr>
-                                            <tr>
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">Basic</td>
-                                                <td style="border-bottom: 1px solid #eee; color: #777;">Standard Listing</td>
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">Free</td>
-                                            </tr>
-                                            <tr style="background-color: #fff9e6;">
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">One Region</td>
-                                                <td style="border-bottom: 1px solid #eee; color: #777;">Priority + Verified Badge</td>
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">R199/mo</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">Provincial</td>
-                                                <td style="border-bottom: 1px solid #eee; color: #777;">Featured Pro Status</td>
-                                                <td style="border-bottom: 1px solid #eee; font-weight: bold;">R599/mo</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight: bold;">National</td>
-                                                <td style="color: #777;">National Partner Status</td>
-                                                <td style="font-weight: bold;">R1499/mo</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                    <div style="background-color: #001f3f; color: #ffffff; padding: 25px; border-radius: 12px; text-align: center;">
-                                        <h4 style="margin: 0 0 10px 0; color: #FFD700; text-transform: uppercase;">Founding Member Perk</h4>
-                                        <p style="margin: 0; font-size: 14px;">Sign up today and get a <strong>Verified Pro Badge</strong> (and 3 months of premium verification) absolutely <strong>FREE</strong>.</p>
+                                    <div style="background-color: #001f3f; color: #ffffff; padding: 30px; border-radius: 16px; margin-top: 35px;">
+                                        <h3 style="color: #FFD700; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 0;">Tailored Subscriptions:</h3>
+                                        <p style="font-size: 14px; color: #ccc; margin-bottom: 20px;">Gain a massive advantage over your competitors:</p>
+                                        <ul style="padding-left: 20px; color: #fff; font-size: 13px; line-height: 1.8;">
+                                            <li>Get a <strong>“Sponsored Tag”</strong> for instant trust.</li>
+                                            <li><strong>Priority Recommendations</strong> in customer searches.</li>
+                                            <li>Expand your reach to multiple regions and provinces.</li>
+                                            <li>Be the first to be seen in your chosen service areas.</li>
+                                            <li><strong>Data Insights:</strong> See what is working and what is not.</li>
+                                            <li><strong>Growth Analytics:</strong> Identify new areas of growth and opportunity.</li>
+                                            <li><strong>Customer Intelligence:</strong> Know exactly what customers have to say.</li>
+                                        </ul>
                                     </div>
 
                                     <div style="text-align: center; margin-top: 40px;">
-                                        <a href="https://slyzah.co.za/register" style="background-color: #FFD700; color: #001f3f; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">Claim Your Spot</a>
+                                        <a href="https://slyzah.co.za/register" style="background-color: #FFD700; color: #001f3f; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">Join Slyzah Pro</a>
                                     </div>
                                 </td>
                             </tr>
@@ -223,10 +199,10 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
                         </div>
                     </div>
                 `
-                })
-            });
-            console.log('Beta Invite email sent successfully to:', to);
-        } catch (error) {
-            console.error('Beta Invite Email Error:', error);
-        }
-    };
+            })
+        });
+        console.log('Beta Invite email sent successfully to:', to);
+    } catch (error) {
+        console.error('Beta Invite Email Error:', error);
+    }
+};
