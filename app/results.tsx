@@ -146,9 +146,13 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
     };
 
     const handleSubmit = async () => {
-        console.log("Starting handleSubmit in RequestQuoteModal (results.tsx)");
-        if (!formData.name || !formData.phone || !formData.issue) {
-            Alert.alert("Missing Fields", "Please fill in your name, phone, and issue.");
+        // Strict Server-Side Style Validation on Mobile
+        const { name, phone, issue, address, town } = formData;
+        const cleanName = name?.trim();
+        const cleanPhone = phone?.trim();
+
+        if (!cleanName || !cleanPhone || !issue?.trim() || !address?.trim()) {
+            Alert.alert("Input Error", "Please verify all required fields are filled correctly.");
             return;
         }
 

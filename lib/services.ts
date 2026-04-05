@@ -129,74 +129,91 @@ export const sendBetaInviteEmail = async (to: string, vendorName: string) => {
             body: JSON.stringify({
                 from: 'Thabiso Letsoko | Slyzah <thabiso@slyzah.co.za>',
                 to: [to],
-                subject: 'StopYour Business on the Go with Slyzah Pro 🇿🇦',
+                subject: 'Run Your Business on the Go with Slyzah Pro 🇿🇦',
                 html: `
-                    <div style="background-color: #f4f7f9; padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,31,63,0.1);">
-                            <!-- Header -->
+                    <div style="margin: 0; padding: 0; background-color: #f4f7f9; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f7f9;">
                             <tr>
-                                <td style="background-color: #001f3f; padding: 30px; text-align: center;">
-                                    <img src="https://slyzah.co.za/logo6.png" width="60" height="60" alt="Slyzah Logo" style="margin-bottom: 10px;">
-                                    <h1 style="color: #FFD700; margin: 0; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; font-weight: 900;">SLYZAH</h1>
-                                </td>
-                            </tr>
-                            
-                            <!-- Body -->
-                            <tr>
-                                <td style="padding: 40px;">
-                                    <h2 style="color: #001f3f; font-size: 22px; margin-top: 0; font-weight: 900;">Hi ${vendorName},</h2>
-                                    <p style="font-size: 16px; line-height: 1.7; color: #555;">
-                                        Most platforms charge you to "maybe" get a job. At <strong>Slyzah Pro</strong>, we’ve built a system that lets you run your business on the go, effectively becoming a <strong>one-man band</strong>.
-                                    </p>
-                                    
-                                    <h3 style="color: #001f3f; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 30px;">Benefits of Slyzah Pro:</h3>
-                                    <ul style="padding-left: 20px; color: #555; font-size: 15px; line-height: 1.8;">
-                                        <li><strong>Zero Lead Fees:</strong> You do not pay for leads.</li>
-                                        <li><strong>Inbound Power:</strong> No chasing leads, leads come to you.</li>
-                                        <li><strong>Targeted Reach:</strong> All leads are in your chosen regions of service.</li>
-                                        <li><strong>Urgency Indicators:</strong> See if it's urgent, standard, or just a comparison.</li>
-                                        <li><strong>Instant Quoting:</strong> Generate professional quotations on the app.</li>
-                                        <li><strong>Hired Alerts:</strong> Get notified immediately on the app if you have been hired.</li>
-                                        <li><strong>Secure Chat:</strong> Communicate with clients directly inside the app.</li>
-                                        <li><strong>Verified Reviews:</strong> Get rated and reviewed for your service for others to see.</li>
-                                    </ul>
+                                <td align="center" style="padding: 20px 0;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="width: 600px; max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,31,63,0.1);">
+                                        
+                                        <!-- Header Logo -->
+                                        <tr>
+                                            <td align="center" bgcolor="#001C3D" style="padding: 30px 0 20px 0;">
+                                                <img src="https://slyzah.co.za/logo-full-navygold.png" width="220" alt="Slyzah Pro Logo" style="display: block; border: 0; outline: none; text-decoration: none;">
+                                            </td>
+                                        </tr>
 
-                                    <div style="background-color: #001f3f; color: #ffffff; padding: 30px; border-radius: 16px; margin-top: 35px;">
-                                        <h3 style="color: #FFD700; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-top: 0;">Tailored Subscriptions:</h3>
-                                        <p style="font-size: 14px; color: #ccc; margin-bottom: 20px;">Gain a massive advantage over your competitors:</p>
-                                        <ul style="padding-left: 20px; color: #fff; font-size: 13px; line-height: 1.8;">
-                                            <li>Get a <strong>“Sponsored Tag”</strong> for instant trust.</li>
-                                            <li><strong>Priority Recommendations</strong> in customer searches.</li>
-                                            <li>Expand your reach to multiple regions and provinces.</li>
-                                            <li>Be the first to be seen in your chosen service areas.</li>
-                                            <li><strong>Data Insights:</strong> See what is working and what is not.</li>
-                                            <li><strong>Growth Analytics:</strong> Identify new areas of growth and opportunity.</li>
-                                            <li><strong>Customer Intelligence:</strong> Know exactly what customers have to say.</li>
-                                        </ul>
-                                    </div>
+                                        <!-- Beta Ribbon -->
+                                        <tr>
+                                            <td align="center" bgcolor="#001C3D" style="padding-bottom: 0;">
+                                                <img src="https://slyzah.co.za/tag-beta-invitation.png" width="600" alt="Beta Invitation" style="display: block; width: 100%; height: auto; border: 0;">
+                                            </td>
+                                        </tr>
 
-                                    <div style="text-align: center; margin-top: 40px;">
-                                        <a href="https://slyzah.co.za/register" style="background-color: #FFD700; color: #001f3f; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">Join Slyzah Pro</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- Footer -->
-                            <tr>
-                                <td style="padding: 30px; text-align: center; border-top: 1px solid #eee;">
-                                    <p style="margin: 0; color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">
-                                        Let’s stop the quote-chasing.
-                                    </p>
-                                    <p style="margin: 10px 0 0 0; color: #001f3f; font-size: 14px; font-weight: 900;">
-                                        Thabiso Letsoko
-                                    </p>
-                                    <p style="margin: 0; color: #999; font-size: 12px;">Founder, Slyzah South Africa 🇿🇦</p>
+                                        <!-- Hero Section -->
+                                        <tr>
+                                            <td align="center">
+                                                <img src="https://slyzah.co.za/hero-plumber-go.jpg" width="600" alt="Empower Your Business" style="display: block; width: 100%; height: auto; border: 0;">
+                                            </td>
+                                        </tr>
+
+                                        <!-- Body Content -->
+                                        <tr>
+                                            <td style="padding: 40px 30px 20px;">
+                                                <h2 style="color: #001f3f; font-size: 22px; margin-top: 0; font-weight: 900;">Hi ${vendorName},</h2>
+                                                <p style="font-size: 16px; line-height: 1.7; color: #4b5563;">
+                                                    Most platforms charge you to "maybe" get a job. At <strong>Slyzah Pro</strong>, we’ve built a system that lets you run your business on the go, effectively becoming a <strong>one-man band</strong>.
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Benefits Section -->
+                                        <tr>
+                                            <td style="padding: 0 30px;">
+                                                <h3 style="color: #001f3f; font-size: 16px; font-weight: 900; text-transform: uppercase; margin: 10px 0 15px 0; letter-spacing: 1px;">Benefits of Slyzah Pro</h3>
+                                                <ul style="padding-left: 20px; color: #4b5563; font-size: 15px; line-height: 1.8; margin: 0;">
+                                                    <li>You do not pay for leads.</li>
+                                                    <li>No chasing leads, leads come to you.</li>
+                                                    <li>All leads are in your chosen regions of service.</li>
+                                                    <li>All leads have an urgency indicator (urgent, not urgent and just comparing).</li>
+                                                    <li>Generate quotations on the app.</li>
+                                                    <li>Get notified on app if you have been hired.</li>
+                                                    <li>Chat with clients inside the app.</li>
+                                                    <li>Get rated and reviewed for your service for others to see.</li>
+                                                </ul>
+
+                                                <!-- Subscriptions Section -->
+                                                <div style="background-color: #001C3D; padding: 30px; border-radius: 20px; margin-top: 35px; border: 1px solid #BF953F;">
+                                                    <h3 style="color: #FFD700; font-size: 15px; font-weight: 900; text-transform: uppercase; margin-top: 0; line-height: 1.4; letter-spacing: 0.5px;">Gain extra competitive advantage over your competitors with our tailored subscriptions</h3>
+                                                    <ul style="padding-left: 20px; color: #ffffff; font-size: 14px; line-height: 1.8; margin: 15px 0 0 0;">
+                                                        <li>Get a “sponsored tag”</li>
+                                                        <li>Priority recommendation.</li>
+                                                        <li>Expand to multiple regions and provinces.</li>
+                                                        <li>Be the first to be seen in your chosen service regions and provinces.</li>
+                                                        <li>Get data insights on what is working and what is not.</li>
+                                                        <li>Get data insights on areas of growth.</li>
+                                                        <li>Get data insights on areas of that need attention.</li>
+                                                        <li>Get data insight on what customers have to say.</li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- CTA Section -->
+                                        <tr>
+                                            <td style="padding: 40px 30px; text-align: center; background-color: #ffffff;">
+                                                <a href="https://slyzah.co.za/register" style="background-color: #BF953F; color: #ffffff; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; box-shadow: 0 4px 15px rgba(191, 149, 63, 0.3);">CLAIM YOUR PRO PROFILE</a>
+                                                <p style="font-size: 12px; color: #9ca3af; margin-top: 20px;">Free during Beta. Limited spots available in your region.</p>
+                                                <hr style="border: 0; border-top: 1px solid #f3f4f6; margin: 30px 0;" />
+                                                <p style="margin: 0; font-weight: 900; color: #001f3f; font-size: 14px;">Thabiso Letsoko</p>
+                                                <p style="margin: 5px 0 0 0; font-size: 12px; color: #6b7280; font-weight: bold;">Founder, Slyzah South Africa 🇿🇦</p>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
-                        <div style="text-align: center; margin-top: 20px;">
-                             <p style="color: #aaa; font-size: 10px;">If you'd like to unsubscribe, <a href="#" style="color: #aaa;">click here</a>.</p>
-                        </div>
                     </div>
                 `
             })
