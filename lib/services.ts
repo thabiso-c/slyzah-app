@@ -59,28 +59,6 @@ export const sendResendEmail = async (to: string, vendorName: string, customerNa
     }
 };
 
-export const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
-    try {
-        await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Accept-encoding': 'gzip, deflate',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                to: expoPushToken,
-                sound: 'slyzah_alert.mp3',
-                title: title,
-                body: body,
-                data: data,
-                channelId: 'slyzah_alert',
-            }),
-        });
-    } catch (error) {
-        console.error("Error sending push:", error);
-    }
-};
 
 export const sendAwardEmail = async (to: string, vendorName: string, customerName: string, customerPhone: string, customerEmail: string, address: string, category: string) => {
     try {

@@ -48,14 +48,6 @@
           }
         }
       ],
-      [
-        "expo-notifications",
-        {
-          "sounds": [
-            "./assets/slyzah_alert.mp3"
-          ]
-        }
-      ]
     ],
     "experiments": {
       "typedRoutes": true,

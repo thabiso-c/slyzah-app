@@ -436,14 +436,6 @@ export default function ResultsScreen() {
     const [selectedForQuote, setSelectedForQuote] = useState<string[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
 
-    const [formData, setFormData] = useState({
-        name: auth.currentUser?.displayName || "",
-        phone: "",
-        email: auth.currentUser?.email || "",
-        issue: "",
-        address: "",
-        town: userRegion
-    });
 
     const [selectedVendorForReviews, setSelectedVendorForReviews] = useState<any>(null);
     const [vendorReviews, setVendorReviews] = useState<any[]>([]);
@@ -719,6 +711,9 @@ export default function ResultsScreen() {
                         <TouchableOpacity onPress={() => fetchReviews(item)}>
                             <Text style={styles.reviewsLink}>REVIEWS</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setViewingCredentials(item)}>
+                            <Text style={[styles.reviewsLink, { color: THEME.gold }]}>VERIFY 🛡️</Text>
+                        </TouchableOpacity>
                         {item.website && (
                             <TouchableOpacity onPress={() => Linking.openURL(item.website)}>
                                 <Text style={styles.reviewsLink}>WEBSITE</Text>
@@ -885,7 +880,6 @@ export default function ResultsScreen() {
                 initialData={formData}
                 availableVendors={vendors}
             />
-        </SafeAreaView>
     );
 }
 
@@ -893,11 +887,13 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: THEME.gray },
     header: {
         backgroundColor: THEME.white,
-        padding: 16,
+        padding: 20,
+        paddingTop: Platform.OS === 'ios' ? 0 : 20,
         flexDirection: 'row',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: '#f0f0f0',
+        zIndex: 100,
     },
     backButton: { marginRight: 16 },
     headerTitle: { color: THEME.navy, fontSize: 18, fontWeight: '900', textTransform: 'uppercase' },
@@ -923,16 +919,16 @@ const styles = StyleSheet.create({
     // Card Styles
     card: {
         backgroundColor: THEME.white,
-        borderRadius: 20,
-        padding: 16,
-        marginBottom: 12,
-        borderWidth: 2,
-        borderColor: 'transparent',
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-        elevation: 2,
+        borderRadius: 25,
+        padding: 20,
+        marginBottom: 16,
+        shadowColor: "#001f3f",
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.08,
+        shadowRadius: 20,
+        elevation: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(0,31,63,0.05)',
     },
     cardSelected: {
         borderColor: THEME.gold,

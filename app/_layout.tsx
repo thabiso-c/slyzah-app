@@ -1,18 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import Constants from 'expo-constants';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
 import { usePathname, useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import * as TaskManager from 'expo-task-manager';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import 'react-native-gesture-handler';
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePushNotifications } from '../hooks/usePushNotifications';
 import { auth, db } from '../firebaseConfig';
 
 const THEME = {
@@ -21,28 +17,6 @@ const THEME = {
   white: '#FFFFFF',
 };
 
-const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND_NOTIFICATION_TASK';
-
-TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
-  if (error) {
-    console.error("Background task error:", error);
-    return;
-  }
-  if (data) {
-    console.log("Notification received in background:", data);
-  }
-});
-
-// Configure Notification Handler
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
 
 function CustomDrawerContent(props: any) {
   const router = useRouter();
@@ -108,87 +82,9 @@ export default function RootLayout() {
     return unsubscribe;
   }, []);
 
-  // Register for Push Notifications
-  useEffect(() => {
-    if (user) {
-      registerForPushNotificationsAsync().then(async (token) => {
-        if (token) {
-          const userRef = doc(db, "users", user.uid);
-          try {
-            const userSnap = await getDoc(userRef);
-            // Check if token changed before writing to save costs
-            if (!userSnap.exists() || userSnap.data()?.expoPushToken !== token) {
-              await setDoc(userRef, { expoPushToken: token, lastTokenUpdate: new Date() }, { merge: true });
-            }
-          } catch (err) {
-            console.log("Error saving push token:", err);
-          }
-        }
-      });
-    }
-  }, [user]);
+  // Initialize modular push notifications hook
+  usePushNotifications(user, router);
 
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-
-      // Custom Slyzah Alert Channel
-      await Notifications.setNotificationChannelAsync('slyzah_alert', {
-        name: 'Slyzah Alerts',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FFD700',
-        sound: 'slyzah_alert.mp3',
-      });
-    }
-
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig?.extra?.eas?.projectId })).data;
-    }
-    return token;
-  }
-
-  // Handle Notification Tap (Cold Start & Background)
-  const lastNotificationResponse = Notifications.useLastNotificationResponse();
-
-  useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      const data = lastNotificationResponse.notification.request.content.data;
-      if (data?.chatId) {
-        // Try the standard chat route first, fallback to root dynamic route if needed
-        try {
-          router.push(`/chat/${data.chatId}`);
-        } catch (e) {
-          router.push(`/${data.chatId}`);
-        }
-      } else if (data?.leadId) {
-        router.push('/dashboard');
-      }
-    }
-  }, [lastNotificationResponse]);
-
-  // Register background task immediately on mount, independent of notification response
-  useEffect(() => {
-    Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK).catch(err => console.log("Task Register Error:", err));
-  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -225,7 +121,7 @@ export default function RootLayout() {
         router.replace('/');
       }
     }
-  }, [user, isTermsAccepted, loading, pathname]);
+  }, [user, isTermsAccepted, loading, pathname, router]);
 
   if (loading) {
     return (
