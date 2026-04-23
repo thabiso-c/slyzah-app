@@ -284,6 +284,7 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                             value={formData.name}
                             onChangeText={(t) => setFormData({ ...formData, name: t })}
                             placeholder="John Doe"
+                            placeholderTextColor={THEME.placeholder}
                         />
 
                         <Text style={styles.label}>Phone Number</Text>

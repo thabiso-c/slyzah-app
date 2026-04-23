@@ -122,6 +122,8 @@ export default function ProfileScreen() {
                         style={styles.input}
                         value={formData.firstName}
                         onChangeText={(t) => setFormData({ ...formData, firstName: t })}
+                        placeholder="First Name"
+                        placeholderTextColor="#9CA3AF"
                     />
 
                     <Text style={styles.label}>SURNAME</Text>
@@ -129,6 +131,8 @@ export default function ProfileScreen() {
                         style={styles.input}
                         value={formData.surname}
                         onChangeText={(t) => setFormData({ ...formData, surname: t })}
+                        placeholder="Surname"
+                        placeholderTextColor="#9CA3AF"
                     />
 
                     <Text style={styles.label}>PHONE NUMBER</Text>

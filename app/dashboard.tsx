@@ -481,6 +481,7 @@ export default function UserDashboard() {
                         <TextInput
                             style={styles.textArea}
                             placeholder="Describe your issue..."
+                            placeholderTextColor="#9CA3AF"
                             multiline
                             numberOfLines={5}
                             value={supportMessage}
@@ -502,6 +503,7 @@ export default function UserDashboard() {
                         <TextInput
                             style={styles.textArea}
                             placeholder="Price too high, etc..."
+                            placeholderTextColor="#9CA3AF"
                             value={rejectionReason}
                             onChangeText={setRejectionReason}
                         />
@@ -529,6 +531,7 @@ export default function UserDashboard() {
                         <TextInput
                             style={styles.textArea}
                             placeholder="Write your review..."
+                            placeholderTextColor="#9CA3AF"
                             value={reviewData.comment}
                             onChangeText={(t) => setReviewData({ ...reviewData, comment: t })}
                         />
@@ -657,7 +660,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
         opacity: 0.7,
     },
-    textArea: { backgroundColor: '#f0f0f0', borderRadius: 12, padding: 10, height: 100, textAlignVertical: 'top', marginVertical: 10 },
+    textArea: { backgroundColor: '#f0f0f0', borderRadius: 12, padding: 10, height: 100, textAlignVertical: 'top', marginVertical: 10, color: '#001f3f', fontSize: 14 },
     modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
     modalContent: { backgroundColor: THEME.white, borderRadius: 20, padding: 20 },
     modalTitle: { fontSize: 18, fontWeight: '900', color: THEME.navy, marginBottom: 5, textAlign: 'center' },

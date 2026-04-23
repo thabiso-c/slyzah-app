@@ -280,6 +280,7 @@ export default function UnifiedChatPage() {
                     <TextInput
                         style={styles.input}
                         placeholder="Type a message..."
+                        placeholderTextColor="#9CA3AF"
                         value={newMessage}
                         onChangeText={setNewMessage}
                         onFocus={() => handleTyping(true)}
