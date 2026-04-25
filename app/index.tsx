@@ -621,7 +621,7 @@ export default function HomeScreen() {
     });
   };
 
-  ];
+
 
   // Slyzah Pulse Activity Feed Logic
   const [pulseLeads, setPulseLeads] = useState<any[]>([]);
