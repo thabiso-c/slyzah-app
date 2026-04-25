@@ -25,7 +25,8 @@ import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 're
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
 import { GOOGLE_MAPS_API_KEY } from '../lib/secrets';
-import { sendPushNotification, sendResendEmail } from '../lib/services';
+import { sendPushNotification } from '../lib/api_client';
+import { sendResendEmail } from '../lib/services';
 
 const { width, height } = Dimensions.get('window');
 
@@ -436,6 +437,8 @@ export default function ResultsScreen() {
     const [searchStatus, setSearchStatus] = useState<"local" | "global" | "none">("local");
     const [selectedForQuote, setSelectedForQuote] = useState<string[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [formData, setFormData] = useState({ name: "", phone: "", email: "", details: "", address: "" });
+    const [viewingCredentials, setViewingCredentials] = useState<any>(null);
 
 
     const [selectedVendorForReviews, setSelectedVendorForReviews] = useState<any>(null);
