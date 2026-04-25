@@ -881,6 +881,7 @@ export default function ResultsScreen() {
                 initialData={formData}
                 availableVendors={vendors}
             />
+        </SafeAreaView>
     );
 }
 
