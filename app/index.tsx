@@ -108,6 +108,17 @@ const resolveCredentialMapping = (categoryInput: string) => {
   return null;
 };
 
+const CATEGORIES = [
+  { name: "Plumber", icon: "water-outline" },
+  { name: "Electrician", icon: "flash-outline" },
+  { name: "Builder", icon: "hammer-outline" },
+  { name: "Gas", icon: "flame-outline" },
+  { name: "Solar/Power", icon: "sunny-outline" },
+  { name: "Cleaning", icon: "sparkles-outline" },
+  { name: "Handyman", icon: "construct-outline" },
+  { name: "Pest Control", icon: "bug-outline" }
+];
+
 const LOCATION_MAPPING: Record<string, string[]> = {
   "Western Cape": ["Cape Town CBD", "Northern Suburbs", "Southern Suburbs", "Atlantic Seaboard", "Western Seaboard", "South Peninsula", "Cape Helderberg", "Cape Winelands", "Paarl/Wellington", "Stellenbosch", "Garden Route", "George/Knysna", "West Coast", "Overberg", "Central Karoo"],
   "Gauteng": ["Johannesburg CBD", "Sandton/Rivonia", "Randburg", "Roodepoort", "Soweto", "Midrand", "Pretoria/Tshwane CBD", "Centurion", "Pretoria East", "Pretoria North", "Ekurhuleni (East Rand)", "Kempton Park", "Brakpan/Benoni", "Sedibeng", "West Rand"],
@@ -732,7 +743,7 @@ export default function HomeScreen() {
           <View style={styles.gridContainer}>
             <Text style={styles.gridTitle}>POPULAR SERVICES</Text>
             <View style={styles.categoryGrid}>
-              {categories.slice(0, 6).map((cat, index) => (
+              {CATEGORIES.slice(0, 6).map((cat: {name: string, icon: string}, index: number) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.gridItem}

@@ -31,3 +31,26 @@ export const verifyCipcBusiness = async (registrationNumber: string) => {
         throw error;
     }
 };
+
+/**
+ * Dispatches push notification through the centralized Slyzah Server API.
+ */
+export const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
+    try {
+        await fetch(`${WEB_API_BASE_URL}/api/admin/notifications/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: expoPushToken,
+                title,
+                body,
+                data,
+                channelId: 'slyzah_alert'
+            }),
+        });
+    } catch (error) {
+        console.error("Centralized Notification API Error:", error);
+    }
+};

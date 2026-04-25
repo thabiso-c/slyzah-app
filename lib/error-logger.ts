@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from './firebase'; // Adjust path if needed
+import { db } from '../firebaseConfig'; // Adjust path if needed
 
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
 
