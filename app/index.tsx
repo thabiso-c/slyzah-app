@@ -14,6 +14,7 @@ import {
   Animated,
   Easing
 } from 'react-native';
+import { Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // FIXED: Correct import path (one level up)
 import { auth, db } from '../firebaseConfig';
