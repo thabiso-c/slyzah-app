@@ -27,8 +27,11 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Image
 } from 'react-native';
+import { ResizeMode, Video } from 'expo-av';
+import { useAssets } from 'expo-asset';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../firebaseConfig';
 import { sendAwardEmail } from '../lib/services';
@@ -54,6 +57,7 @@ export default function UserDashboard() {
     const [unreadCount, setUnreadCount] = useState(0);
     const scrollViewRef = useRef<ScrollView>(null);
     const [showAlertsModal, setShowAlertsModal] = useState(false);
+    const [assets] = useAssets([require('../assets/Golden_Man_Compares_Pages_Runs.mp4')]);
 
     // --- REJECTION MODAL STATES ---
     const [showRejectionModal, setShowRejectionModal] = useState(false);
@@ -121,7 +125,7 @@ export default function UserDashboard() {
                                     content: {
                                         title: `New Message from ${data.vendorName || 'Pro'}`,
                                         body: data.lastMessage,
-                                        sound: 'slyzah_alert.mp3',
+                                        sound: 'notification_sound.mp3',
                                         data: { chatId: data.id },
                                         // @ts-ignore: channelId is supported on Android
                                         channelId: 'slyzah_alert',
@@ -339,18 +343,31 @@ export default function UserDashboard() {
     }
 
     return (
-        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
-            {/* HEADER */}
-            <View style={styles.header}>
-                <View>
-                    <Text style={styles.headerTitle}>MY SLYZAH DASHBOARD</Text>
-                    <Text style={styles.headerSubtitle}>Slyzah Customer Portal</Text>
+        <View style={styles.container}>
+            {assets && (
+                <Video
+                    source={assets[0]}
+                    style={StyleSheet.absoluteFill}
+                    resizeMode={ResizeMode.COVER}
+                    shouldPlay
+                    isLooping
+                    isMuted
+                />
+            )}
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.85)' }]} />
+
+            <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+                {/* HEADER */}
+                <View style={styles.header}>
+                    <View>
+                        <Text style={styles.headerTitle}>MY SLYZAH DASHBOARD</Text>
+                        <Text style={styles.headerSubtitle}>Slyzah Customer Portal</Text>
+                    </View>
+                    <TouchableOpacity style={styles.alertBadge} onPress={() => setShowAlertsModal(true)} disabled={unreadCount === 0}>
+                        <Ionicons name="notifications" size={20} color={unreadCount > 0 ? THEME.gold : "rgba(255,255,255,0.4)"} />
+                        <Text style={styles.alertText}>{unreadCount} New Alerts</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.alertBadge} onPress={() => setShowAlertsModal(true)} disabled={unreadCount === 0}>
-                    <Ionicons name="notifications" size={20} color={unreadCount > 0 ? THEME.gold : "#ccc"} />
-                    <Text style={styles.alertText}>{unreadCount} New Alerts</Text>
-                </TouchableOpacity>
-            </View>
 
             {/* TABS */}
             <View style={styles.tabsContainer}>
@@ -498,7 +515,7 @@ export default function UserDashboard() {
             {/* MODALS */}
             <Modal visible={showRejectionModal} transparent animationType="slide">
                 <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
+                    <View style={styles.glassModalContent}>
                         <Text style={styles.modalTitle}>Confirm Winner</Text>
                         <Text style={styles.modalSubtitle}>Why were others not selected?</Text>
                         <TextInput
@@ -520,7 +537,7 @@ export default function UserDashboard() {
 
             <Modal visible={showReviewModal} transparent animationType="slide">
                 <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
+                    <View style={styles.glassModalContent}>
                         <Text style={styles.modalTitle}>Rate {targetReview?.vendorName}</Text>
                         <View style={styles.starsRow}>
                             {[1, 2, 3, 4, 5].map((star) => (
@@ -548,7 +565,7 @@ export default function UserDashboard() {
 
             <Modal visible={showAlertsModal} transparent animationType="fade">
                 <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowAlertsModal(false)}>
-                    <View style={[styles.modalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
+                    <View style={[styles.glassModalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
                         <Text style={styles.modalTitle}>Notifications</Text>
                         <ScrollView>
                             {chats.filter(c => c.customerUnreadCount > 0).length > 0 ? (
@@ -584,6 +601,7 @@ export default function UserDashboard() {
             </Modal>
 
         </SafeAreaView>
+        </View>
     );
 }
 
@@ -603,14 +621,15 @@ const TabBtn = ({ active, label, icon, onClick, badge }: any) => (
 );
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: THEME.gray },
+    container: { flex: 1, backgroundColor: THEME.navy },
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: THEME.navy },
     header: {
-        backgroundColor: THEME.navy,
         padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.05)',
     },
     headerTitle: { color: THEME.white, fontSize: 20, fontWeight: '900', textTransform: 'uppercase' },
     headerSubtitle: { color: THEME.gold, fontSize: 12, fontWeight: 'bold', textTransform: 'uppercase' },
@@ -624,7 +643,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: 20,
         marginRight: 10,
-        backgroundColor: THEME.white,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
     },
     tabBtnActive: { backgroundColor: THEME.navy },
     tabText: { fontSize: 12, fontWeight: 'bold', color: '#999', marginLeft: 5, textTransform: 'uppercase' },
@@ -632,13 +653,20 @@ const styles = StyleSheet.create({
     tabBadge: { position: 'absolute', top: -5, right: -5, backgroundColor: 'red', borderRadius: 10, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' },
     tabBadgeText: { color: 'white', fontSize: 10, fontWeight: 'bold' },
     content: { padding: 15, paddingBottom: 50 },
-    card: { backgroundColor: THEME.white, borderRadius: 20, padding: 20, marginBottom: 15, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
+    card: { 
+        backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+        borderRadius: 24, 
+        padding: 20, 
+        marginBottom: 15, 
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+    },
     cardActive: { borderColor: THEME.gold, borderWidth: 1 },
-    cardTitle: { fontSize: 16, fontWeight: '900', color: THEME.navy, marginBottom: 5 },
-    cardSubtitle: { fontSize: 12, color: '#666', marginBottom: 10 },
+    cardTitle: { fontSize: 16, fontWeight: '900', color: THEME.white, marginBottom: 5 },
+    cardSubtitle: { fontSize: 12, color: 'rgba(255, 255, 255, 0.5)', marginBottom: 10 },
     row: { flexDirection: 'row', alignItems: 'center' },
     rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-    avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: THEME.navy, justifyContent: 'center', alignItems: 'center' },
+    avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255, 255, 255, 0.1)', justifyContent: 'center', alignItems: 'center' },
     avatarText: { color: THEME.gold, fontWeight: '900' },
     badge: { backgroundColor: THEME.gold, borderRadius: 10, paddingHorizontal: 6, paddingVertical: 2 },
     badgeText: { fontSize: 10, fontWeight: 'bold', color: THEME.navy },
@@ -648,27 +676,27 @@ const styles = StyleSheet.create({
     dateText: { fontSize: 10, color: '#999', fontWeight: 'bold' },
     actionButton: { backgroundColor: THEME.navy, padding: 12, borderRadius: 12, alignItems: 'center', marginTop: 10 },
     actionButtonText: { color: THEME.white, fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12 },
-    quotesSection: { marginTop: 15, backgroundColor: '#f9f9f9', padding: 10, borderRadius: 12 },
-    sectionHeader: { fontSize: 10, fontWeight: '900', color: '#999', textTransform: 'uppercase', marginBottom: 10 },
-    quoteItem: { backgroundColor: THEME.white, padding: 10, borderRadius: 10, marginBottom: 8, borderWidth: 1, borderColor: '#eee' },
+    quotesSection: { marginTop: 15, backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: 10, borderRadius: 12 },
+    sectionHeader: { fontSize: 10, fontWeight: '900', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase', marginBottom: 10 },
+    quoteItem: { backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: 10, borderRadius: 10, marginBottom: 8, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.05)' },
     quoteWinner: { borderColor: THEME.gold, borderWidth: 2 },
-    quoteVendor: { fontSize: 12, fontWeight: '900', color: THEME.navy, flex: 1, marginRight: 10 },
-    quotePrice: { fontSize: 14, fontWeight: '900', color: THEME.navy },
-    quoteMessage: { fontSize: 11, fontStyle: 'italic', color: '#666', marginVertical: 5 },
+    quoteVendor: { fontSize: 12, fontWeight: '900', color: THEME.white, flex: 1, marginRight: 10 },
+    quotePrice: { fontSize: 14, fontWeight: '900', color: THEME.white },
+    quoteMessage: { fontSize: 11, fontStyle: 'italic', color: 'rgba(255, 255, 255, 0.5)', marginVertical: 5 },
     selectButton: { backgroundColor: THEME.gold, padding: 8, borderRadius: 8, alignItems: 'center', marginTop: 5 },
     selectButtonText: { color: THEME.navy, fontWeight: 'bold', fontSize: 10, textTransform: 'uppercase' },
     disabledButton: {
         backgroundColor: '#ccc',
         opacity: 0.7,
     },
-    textArea: { backgroundColor: '#f0f0f0', borderRadius: 12, padding: 10, height: 100, textAlignVertical: 'top', marginVertical: 10, color: '#001f3f', fontSize: 14 },
-    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
-    modalContent: { backgroundColor: THEME.white, borderRadius: 20, padding: 20 },
-    modalTitle: { fontSize: 18, fontWeight: '900', color: THEME.navy, marginBottom: 5, textAlign: 'center' },
-    modalSubtitle: { fontSize: 12, color: '#666', marginBottom: 15, textAlign: 'center' },
+    textArea: { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: 15, height: 120, textAlignVertical: 'top', marginVertical: 10, color: THEME.white, fontSize: 14, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.1)' },
+    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,31,63,0.9)', justifyContent: 'center', padding: 20 },
+    glassModalContent: { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 32, padding: 25, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.1)', shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 20 },
+    modalTitle: { fontSize: 18, fontWeight: '900', color: THEME.white, marginBottom: 5, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1 },
+    modalSubtitle: { fontSize: 12, color: 'rgba(255, 255, 255, 0.6)', marginBottom: 15, textAlign: 'center' },
     cancelButton: { padding: 12, alignItems: 'center', marginTop: 5 },
-    cancelButtonText: { color: '#999', fontWeight: 'bold' },
+    cancelButtonText: { color: 'rgba(255, 255, 255, 0.4)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 1, fontSize: 10 },
     starsRow: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginBottom: 15 },
-    notificationItem: { paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: THEME.gray },
-    notificationTitle: { fontSize: 14, fontWeight: 'bold', color: THEME.navy },
+    notificationItem: { paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(255, 255, 255, 0.05)' },
+    notificationTitle: { fontSize: 14, fontWeight: 'bold', color: THEME.white },
 });

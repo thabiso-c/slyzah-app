@@ -126,3 +126,29 @@ if (GOOGLE_SERVICE_INFO_PLIST) {
         process.exit(1);
     }
 }
+
+// --- 3. FORCE INJECT KOTLIN VERSION (The Build Fix) ---
+// This targets the generated android folder during the EAS build process
+const buildGradlePath = path.join(process.cwd(), 'android', 'build.gradle');
+const KOTLIN_VERSION = process.env.KOTLIN_VERSION;
+
+if (fs.existsSync(buildGradlePath)) {
+    try {
+        let content = fs.readFileSync(buildGradlePath, 'utf8');
+        const targetVersion = KOTLIN_VERSION || '2.1.20';
+
+        if (!content.includes('kotlinVersion')) {
+            // Find the buildscript block and inject the version
+            const updatedContent = content.replace(
+                /buildscript\s*{/,
+                `buildscript {\n    ext.kotlinVersion = "${targetVersion}"`
+            );
+            fs.writeFileSync(buildGradlePath, updatedContent);
+            console.log(`✅ Successfully injected kotlinVersion (${targetVersion}) into build.gradle`);
+        }
+    } catch (error) {
+        console.error('⚠️ Could not modify build.gradle:', error);
+    }
+} else {
+    console.log('ℹ️ No android directory found yet; skipping build.gradle injection.');
+}

@@ -1,6 +1,8 @@
 import * as Google from 'expo-auth-session/providers/google';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
+import { useAssets } from 'expo-asset';
+import { ResizeMode, Video } from 'expo-av';
 import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
@@ -57,6 +59,7 @@ export default function LoginScreen() {
     const [isRegistering, setIsRegistering] = useState(false);
     const [loading, setLoading] = useState(false);
     const [initializing, setInitializing] = useState(true);
+    const [assets] = useAssets([require('../assets/Golden_Man_Compares_Pages_Runs.mp4')]);
 
     if (!GOOGLE_IOS_CLIENT_ID || !GOOGLE_ANDROID_CLIENT_ID) {
         console.warn("Google Client IDs are missing in lib/secrets.ts. Social login will fail.");
@@ -174,14 +177,17 @@ export default function LoginScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.backgroundImageContainer}>
-                <Image
-                    source={require('../assets/logo6.png')}
-                    style={styles.backgroundImage}
-                    resizeMode="cover"
+            {assets && (
+                <Video
+                    source={assets[0]}
+                    style={StyleSheet.absoluteFill}
+                    resizeMode={ResizeMode.COVER}
+                    shouldPlay
+                    isLooping
+                    isMuted
                 />
-                <View style={styles.overlay} />
-            </View>
+            )}
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.85)' }]} />
 
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -206,7 +212,7 @@ export default function LoginScreen() {
                         </Text>
                     </View>
 
-                    <View style={styles.formContainer}>
+                    <View style={styles.glassFormContainer}>
                         {isRegistering && (
                             <>
                                 <TextInput
@@ -387,14 +393,25 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 16,
     },
+    glassFormContainer: {
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderRadius: 32,
+        padding: 24,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        gap: 16,
+    },
     input: {
-        backgroundColor: THEME.gray,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
         borderRadius: 20,
         paddingVertical: 16,
         paddingHorizontal: 20,
         fontSize: 16,
         fontWeight: '600',
-        color: THEME.navy,
+        color: THEME.white,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
     },
     forgotPasswordButton: {
         alignSelf: 'flex-end',
@@ -412,10 +429,10 @@ const styles = StyleSheet.create({
         paddingVertical: 18,
         alignItems: 'center',
         marginTop: 8,
-        shadowColor: '#000',
+        shadowColor: THEME.gold,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
-        shadowRadius: 4,
+        shadowRadius: 10,
         elevation: 5,
     },
     mainButtonText: {
@@ -426,12 +443,12 @@ const styles = StyleSheet.create({
         letterSpacing: 1.5,
     },
     toggleButton: {
-        marginTop: 20,
+        marginTop: 10,
         alignItems: 'center',
     },
     toggleText: {
         color: THEME.white,
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: 1,
@@ -440,41 +457,43 @@ const styles = StyleSheet.create({
     separatorContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 20,
+        marginVertical: 10,
     },
     separatorLine: {
         flex: 1,
         height: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
     },
     separatorText: {
         width: 50,
         textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.5)',
+        color: 'rgba(255, 255, 255, 0.3)',
         fontWeight: 'bold',
-        fontSize: 12,
+        fontSize: 10,
     },
     socialButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 30,
-        paddingVertical: 16,
+        paddingVertical: 14,
         width: '100%',
         gap: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
     },
     googleButton: {
-        backgroundColor: THEME.white,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
     },
     facebookButton: {
-        backgroundColor: '#1877F2', // Official Facebook Blue
+        backgroundColor: 'rgba(24, 119, 242, 0.8)', // Semi-transparent Facebook Blue
     },
     socialIcon: {
-        width: 24,
-        height: 24,
+        width: 20,
+        height: 20,
     },
     socialButtonText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '900',
         color: THEME.white,
         textTransform: 'uppercase',

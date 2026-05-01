@@ -8,8 +8,8 @@ function withCustomNotificationSound(config) {
         async (config) => {
             const projectRoot = config.modRequest.projectRoot;
             const androidRawResPath = path.join(projectRoot, 'android', 'app', 'src', 'main', 'res', 'raw');
-            const sourceSoundPath = path.join(projectRoot, 'assets', 'slyzah_alert.mp3');
-            const targetSoundPath = path.join(androidRawResPath, 'slyzah_alert.mp3'); // Android requires lowercase, underscores
+            const sourceSoundPath = path.join(projectRoot, 'assets', 'notification_sound.mp3');
+            const targetSoundPath = path.join(androidRawResPath, 'notification_sound.mp3'); // Android requires lowercase, underscores
 
             // Ensure the raw directory exists
             if (!fs.existsSync(androidRawResPath)) {

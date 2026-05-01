@@ -10,8 +10,11 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Image
 } from 'react-native';
+import { ResizeMode, Video } from 'expo-av';
+import { useAssets } from 'expo-asset';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../firebaseConfig';
 
@@ -28,6 +31,7 @@ export default function ProfileScreen() {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [assets] = useAssets([require('../assets/Golden_Man_Compares_Pages_Runs.mp4')]);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -101,77 +105,92 @@ export default function ProfileScreen() {
     }
 
     return (
-        <SafeAreaView style={styles.container} edges={['top']}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>MY PROFILE</Text>
-            </View>
+        <View style={styles.container}>
+            {assets && (
+                <Video
+                    source={assets[0]}
+                    style={StyleSheet.absoluteFill}
+                    resizeMode={ResizeMode.COVER}
+                    shouldPlay
+                    isLooping
+                    isMuted
+                />
+            )}
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.85)' }]} />
 
-            <ScrollView contentContainerStyle={styles.content}>
-                <View style={styles.avatarContainer}>
-                    <View style={styles.avatar}>
-                        <Text style={styles.avatarText}>
-                            {formData.firstName ? formData.firstName.charAt(0).toUpperCase() : "U"}
-                        </Text>
+            <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>MY PROFILE</Text>
+                </View>
+
+                <ScrollView contentContainerStyle={styles.content}>
+                    <View style={styles.avatarContainer}>
+                        <View style={styles.avatar}>
+                            <Text style={styles.avatarText}>
+                                {formData.firstName ? formData.firstName.charAt(0).toUpperCase() : "U"}
+                            </Text>
+                        </View>
+                        <Text style={styles.emailText}>{formData.email}</Text>
                     </View>
-                    <Text style={styles.emailText}>{formData.email}</Text>
-                </View>
 
-                <View style={styles.form}>
-                    <Text style={styles.label}>FIRST NAME</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={formData.firstName}
-                        onChangeText={(t) => setFormData({ ...formData, firstName: t })}
-                        placeholder="First Name"
-                        placeholderTextColor="#9CA3AF"
-                    />
+                    <View style={styles.form}>
+                        <Text style={styles.label}>FIRST NAME</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={formData.firstName}
+                            onChangeText={(t) => setFormData({ ...formData, firstName: t })}
+                            placeholder="First Name"
+                            placeholderTextColor="rgba(255,255,255,0.4)"
+                        />
 
-                    <Text style={styles.label}>SURNAME</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={formData.surname}
-                        onChangeText={(t) => setFormData({ ...formData, surname: t })}
-                        placeholder="Surname"
-                        placeholderTextColor="#9CA3AF"
-                    />
+                        <Text style={styles.label}>SURNAME</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={formData.surname}
+                            onChangeText={(t) => setFormData({ ...formData, surname: t })}
+                            placeholder="Surname"
+                            placeholderTextColor="rgba(255,255,255,0.4)"
+                        />
 
-                    <Text style={styles.label}>PHONE NUMBER</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={formData.phone}
-                        onChangeText={(t) => setFormData({ ...formData, phone: t })}
-                        keyboardType="phone-pad"
-                        placeholder="+27..."
-                    />
+                        <Text style={styles.label}>PHONE NUMBER</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={formData.phone}
+                            onChangeText={(t) => setFormData({ ...formData, phone: t })}
+                            keyboardType="phone-pad"
+                            placeholder="+27..."
+                            placeholderTextColor="rgba(255,255,255,0.4)"
+                        />
 
-                    <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
-                        {saving ? <ActivityIndicator color={THEME.navy} /> : <Text style={styles.saveButtonText}>SAVE CHANGES</Text>}
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
+                            {saving ? <ActivityIndicator color={THEME.navy} /> : <Text style={styles.saveButtonText}>SAVE CHANGES</Text>}
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                        <Text style={styles.logoutText}>LOGOUT</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                            <Text style={styles.logoutText}>LOGOUT</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: THEME.gray },
+    container: { flex: 1, backgroundColor: THEME.navy },
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: THEME.navy },
-    header: { backgroundColor: THEME.navy, padding: 20, alignItems: 'center' },
-    headerTitle: { color: THEME.white, fontSize: 18, fontWeight: '900', textTransform: 'uppercase' },
+    header: { padding: 20, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)' },
+    headerTitle: { color: THEME.white, fontSize: 18, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 },
     content: { padding: 20 },
     avatarContainer: { alignItems: 'center', marginBottom: 30 },
-    avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: THEME.navy, justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
-    avatarText: { color: THEME.gold, fontSize: 32, fontWeight: '900' },
-    emailText: { color: '#666', fontSize: 14, fontWeight: '600' },
-    form: { backgroundColor: THEME.white, padding: 20, borderRadius: 20 },
-    label: { fontSize: 10, fontWeight: '900', color: THEME.navy, marginBottom: 5, marginTop: 15 },
-    input: { backgroundColor: THEME.gray, padding: 15, borderRadius: 12, fontSize: 14, fontWeight: '600', color: THEME.navy },
-    saveButton: { backgroundColor: THEME.gold, padding: 18, borderRadius: 15, alignItems: 'center', marginTop: 30 },
-    saveButtonText: { color: THEME.navy, fontWeight: '900', fontSize: 12 },
-    logoutButton: { marginTop: 20, alignItems: 'center', padding: 15 },
-    logoutText: { color: 'red', fontWeight: '900', fontSize: 12 }
+    avatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+    avatarText: { color: THEME.gold, fontSize: 40, fontWeight: '900' },
+    emailText: { color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: '600' },
+    form: { backgroundColor: 'rgba(255,255,255,0.05)', padding: 30, borderRadius: 32, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+    label: { fontSize: 10, fontWeight: '900', color: THEME.gold, marginBottom: 8, marginTop: 15, letterSpacing: 1 },
+    input: { backgroundColor: 'rgba(255,255,255,0.05)', padding: 18, borderRadius: 20, fontSize: 16, fontWeight: '600', color: THEME.white, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+    saveButton: { backgroundColor: THEME.gold, padding: 18, borderRadius: 25, alignItems: 'center', marginTop: 30, shadowColor: THEME.gold, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5 },
+    saveButtonText: { color: THEME.navy, fontWeight: '900', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase' },
+    logoutButton: { marginTop: 25, alignItems: 'center', padding: 15, backgroundColor: 'rgba(255, 59, 48, 0.1)', borderRadius: 20 },
+    logoutText: { color: '#FF3B30', fontWeight: '900', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }
 });

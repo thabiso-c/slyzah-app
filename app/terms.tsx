@@ -12,8 +12,11 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Image
 } from 'react-native';
+import { ResizeMode, Video } from 'expo-av';
+import { useAssets } from 'expo-asset';
 import { auth, db } from '../firebaseConfig';
 
 const { width } = Dimensions.get('window');
@@ -31,6 +34,7 @@ export default function TermsScreen() {
     const router = useRouter();
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [assets] = useAssets([require('../assets/Golden_Man_Compares_Pages_Runs.mp4')]);
 
     // Detect when user hits the bottom of the ScrollView
     const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -84,6 +88,18 @@ export default function TermsScreen() {
 
     return (
         <View style={styles.container}>
+            {assets && (
+                <Video
+                    source={assets[0]}
+                    style={StyleSheet.absoluteFill}
+                    resizeMode={ResizeMode.COVER}
+                    shouldPlay
+                    isLooping
+                    isMuted
+                />
+            )}
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.85)' }]} />
+
             {/* Header with Integrated Logout */}
             <SafeAreaView style={styles.header}>
                 <Text style={styles.headerTitle}>LEGAL & POLICIES</Text>
@@ -159,7 +175,7 @@ export default function TermsScreen() {
                             styles.buttonText,
                             isScrolledToBottom ? styles.buttonTextActive : styles.buttonTextDisabled
                         ]}>
-                            {isScrolledToBottom ? "I ACCEPT ALL TERMS" : "SCROLL TO END TO ACCEPT"}
+                            {isScrolledToBottom ? "I ACCEPT ALL TERMS" : "SCROLL TO END"}
                         </Text>
                     )}
                 </TouchableOpacity>
@@ -174,13 +190,12 @@ const styles = StyleSheet.create({
         backgroundColor: THEME.navy,
     },
     header: {
-        paddingTop: 20,
+        paddingTop: 40,
         paddingBottom: 20,
         paddingHorizontal: 20,
-        backgroundColor: THEME.navy,
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255,255,255,0.1)',
+        borderBottomColor: 'rgba(255,255,255,0.05)',
     },
     headerTitle: {
         fontSize: 22,
@@ -192,68 +207,73 @@ const styles = StyleSheet.create({
     headerSubtitle: {
         fontSize: 12,
         color: THEME.white,
-        opacity: 0.7,
+        opacity: 0.5,
         marginTop: 5,
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
     },
     scrollView: {
         flex: 1,
-        backgroundColor: '#f8fafc',
     },
     scrollContent: {
         padding: 20,
     },
     card: {
-        backgroundColor: THEME.white,
-        borderRadius: 20,
-        padding: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderRadius: 24,
+        padding: 24,
         marginBottom: 20,
-        elevation: 3,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
     },
     sectionHeader: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '900',
-        color: THEME.navy,
+        color: THEME.gold,
         marginBottom: 12,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
     },
     sectionContent: {
-        gap: 10,
+        gap: 12,
     },
     paragraph: {
         fontSize: 14,
-        color: THEME.textGray,
+        color: 'rgba(255, 255, 255, 0.6)',
         lineHeight: 22,
     },
     footer: {
-        padding: 20,
-        backgroundColor: THEME.white,
+        padding: 24,
+        backgroundColor: 'rgba(0, 31, 63, 0.9)',
         borderTopWidth: 1,
-        borderTopColor: '#e2e8f0',
+        borderTopColor: 'rgba(255, 255, 255, 0.05)',
     },
     button: {
-        paddingVertical: 18,
+        paddingVertical: 20,
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
     },
     buttonActive: {
         backgroundColor: THEME.gold,
+        shadowColor: THEME.gold,
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 5,
     },
     buttonDisabled: {
-        backgroundColor: '#E2E8F0',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
     },
     buttonText: {
         fontSize: 14,
         fontWeight: '900',
         textTransform: 'uppercase',
+        letterSpacing: 1.5,
     },
     buttonTextActive: {
         color: THEME.navy,
     },
     buttonTextDisabled: {
-        color: '#94A3B8',
+        color: 'rgba(255, 255, 255, 0.2)',
     },
 });

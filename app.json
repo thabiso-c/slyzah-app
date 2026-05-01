@@ -37,6 +37,16 @@
     "plugins": [
       "expo-router",
       [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "sounds": [
+            "./assets/notification-sound.mp3"
+          ],
+          "color": "#FFFFFF"
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
@@ -48,6 +58,15 @@
           }
         }
       ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.1.20",
+            "kspVersion": "2.1.20-1.0.29"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

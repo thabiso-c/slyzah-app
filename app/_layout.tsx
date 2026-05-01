@@ -108,7 +108,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loading) return;
 
-    const inAuthGroup = pathname === '/login';
+    const inAuthGroup = pathname === '/login' || pathname === '/forgot-password';
     const inTermsGroup = pathname === '/terms';
 
     if (!user && !inAuthGroup) {

@@ -47,7 +47,7 @@ const sendPushNotification = async (expoPushToken: string, title: string, body: 
             },
             body: JSON.stringify({
                 to: expoPushToken,
-                sound: 'slyzah_alert.mp3',
+                sound: 'notification_sound.mp3',
                 title: title,
                 body: body,
                 data: data,

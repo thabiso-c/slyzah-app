@@ -47,7 +47,7 @@ async function registerForPushNotificationsAsync() {
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: '#FFD700',
-      sound: 'slyzah_alert.mp3',
+      sound: 'notification-sound.mp3',
     });
   }
 
