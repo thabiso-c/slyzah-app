@@ -515,7 +515,7 @@ export default function UserDashboard() {
             {/* MODALS */}
             <Modal visible={showRejectionModal} transparent animationType="slide">
                 <View style={styles.modalOverlay}>
-                    <View style={styles.glassModalContent}>
+                    <View style={styles.solidModalContent}>
                         <Text style={styles.modalTitle}>Confirm Winner</Text>
                         <Text style={styles.modalSubtitle}>Why were others not selected?</Text>
                         <TextInput
@@ -537,7 +537,7 @@ export default function UserDashboard() {
 
             <Modal visible={showReviewModal} transparent animationType="slide">
                 <View style={styles.modalOverlay}>
-                    <View style={styles.glassModalContent}>
+                    <View style={styles.solidModalContent}>
                         <Text style={styles.modalTitle}>Rate {targetReview?.vendorName}</Text>
                         <View style={styles.starsRow}>
                             {[1, 2, 3, 4, 5].map((star) => (
@@ -565,7 +565,7 @@ export default function UserDashboard() {
 
             <Modal visible={showAlertsModal} transparent animationType="fade">
                 <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowAlertsModal(false)}>
-                    <View style={[styles.glassModalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
+                    <View style={[styles.solidModalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
                         <Text style={styles.modalTitle}>Notifications</Text>
                         <ScrollView>
                             {chats.filter(c => c.customerUnreadCount > 0).length > 0 ? (
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
     },
     textArea: { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: 15, height: 120, textAlignVertical: 'top', marginVertical: 10, color: THEME.white, fontSize: 14, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.1)' },
     modalOverlay: { flex: 1, backgroundColor: 'rgba(0,31,63,0.9)', justifyContent: 'center', padding: 20 },
-    glassModalContent: { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 32, padding: 25, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.1)', shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 20 },
+    solidModalContent: { backgroundColor: THEME.navy, borderRadius: 32, padding: 25, borderWidth: 1, borderColor: THEME.gold, shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 20 },
     modalTitle: { fontSize: 18, fontWeight: '900', color: THEME.white, marginBottom: 5, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 1 },
     modalSubtitle: { fontSize: 12, color: 'rgba(255, 255, 255, 0.6)', marginBottom: 15, textAlign: 'center' },
     cancelButton: { padding: 12, alignItems: 'center', marginTop: 5 },

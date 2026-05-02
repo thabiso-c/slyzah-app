@@ -705,7 +705,7 @@ export default function HomeScreen() {
               <Text style={styles.heroSubtitle}>{"SOUTH AFRICA'S ELITE PRO NETWORK"}</Text>
 
               {/* Solid White Search Box */}
-              <View style={styles.glassSearchBox}>
+              <View style={styles.searchBox}>
                 <View style={styles.searchInputRow}>
                   <Ionicons name="search" size={20} color={THEME.navy} />
                   <TextInput
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     opacity: 0.8,
   },
-  glassSearchBox: {
+  searchBox: {
     backgroundColor: THEME.white,
     borderRadius: 32,
     padding: 20,

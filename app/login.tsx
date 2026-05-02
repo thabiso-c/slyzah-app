@@ -212,7 +212,7 @@ export default function LoginScreen() {
                         </Text>
                     </View>
 
-                    <View style={styles.glassFormContainer}>
+                    <View style={styles.solidFormContainer}>
                         {isRegistering && (
                             <>
                                 <TextInput
@@ -393,17 +393,17 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 16,
     },
-    glassFormContainer: {
+    solidFormContainer: {
         width: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: THEME.navy,
         borderRadius: 32,
         padding: 24,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderColor: THEME.gold,
         gap: 16,
     },
     input: {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: '#0B2A4A',
         borderRadius: 20,
         paddingVertical: 16,
         paddingHorizontal: 20,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: THEME.white,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.05)',
+        borderColor: '#173A5E',
     },
     forgotPasswordButton: {
         alignSelf: 'flex-end',

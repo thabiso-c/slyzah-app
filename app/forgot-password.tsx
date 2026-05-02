@@ -57,7 +57,7 @@ export default function ForgotPassword() {
                 )}
                 <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.85)' }]} />
                 <View style={styles.content}>
-                    <View style={styles.glassContainer}>
+                    <View style={styles.solidContainer}>
                         <View style={styles.successIcon}>
                             <Text style={{ fontSize: 40 }}>📨</Text>
                         </View>
@@ -99,7 +99,7 @@ export default function ForgotPassword() {
                 </TouchableOpacity>
 
                 <View style={styles.content}>
-                    <View style={styles.glassContainer}>
+                    <View style={styles.solidContainer}>
                         <Text style={styles.title}>Reset Password</Text>
                         <Text style={styles.subtitle}>Enter your email to receive a reset link.</Text>
 
@@ -132,25 +132,25 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: THEME.navy },
     backButton: { marginTop: 60, marginLeft: 20, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center' },
     content: { flex: 1, justifyContent: 'center', padding: 20 },
-    glassContainer: {
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    solidContainer: {
+        backgroundColor: THEME.navy,
         borderRadius: 32,
         padding: 30,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderColor: THEME.gold,
     },
     title: { fontSize: 28, fontWeight: '900', color: THEME.white, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 },
     subtitle: { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 30, lineHeight: 20 },
     label: { color: THEME.gold, fontSize: 10, fontWeight: '900', textTransform: 'uppercase', marginBottom: 10, marginLeft: 4, letterSpacing: 1 },
     input: {
-        backgroundColor: 'rgba(255,255,255,0.1)',
+        backgroundColor: '#0B2A4A',
         borderRadius: 20,
         padding: 18,
         color: THEME.white,
         fontSize: 16,
         fontWeight: '600',
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.05)',
+        borderColor: '#173A5E',
         marginBottom: 20,
     },
     button: { backgroundColor: THEME.gold, padding: 18, borderRadius: 25, alignItems: 'center', shadowColor: THEME.gold, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5 },
