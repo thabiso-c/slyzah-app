@@ -691,7 +691,7 @@ export default function HomeScreen() {
           onError={(e) => console.log("Video Error:", e)}
         />
       )}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.75)' }]} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 31, 63, 0.4)' }]} />
 
       <SafeAreaView style={{ flex: 1, zIndex: 1 }} edges={['top']}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -704,14 +704,14 @@ export default function HomeScreen() {
               <Text style={styles.heroTitle}>Smarter Service.{"\n"}Faster Quotes.</Text>
               <Text style={styles.heroSubtitle}>SOUTH AFRICA'S ELITE PRO NETWORK</Text>
 
-              {/* Glassmorphism Search Box */}
+              {/* Solid White Search Box */}
               <View style={styles.glassSearchBox}>
                 <View style={styles.searchInputRow}>
-                  <Ionicons name="search" size={20} color={THEME.white} />
+                  <Ionicons name="search" size={20} color={THEME.navy} />
                   <TextInput
-                    style={[styles.input, { color: THEME.white }]}
+                    style={[styles.input, { color: THEME.navy }]}
                     placeholder="What service do you need?"
-                    placeholderTextColor="rgba(255,255,255,0.5)"
+                    placeholderTextColor="rgba(0, 31, 63, 0.5)"
                     value={category}
                     onChangeText={setCategory}
                     onSubmitEditing={() => handleSearch()}
@@ -723,7 +723,7 @@ export default function HomeScreen() {
                     style={styles.locationButton}
                     onPress={handleGetLocation}
                   >
-                    <Text style={[styles.locationText, (locationCity || locationProvince) ? { color: THEME.gold } : { color: 'rgba(255,255,255,0.6)' }]}>
+                    <Text style={[styles.locationText, (locationCity || locationProvince) ? { color: THEME.gold } : { color: 'rgba(0, 31, 63, 0.5)' }]}>
                       {geoLoading ? "..." : (locationCity || locationProvince) ? `📍 ${locationCity || locationProvince}` : "📍 Detect Location"}
                     </Text>
                   </TouchableOpacity>
@@ -999,14 +999,14 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   glassSearchBox: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: THEME.white,
     borderRadius: 32,
     padding: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 4,
+    borderColor: 'rgba(255, 215, 0, 0.2)',
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.15,
     shadowRadius: 20,
     elevation: 10,
   },
@@ -1014,7 +1014,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomColor: 'rgba(0, 31, 63, 0.1)',
     paddingBottom: 15,
     marginBottom: 15,
     gap: 12,
@@ -1023,7 +1023,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '700',
-    color: THEME.white,
+    color: THEME.navy,
   },
   searchActions: {
     flexDirection: 'row',
