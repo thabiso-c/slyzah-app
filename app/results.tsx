@@ -707,7 +707,7 @@ export default function ResultsScreen() {
                 </View>
 
                 <Text style={styles.description} numberOfLines={2}>
-                    "{item.fullCategoryDescription || "Professional service provider available for call-outs."}"
+                    {`"${item.fullCategoryDescription || "Professional service provider available for call-outs."}"`}
                 </Text>
 
                 <View style={styles.cardFooter}>
@@ -857,7 +857,7 @@ export default function ResultsScreen() {
                                                 <Text style={styles.reviewRating}>★ {rev.rating}</Text>
                                             </View>
                                         </View>
-                                        <Text style={styles.reviewComment}>"{rev.comment}"</Text>
+                                        <Text style={styles.reviewComment}>{`"${rev.comment}"`}</Text>
                                     </View>
                                 )) : (
                                     <Text style={styles.noReviewsText}>No reviews yet.</Text>

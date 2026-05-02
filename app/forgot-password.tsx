@@ -63,7 +63,7 @@ export default function ForgotPassword() {
                         </View>
                         <Text style={[styles.title, { textAlign: 'center' }]}>Check your inbox</Text>
                         <Text style={[styles.subtitle, { textAlign: 'center' }]}>
-                            We've sent a password reset link to{"\n"}
+                            {"We've sent a password reset link to"}{"\n"}
                             <Text style={{ color: THEME.gold, fontWeight: 'bold' }}>{email}</Text>
                         </Text>
 

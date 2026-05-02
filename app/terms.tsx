@@ -151,7 +151,7 @@ export default function TermsScreen() {
 
                 <Section title="6. About Us">
                     <Paragraph>
-                        Slyzah (Pty) Ltd is South Africa's premier on-demand service marketplace. Our mission is to empower local professionals while providing homeowners with reliable service solutions.
+                        {"Slyzah (Pty) Ltd is South Africa's premier on-demand service marketplace. Our mission is to empower local professionals while providing homeowners with reliable service solutions."}
                     </Paragraph>
                 </Section>
 

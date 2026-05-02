@@ -702,7 +702,7 @@ export default function HomeScreen() {
           <View style={styles.heroContainer}>
             <View style={styles.heroContent}>
               <Text style={styles.heroTitle}>Smarter Service.{"\n"}Faster Quotes.</Text>
-              <Text style={styles.heroSubtitle}>SOUTH AFRICA'S ELITE PRO NETWORK</Text>
+              <Text style={styles.heroSubtitle}>{"SOUTH AFRICA'S ELITE PRO NETWORK"}</Text>
 
               {/* Solid White Search Box */}
               <View style={styles.glassSearchBox}>

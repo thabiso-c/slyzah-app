@@ -450,7 +450,7 @@ export default function UserDashboard() {
                                                     <Text style={styles.quotePrice}>R{quote.amount}</Text>
                                                 </View>
                                                 {quote.message && (
-                                                    <Text style={styles.quoteMessage}>"{quote.message}"</Text>
+                                                    <Text style={styles.quoteMessage}>{`"${quote.message}"`}</Text>
                                                 )}
                                                 {lead.status === "open" && (
                                                     <TouchableOpacity
