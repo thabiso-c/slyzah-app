@@ -439,6 +439,7 @@ export default function ResultsScreen() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", phone: "", email: "", details: "", address: "" });
     const [viewingCredentials, setViewingCredentials] = useState<any>(null);
+    const [viewingGallery, setViewingGallery] = useState<{ images: string[], index: number } | null>(null);
 
 
     const [selectedVendorForReviews, setSelectedVendorForReviews] = useState<any>(null);
@@ -730,9 +731,14 @@ export default function ResultsScreen() {
                                 <Text style={[styles.verifiedText, { color: '#006064' }]}>⚡ 15m RESPONSE</Text>
                             </View>
                         )}
-                        {item.cipcVerified && (
+                        {item.cipcVerified && !item.isIndependentContractor && (
                             <View style={[styles.verifiedBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}>
                                 <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>✅ CIPC VERIFIED</Text>
+                            </View>
+                        )}
+                        {item.isIndependentContractor && (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>👤 INDEPENDENT</Text>
                             </View>
                         )}
                         {additionalCerts.map((cert: any, index: number) => (
@@ -747,6 +753,19 @@ export default function ResultsScreen() {
                         )}
                     </View>
                 </View>
+
+                {/* SERVICE GALLERY PREVIEW */}
+                {item.serviceGallery && item.serviceGallery.length > 0 && (
+                    <View style={styles.galleryPreviewContainer}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.galleryScroll}>
+                            {item.serviceGallery.map((imgUrl: string, idx: number) => (
+                                <TouchableOpacity key={idx} onPress={() => setViewingGallery({ images: item.serviceGallery, index: idx })}>
+                                    <Image source={{ uri: imgUrl }} style={styles.galleryThumb} />
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </View>
+                )}
             </TouchableOpacity>
         );
     };
@@ -884,6 +903,44 @@ export default function ResultsScreen() {
                 initialData={formData}
                 availableVendors={vendors}
             />
+
+            {/* Gallery Viewer Modal */}
+            <Modal visible={!!viewingGallery} animationType="fade" transparent>
+                <View style={styles.galleryOverlay}>
+                    <TouchableOpacity style={styles.galleryClose} onPress={() => setViewingGallery(null)}>
+                        <Ionicons name="close" size={32} color="white" />
+                    </TouchableOpacity>
+                    {viewingGallery && (
+                        <Image 
+                            source={{ uri: viewingGallery.images[viewingGallery.index] }} 
+                            style={styles.fullImage}
+                            resizeMode="contain"
+                        />
+                    )}
+                    <View style={styles.galleryNav}>
+                        {viewingGallery && viewingGallery.images.length > 1 && (
+                            <>
+                                <TouchableOpacity 
+                                    onPress={() => setViewingGallery(prev => prev ? { ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length } : null)}
+                                    style={styles.navButton}
+                                >
+                                    <Ionicons name="chevron-back" size={32} color="white" />
+                                </TouchableOpacity>
+                                <Text style={styles.galleryCounter}>
+                                    {viewingGallery.index + 1} / {viewingGallery.images.length}
+                                </Text>
+                                <TouchableOpacity 
+                                    onPress={() => setViewingGallery(prev => prev ? { ...prev, index: (prev.index + 1) % prev.images.length } : null)}
+                                    style={styles.navButton}
+                                >
+                                    <Ionicons name="chevron-forward" size={32} color="white" />
+                                </TouchableOpacity>
+                            </>
+                        )}
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView>
     );
 }
@@ -1081,5 +1138,60 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 12,
         fontWeight: 'bold',
+    },
+    galleryPreviewContainer: {
+        marginTop: 15,
+        paddingTop: 15,
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(0,31,63,0.05)',
+    },
+    galleryScroll: {
+        gap: 10,
+        paddingRight: 20,
+    },
+    galleryThumb: {
+        width: 80,
+        height: 80,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: '#f0f0f0',
+    },
+    galleryOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.95)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    galleryClose: {
+        position: 'absolute',
+        top: 40,
+        right: 20,
+        zIndex: 100,
+    },
+    fullImage: {
+        width: '100%',
+        height: '80%',
+    },
+    galleryNav: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 40,
+        width: '100%',
+        gap: 30,
+    },
+    navButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    galleryCounter: {
+        color: 'white',
+        fontWeight: '900',
+        fontSize: 14,
     },
 });
