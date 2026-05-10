@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as WebBrowser from 'expo-web-browser';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -458,9 +459,9 @@ export default function ResultsScreen() {
         setFailedImageUrls(prev => ({ ...prev, [url]: true }));
     };
 
-    const openDocumentUrl = (url?: string | null) => {
+    const openDocumentUrl = async (url?: string | null) => {
         const safeUrl = getSafeImageUrl(url);
-        if (safeUrl) Linking.openURL(safeUrl);
+        if (safeUrl) await WebBrowser.openBrowserAsync(safeUrl);
     };
 
     const formatVendorLocation = (vendor: any) => {
@@ -810,7 +811,7 @@ export default function ResultsScreen() {
                             <Text style={[styles.reviewsLink, { color: THEME.gold }]}>PROOFS</Text>
                         </TouchableOpacity>
                         {item.website && (
-                            <TouchableOpacity onPress={() => Linking.openURL(item.website)}>
+                            <TouchableOpacity onPress={async () => await WebBrowser.openBrowserAsync(item.website)}>
                                 <Text style={styles.reviewsLink}>WEBSITE</Text>
                             </TouchableOpacity>
                         )}
