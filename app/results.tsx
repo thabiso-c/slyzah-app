@@ -39,36 +39,36 @@ const THEME = {
     text: '#001f3f'
 };
 
-const CREDENTIAL_MAPPING: Record<string, { label: string; field: string }> = {
-    "Plumber": { label: "PIRB Licensed", field: "pirbNumber" },
-    "Electrician": { label: "Wireman's License", field: "wiremanNumber" },
-    "Panel Beater": { label: "RMI Member", field: "rmiNumber" },
-    "Builder": { label: "NHBRC Reg", field: "nhbrcNumber" },
-    "Gas": { label: "SAQCC Gas", field: "saqccNumber" },
-    "Air Conditioning": { label: "SARACCA", field: "saraccaNumber" },
-    "CCTV & Security": { label: "PSiRA Reg", field: "psiraNumber" },
-    "Pest Control": { label: "PCO Reg", field: "pcoNumber" },
-    "Appliance Repairs": { label: "Trade Cert", field: "tradeCertNumber" },
-    "Locksmith": { label: "LASA Member", field: "lasaNumber" },
-    "Roofing": { label: "PRA Member", field: "praNumber" },
-    "Gate Motors": { label: "Certified Installer", field: "installerNumber" },
-    "Handyman": { label: "Liability Insurance", field: "liabilityPolicyNumber" },
-    "Solar/Power": { label: "PV Green Card", field: "pvGreenCardNumber" },
-    "Cleaning": { label: "NCCA Member", field: "nccaNumber" },
-    "Automotive": { label: "RMI / MIWA", field: "rmiMiwaNumber" },
-    "Carpenter": { label: "Trade Cert", field: "tradeCertNumber" },
-    "Solar": { label: "PV GreenCard", field: "pvGreenCardNumber" },
-    "Fire Protection": { label: "SAQCC Fire", field: "fireRegNumber" },
-    "Movers": { label: "PMA Member", field: "pmaNumber" },
-    "Mechanic": { label: "MIWA/RMI Member", field: "miwaNumber" },
-    "Auto Glass": { label: "SAGGA Member", field: "saggaNumber" },
-    "Borehole": { label: "BWA Member", field: "bwaNumber" },
-    "Pool Services": { label: "NSPI Member", field: "nspiNumber" },
-    "Tree Felling": { label: "Public Liability", field: "insuranceNumber" },
-    "Solar / EV": { label: "PV GreenCard / EV Cert", field: "pvGreenCardNumber" },
-    "Cybersecurity": { label: "IT Security Cert", field: "itSecurityCertNumber" },
-    "Accountant": { label: "SAIPA / SARS No.", field: "saipaNumber" },
-    "Childcare": { label: "First Aid / Background Check", field: "childcareCertNumber" }
+const CREDENTIAL_MAPPING: Record<string, { label: string; field: string; docField: string }> = {
+    "Plumber": { label: "PIRB Licensed", field: "pirbNumber", docField: "pirbDocumentUrl" },
+    "Electrician": { label: "Wireman's License", field: "wiremanNumber", docField: "wiremanDocumentUrl" },
+    "Panel Beater": { label: "RMI Member", field: "rmiNumber", docField: "rmiDocumentUrl" },
+    "Builder": { label: "NHBRC Reg", field: "nhbrcNumber", docField: "nhbrcDocumentUrl" },
+    "Gas": { label: "SAQCC Gas", field: "saqccNumber", docField: "saqccDocumentUrl" },
+    "Air Conditioning": { label: "SARACCA", field: "saraccaNumber", docField: "saraccaDocumentUrl" },
+    "CCTV & Security": { label: "PSiRA Reg", field: "psiraNumber", docField: "psiraDocumentUrl" },
+    "Pest Control": { label: "PCO Reg", field: "pcoNumber", docField: "pcoDocumentUrl" },
+    "Appliance Repairs": { label: "Trade Cert", field: "tradeCertNumber", docField: "tradeCertDocumentUrl" },
+    "Locksmith": { label: "LASA Member", field: "lasaNumber", docField: "lasaDocumentUrl" },
+    "Roofing": { label: "PRA Member", field: "praNumber", docField: "praDocumentUrl" },
+    "Gate Motors": { label: "Certified Installer", field: "installerNumber", docField: "installerDocumentUrl" },
+    "Handyman": { label: "Liability Insurance", field: "liabilityPolicyNumber", docField: "liabilityPolicyUrl" },
+    "Solar/Power": { label: "PV Green Card", field: "pvGreenCardNumber", docField: "pvGreenCardUrl" },
+    "Cleaning": { label: "NCCA Member", field: "nccaNumber", docField: "nccaUrl" },
+    "Automotive": { label: "RMI / MIWA", field: "rmiMiwaNumber", docField: "rmiMiwaUrl" },
+    "Carpenter": { label: "Trade Cert", field: "tradeCertNumber", docField: "tradeCertDocumentUrl" },
+    "Solar": { label: "PV GreenCard", field: "pvGreenCardNumber", docField: "pvGreenCardUrl" },
+    "Fire Protection": { label: "SAQCC Fire", field: "fireRegNumber", docField: "fireRegUrl" },
+    "Movers": { label: "PMA Member", field: "pmaNumber", docField: "pmaUrl" },
+    "Mechanic": { label: "MIWA/RMI Member", field: "miwaNumber", docField: "miwaUrl" },
+    "Auto Glass": { label: "SAGGA Member", field: "saggaNumber", docField: "saggaUrl" },
+    "Borehole": { label: "BWA Member", field: "bwaNumber", docField: "bwaUrl" },
+    "Pool Services": { label: "NSPI Member", field: "nspiNumber", docField: "nspiUrl" },
+    "Tree Felling": { label: "Public Liability", field: "insuranceNumber", docField: "insuranceUrl" },
+    "Solar / EV": { label: "PV GreenCard / EV Cert", field: "pvGreenCardNumber", docField: "pvGreenCardUrl" },
+    "Cybersecurity": { label: "IT Security Cert", field: "itSecurityCertNumber", docField: "itSecurityCertUrl" },
+    "Accountant": { label: "SAIPA / SARS No.", field: "saipaNumber", docField: "saipaUrl" },
+    "Childcare": { label: "First Aid / Background Check", field: "childcareCertNumber", docField: "childcareCertUrl" }
 };
 
 const resolveCredentialMapping = (categoryInput: string) => {
@@ -440,12 +440,38 @@ export default function ResultsScreen() {
     const [formData, setFormData] = useState({ name: "", phone: "", email: "", details: "", address: "" });
     const [viewingCredentials, setViewingCredentials] = useState<any>(null);
     const [viewingGallery, setViewingGallery] = useState<{ images: string[], index: number } | null>(null);
+    const [failedImageUrls, setFailedImageUrls] = useState<Record<string, true>>({});
 
 
     const [selectedVendorForReviews, setSelectedVendorForReviews] = useState<any>(null);
     const [vendorReviews, setVendorReviews] = useState<any[]>([]);
     const [loadingReviews, setLoadingReviews] = useState(false);
     const [reviewSort, setReviewSort] = useState<'recent' | 'rating'>('recent');
+
+    const getSafeImageUrl = (url?: string | null) => {
+        const trimmed = String(url || "").trim();
+        if (!trimmed || failedImageUrls[trimmed]) return "";
+        return /^https?:\/\//i.test(trimmed) || trimmed.startsWith("file://") ? trimmed : "";
+    };
+
+    const markImageFailed = (url: string) => {
+        setFailedImageUrls(prev => ({ ...prev, [url]: true }));
+    };
+
+    const getVendorCredentialDetails = (vendor: any) => {
+        const mapping = resolveCredentialMapping(vendor?.category || category);
+        const additionalCerts = Array.isArray(vendor?.additionalCertifications)
+            ? vendor.additionalCertifications
+                .map((cert: any) => typeof cert === "string" ? { name: cert } : cert)
+                .filter((cert: any) => cert?.name)
+            : [];
+
+        return {
+            mapping,
+            serviceNumber: mapping ? vendor?.[mapping.field] : "",
+            additionalCerts
+        };
+    };
 
     // Auto-fill user data
     useEffect(() => {
@@ -649,6 +675,11 @@ export default function ResultsScreen() {
         const isSelected = selectedForQuote.includes(item.id);
         const credentialInfo = resolveCredentialMapping(item.category);
         const additionalCerts = Array.isArray(item.additionalCertifications) ? item.additionalCertifications : [];
+        const logoUrl = getSafeImageUrl(item.logo);
+        const galleryUrls = Array.isArray(item.serviceGallery)
+            ? item.serviceGallery.map((imgUrl: string) => getSafeImageUrl(imgUrl)).filter(Boolean)
+            : [];
+        const credentials = getVendorCredentialDetails(item);
 
         return (
             <TouchableOpacity
@@ -677,8 +708,8 @@ export default function ResultsScreen() {
 
                     {/* Logo */}
                     <View style={styles.logoContainer}>
-                        {item.logo && item.logo.trim() !== "" ? (
-                            <Image source={{ uri: item.logo }} style={styles.logo} />
+                        {logoUrl ? (
+                            <Image source={{ uri: logoUrl }} style={styles.logo} onError={() => markImageFailed(logoUrl)} />
                         ) : (
                             <View style={styles.logoPlaceholder}>
                                 <Text style={styles.logoPlaceholderText}>SLYZAH</Text>
@@ -710,6 +741,35 @@ export default function ResultsScreen() {
                 <Text style={styles.description} numberOfLines={2}>
                     {`"${item.fullCategoryDescription || "Professional service provider available for call-outs."}"`}
                 </Text>
+
+                <View style={styles.credentialsPanel}>
+                    <Text style={styles.credentialsTitle}>Credentials</Text>
+                    <View style={styles.credentialsWrap}>
+                        {!item.isIndependentContractor && item.cipcRegistrationNumber ? (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>CIPC: {item.cipcRegistrationNumber}</Text>
+                            </View>
+                        ) : null}
+                        {credentials.mapping && credentials.serviceNumber ? (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}>
+                                <Text style={[styles.verifiedText, { color: '#1565C0' }]}>{credentials.mapping.label}: {credentials.serviceNumber}</Text>
+                            </View>
+                        ) : null}
+                        {credentials.additionalCerts.map((cert: any, index: number) => (
+                            <View key={`visible-cert-${index}`} style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>{cert.name}</Text>
+                            </View>
+                        ))}
+                        {item.isIndependentContractor ? (
+                            <View style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>INDEPENDENT CONTRACTOR</Text>
+                            </View>
+                        ) : null}
+                        {!item.isIndependentContractor && !item.cipcRegistrationNumber && !credentials.serviceNumber && credentials.additionalCerts.length === 0 ? (
+                            <Text style={styles.noCredentialText}>Verification details pending review.</Text>
+                        ) : null}
+                    </View>
+                </View>
 
                 <View style={styles.cardFooter}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
@@ -755,12 +815,12 @@ export default function ResultsScreen() {
                 </View>
 
                 {/* SERVICE GALLERY PREVIEW */}
-                {item.serviceGallery && item.serviceGallery.length > 0 && (
+                {galleryUrls.length > 0 && (
                     <View style={styles.galleryPreviewContainer}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.galleryScroll}>
-                            {item.serviceGallery.map((imgUrl: string, idx: number) => (
-                                <TouchableOpacity key={idx} onPress={() => setViewingGallery({ images: item.serviceGallery, index: idx })}>
-                                    <Image source={{ uri: imgUrl }} style={styles.galleryThumb} />
+                            {galleryUrls.map((imgUrl: string, idx: number) => (
+                                <TouchableOpacity key={idx} onPress={() => setViewingGallery({ images: galleryUrls, index: idx })}>
+                                    <Image source={{ uri: imgUrl }} style={styles.galleryThumb} onError={() => markImageFailed(imgUrl)} />
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
@@ -894,6 +954,70 @@ export default function ResultsScreen() {
                 </View>
             </Modal>
 
+            {/* Credentials Modal */}
+            <Modal visible={!!viewingCredentials} animationType="fade" transparent>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>{viewingCredentials?.name}</Text>
+                        <Text style={styles.modalSubtitle}>Verification Details</Text>
+
+                        {viewingCredentials && (() => {
+                            const credentials = getVendorCredentialDetails(viewingCredentials);
+                            const rows = [
+                                ...(!viewingCredentials.isIndependentContractor && viewingCredentials.cipcRegistrationNumber
+                                    ? [{
+                                        label: "CIPC Registration",
+                                        value: viewingCredentials.cipcRegistrationNumber,
+                                        url: viewingCredentials.cipcDocumentUrl
+                                    }]
+                                    : []),
+                                ...(credentials.mapping && credentials.serviceNumber
+                                    ? [{
+                                        label: credentials.mapping.label,
+                                        value: credentials.serviceNumber,
+                                        url: viewingCredentials[credentials.mapping.docField]
+                                    }]
+                                    : []),
+                                ...credentials.additionalCerts.map((cert: any) => ({
+                                    label: "Additional Certification",
+                                    value: cert.name,
+                                    url: cert.url
+                                }))
+                            ];
+
+                            return rows.length > 0 ? (
+                                <ScrollView style={{ maxHeight: 320 }}>
+                                    {rows.map((row, index) => (
+                                        <View key={`credential-row-${index}`} style={styles.credentialDetailRow}>
+                                            <View style={{ flex: 1 }}>
+                                                <Text style={styles.credentialDetailLabel}>{row.label}</Text>
+                                                <Text style={styles.credentialDetailValue}>{row.value}</Text>
+                                            </View>
+                                            {row.url ? (
+                                                <TouchableOpacity onPress={() => Linking.openURL(row.url)} style={styles.credentialViewButton}>
+                                                    <Text style={styles.credentialViewButtonText}>VIEW</Text>
+                                                </TouchableOpacity>
+                                            ) : null}
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            ) : (
+                                <Text style={styles.noReviewsText}>
+                                    {viewingCredentials.isIndependentContractor ? "Independent contractor profile." : "Verification details pending review."}
+                                </Text>
+                            );
+                        })()}
+
+                        <TouchableOpacity
+                            onPress={() => setViewingCredentials(null)}
+                            style={styles.closeButton}
+                        >
+                            <Text style={styles.closeButtonText}>CLOSE</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             {/* Request Form Modal */}
             <RequestQuoteModal
                 visible={isFormOpen}
@@ -915,6 +1039,7 @@ export default function ResultsScreen() {
                             source={{ uri: viewingGallery.images[viewingGallery.index] }} 
                             style={styles.fullImage}
                             resizeMode="contain"
+                            onError={() => markImageFailed(viewingGallery.images[viewingGallery.index])}
                         />
                     )}
                     <View style={styles.galleryNav}>
@@ -1022,6 +1147,10 @@ const styles = StyleSheet.create({
     credentialBadge: { backgroundColor: '#E3F2FD', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, alignSelf: 'flex-start', marginTop: 4 },
     credentialText: { fontSize: 9, fontWeight: 'bold', color: '#1565C0', textTransform: 'uppercase' },
     description: { fontSize: 14, color: 'rgba(255, 255, 255, 0.6)', fontStyle: 'italic', marginBottom: 15, lineHeight: 20 },
+    credentialsPanel: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 10, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
+    credentialsTitle: { color: THEME.gold, fontSize: 9, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
+    credentialsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+    noCredentialText: { color: 'rgba(255,255,255,0.45)', fontSize: 10, fontWeight: '700' },
     cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     reviewsLink: { fontSize: 12, fontWeight: '900', color: THEME.gold, textDecorationLine: 'underline' },
     verifiedBadge: {
@@ -1082,6 +1211,11 @@ const styles = StyleSheet.create({
     noReviewsText: { textAlign: 'center', color: 'rgba(255, 255, 255, 0.4)', fontStyle: 'italic', marginVertical: 20 },
     closeButton: { backgroundColor: THEME.gold, padding: 16, borderRadius: 20, alignItems: 'center', marginTop: 10 },
     closeButtonText: { color: THEME.navy, fontWeight: '900', fontSize: 12 },
+    credentialDetailRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.08)' },
+    credentialDetailLabel: { color: THEME.gold, fontSize: 10, fontWeight: '900', textTransform: 'uppercase', marginBottom: 4 },
+    credentialDetailValue: { color: THEME.white, fontSize: 13, fontWeight: '700' },
+    credentialViewButton: { backgroundColor: THEME.gold, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12 },
+    credentialViewButtonText: { color: THEME.navy, fontSize: 10, fontWeight: '900' },
 
     // Form Styles
     formScroll: { paddingBottom: 20 },
