@@ -742,9 +742,7 @@ export default function ResultsScreen() {
                                 </View>
                             )}
                         </View>
-                        <Text style={styles.locationText}>
-                            {formatVendorLocation(item)}
-                        </Text>
+
                         {credentialInfo && item[credentialInfo.field] && (
                             <View style={styles.credentialBadge}>
                                 <Text style={styles.credentialText}>🛡️ {credentialInfo.label}: {item[credentialInfo.field]}</Text>
