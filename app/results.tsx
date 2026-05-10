@@ -458,6 +458,17 @@ export default function ResultsScreen() {
         setFailedImageUrls(prev => ({ ...prev, [url]: true }));
     };
 
+    const openDocumentUrl = (url?: string | null) => {
+        const safeUrl = getSafeImageUrl(url);
+        if (safeUrl) Linking.openURL(safeUrl);
+    };
+
+    const formatVendorLocation = (vendor: any) => {
+        if (vendor?.tier === "Multi-Province") return "National Coverage";
+        const locationParts = [vendor?.region || vendor?.town, vendor?.province].filter(Boolean);
+        return locationParts.length > 0 ? locationParts.join(" | ") : "Coverage area pending";
+    };
+
     const getVendorCredentialDetails = (vendor: any) => {
         const mapping = resolveCredentialMapping(vendor?.category || category);
         const additionalCerts = Array.isArray(vendor?.additionalCertifications)
@@ -469,6 +480,7 @@ export default function ResultsScreen() {
         return {
             mapping,
             serviceNumber: mapping ? vendor?.[mapping.field] : "",
+            serviceDocUrl: mapping ? vendor?.[mapping.docField] : "",
             additionalCerts
         };
     };
@@ -680,6 +692,8 @@ export default function ResultsScreen() {
             ? item.serviceGallery.map((imgUrl: string) => getSafeImageUrl(imgUrl)).filter(Boolean)
             : [];
         const credentials = getVendorCredentialDetails(item);
+        const cipcDocumentUrl = getSafeImageUrl(item.cipcDocumentUrl);
+        const serviceDocumentUrl = getSafeImageUrl(credentials.serviceDocUrl);
 
         return (
             <TouchableOpacity
@@ -728,7 +742,7 @@ export default function ResultsScreen() {
                             )}
                         </View>
                         <Text style={styles.locationText}>
-                            {item.tier === "Multi-Province" ? "🌍 National Coverage" : `📍 ${item.region || item.town || "Verified Area"}`}
+                            {formatVendorLocation(item)}
                         </Text>
                         {credentialInfo && item[credentialInfo.field] && (
                             <View style={styles.credentialBadge}>
@@ -746,20 +760,36 @@ export default function ResultsScreen() {
                     <Text style={styles.credentialsTitle}>Credentials</Text>
                     <View style={styles.credentialsWrap}>
                         {!item.isIndependentContractor && item.cipcRegistrationNumber ? (
-                            <View style={[styles.verifiedBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}>
-                                <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>CIPC: {item.cipcRegistrationNumber}</Text>
-                            </View>
+                            <TouchableOpacity
+                                disabled={!cipcDocumentUrl}
+                                onPress={() => openDocumentUrl(cipcDocumentUrl)}
+                                style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}
+                            >
+                                <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>CIPC: {item.cipcRegistrationNumber}{cipcDocumentUrl ? " | VIEW" : ""}</Text>
+                            </TouchableOpacity>
                         ) : null}
                         {credentials.mapping && credentials.serviceNumber ? (
-                            <View style={[styles.verifiedBadge, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}>
-                                <Text style={[styles.verifiedText, { color: '#1565C0' }]}>{credentials.mapping.label}: {credentials.serviceNumber}</Text>
-                            </View>
+                            <TouchableOpacity
+                                disabled={!serviceDocumentUrl}
+                                onPress={() => openDocumentUrl(serviceDocumentUrl)}
+                                style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}
+                            >
+                                <Text style={[styles.verifiedText, { color: '#1565C0' }]}>{credentials.mapping.label}: {credentials.serviceNumber}{serviceDocumentUrl ? " | VIEW" : ""}</Text>
+                            </TouchableOpacity>
                         ) : null}
-                        {credentials.additionalCerts.map((cert: any, index: number) => (
-                            <View key={`visible-cert-${index}`} style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
-                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>{cert.name}</Text>
-                            </View>
-                        ))}
+                        {credentials.additionalCerts.map((cert: any, index: number) => {
+                            const certUrl = getSafeImageUrl(cert.url);
+                            return (
+                                <TouchableOpacity
+                                    key={`visible-cert-${index}`}
+                                    disabled={!certUrl}
+                                    onPress={() => openDocumentUrl(certUrl)}
+                                    style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}
+                                >
+                                    <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>{cert.name}{certUrl ? " | VIEW" : ""}</Text>
+                                </TouchableOpacity>
+                            );
+                        })}
                         {item.isIndependentContractor ? (
                             <View style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
                                 <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>INDEPENDENT CONTRACTOR</Text>
@@ -777,7 +807,7 @@ export default function ResultsScreen() {
                             <Text style={styles.reviewsLink}>REVIEWS</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setViewingCredentials(item)}>
-                            <Text style={[styles.reviewsLink, { color: THEME.gold }]}>VERIFY 🛡️</Text>
+                            <Text style={[styles.reviewsLink, { color: THEME.gold }]}>PROOFS</Text>
                         </TouchableOpacity>
                         {item.website && (
                             <TouchableOpacity onPress={() => Linking.openURL(item.website)}>
@@ -819,8 +849,9 @@ export default function ResultsScreen() {
                     <View style={styles.galleryPreviewContainer}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.galleryScroll}>
                             {galleryUrls.map((imgUrl: string, idx: number) => (
-                                <TouchableOpacity key={idx} onPress={() => setViewingGallery({ images: galleryUrls, index: idx })}>
+                                <TouchableOpacity key={idx} style={styles.galleryThumbButton} onPress={() => setViewingGallery({ images: galleryUrls, index: idx })}>
                                     <Image source={{ uri: imgUrl }} style={styles.galleryThumb} onError={() => markImageFailed(imgUrl)} />
+                                    <Text style={styles.galleryThumbLabel}>VIEW</Text>
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
@@ -994,7 +1025,7 @@ export default function ResultsScreen() {
                                                 <Text style={styles.credentialDetailValue}>{row.value}</Text>
                                             </View>
                                             {row.url ? (
-                                                <TouchableOpacity onPress={() => Linking.openURL(row.url)} style={styles.credentialViewButton}>
+                                                <TouchableOpacity onPress={() => openDocumentUrl(row.url)} style={styles.credentialViewButton}>
                                                     <Text style={styles.credentialViewButtonText}>VIEW</Text>
                                                 </TouchableOpacity>
                                             ) : null}
@@ -1162,6 +1193,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#B2F5EA'
     },
+    credentialProofBadge: {
+        paddingHorizontal: 8,
+        paddingVertical: 5,
+        borderRadius: 8,
+    },
     verifiedText: { fontSize: 8, fontWeight: '900' },
 
     // Empty & Load More
@@ -1289,6 +1325,25 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         borderWidth: 1,
         borderColor: '#f0f0f0',
+    },
+    galleryThumbButton: {
+        position: 'relative',
+        width: 80,
+        height: 80,
+    },
+    galleryThumbLabel: {
+        position: 'absolute',
+        left: 6,
+        right: 6,
+        bottom: 6,
+        paddingVertical: 3,
+        borderRadius: 8,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(0,31,63,0.82)',
+        color: THEME.white,
+        fontSize: 8,
+        fontWeight: '900',
+        textAlign: 'center',
     },
     galleryOverlay: {
         flex: 1,
