@@ -522,87 +522,77 @@ export default function HomeScreen() {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      // Reverse Geocode to get city/province
-      let address = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude
-      });
+      
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.coords.latitude}&lon=${location.coords.longitude}&zoom=18`,
+        { headers: { 'User-Agent': 'Slyzah-App/1.0' } }
+      );
+      const data = await response.json();
+      const address = data.address || {};
+      const detectedProv = address.state || "";
+      const detectedPostalCode = address.postcode;
 
-      if (address && address.length > 0) {
-        const detected = address[0];
-        const detectedProv = detected.region || "";
-        const detectedPostalCode = detected.postalCode;
+      // Gather potential suburb names exactly like the web app
+      const potentialSuburbs = [
+        address.suburb,
+        address.neighbourhood,
+        address.residential,
+        address.village,
+        address.town,
+        address.city_district,
+        address.city
+      ].filter(Boolean) as string[];
 
-        // Gather all potential suburb/city names from the address object
-        const potentialSuburbs = [
-          detected.subregion,
-          detected.district,
-          detected.street, // Check street address for suburb name
-          detected.name,   // Check location name for suburb name
-          detected.city,
-        ].filter(Boolean) as string[];
+      let finalRegion = "";
+      let finalProvince = detectedProv;
 
-        let finalProvince = detectedProv;
-        let finalCity = "";
+      // Normalize string for comparison
+      const normalize = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
+      const pKey = Object.keys(LOCATION_MAPPING).find(k => normalize(k) === normalize(detectedProv));
 
-        // Normalize string for comparison (remove non-alphanumeric)
-        const normalize = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
-        const pKey = Object.keys(LOCATION_MAPPING).find(k => normalize(k) === normalize(detectedProv));
+      if (pKey) {
+        finalProvince = pKey;
+        const regions = LOCATION_MAPPING[pKey];
 
-        if (pKey) {
-          finalProvince = pKey;
-          const regions = LOCATION_MAPPING[pKey]
-
-          // 1. Check Postal Code FIRST (Most accurate for specific areas like Kraaifontein)
-          if (detectedPostalCode && POSTAL_CODE_TO_REGION_MAP[detectedPostalCode]) {
-            const mappedRegion = POSTAL_CODE_TO_REGION_MAP[detectedPostalCode];
-            if (regions.includes(mappedRegion)) {
-              finalCity = mappedRegion;
-            }
+        // 1. Check Postal Code
+        if (detectedPostalCode && POSTAL_CODE_TO_REGION_MAP[detectedPostalCode]) {
+          const mappedRegion = POSTAL_CODE_TO_REGION_MAP[detectedPostalCode];
+          if (regions.includes(mappedRegion)) {
+            finalRegion = mappedRegion;
           }
+        }
 
-          // 2. If no postal code match, try to map from Suburb -> Region using the map
-          if (!finalCity) {
-            for (const sub of potentialSuburbs) {
-              const cleanSub = sub.toLowerCase().trim();
-              if (SUBURB_TO_REGION_MAP[cleanSub]) {
-                const mappedRegion = SUBURB_TO_REGION_MAP[cleanSub];
-                // Verify this region exists in the province's list
-                if (regions.includes(mappedRegion)) {
-                  finalCity = mappedRegion;
-                  break;
-                }
-              }
-            }
-          }
-
-          // 3. If no map match, check if any potential suburb IS the region name
-          if (!finalCity) {
-            for (const sub of potentialSuburbs) {
-              const match = regions.find(r => {
-                const parts = r.split('/').map(p => p.trim().toLowerCase());
-                return parts.some(part => sub.toLowerCase().includes(part));
-              });
-              if (match) {
-                finalCity = match;
+        // 2. Check Suburb Map
+        if (!finalRegion) {
+          for (const sub of potentialSuburbs) {
+            const cleanSub = sub.toLowerCase().trim();
+            if (SUBURB_TO_REGION_MAP[cleanSub]) {
+              const mappedRegion = SUBURB_TO_REGION_MAP[cleanSub];
+              if (regions.includes(mappedRegion)) {
+                finalRegion = mappedRegion;
                 break;
               }
             }
           }
+        }
 
-          // 4. Fallback: If still nothing, use the first available city name
-          if (!finalCity) {
-            if (potentialSuburbs.length > 0) {
-              finalCity = potentialSuburbs[0];
-            } else {
-              finalCity = finalProvince; // Ultimate fallback to Province if no city/suburb found
+        // 3. Check if suburb IS the region
+        if (!finalRegion) {
+          for (const sub of potentialSuburbs) {
+            const match = regions.find(r => {
+              const parts = r.split('/').map(p => p.trim().toLowerCase());
+              return parts.some(part => sub.toLowerCase().includes(part));
+            });
+            if (match) {
+              finalRegion = match;
+              break;
             }
           }
         }
-
-        setLocationCity(finalCity);
-        setLocationProvince(finalProvince);
       }
+
+      setLocationCity(finalRegion);
+      setLocationProvince(finalProvince);
     } catch (error) {
       console.log(error);
     } finally {

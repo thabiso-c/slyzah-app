@@ -540,6 +540,19 @@ export default function ResultsScreen() {
     // Fetch Reviews
     const fetchReviews = async (vendor: any) => {
         setSelectedVendorForReviews(vendor);
+        if (vendor.source === "web") {
+            const webReviews = (vendor.reviews || []).map((rev: any, idx: number) => ({
+                id: `${vendor.id}-review-${idx}`,
+                customerName: rev.authorName || "Google Reviewer",
+                rating: rev.rating,
+                comment: rev.comment,
+                timeDescription: rev.timeDescription,
+                createdAt: rev.time ? { seconds: rev.time, toDate: () => new Date(rev.time * 1000) } : null,
+            }));
+            setVendorReviews(webReviews);
+            setLoadingReviews(false);
+            return;
+        }
         setLoadingReviews(true);
         try {
             const q = query(
@@ -563,16 +576,6 @@ export default function ResultsScreen() {
             if (!category) return;
             setLoading(true);
             console.log(`🔍 Searching for: "${category}" in Region: "${userRegion}", Province: "${userProvince}"`);
-
-            // Early exit if no location is provided. This prevents an unnecessary broad query
-            // that might fail due to Firestore security rules if location is required for access.
-            if (!userRegion && !userProvince) {
-                console.log("No user location provided for matching. Aborting search.");
-                setVendors([]);
-                setSearchStatus("none");
-                setLoading(false);
-                return;
-            }
 
             try {
                 const searchKeywords = category.toLowerCase().split(" ").map(word =>
@@ -718,7 +721,8 @@ export default function ResultsScreen() {
     };
 
     const handleRequestQuotes = () => {
-        if (!auth.currentUser) {
+        const hasWebVendor = selectedForQuote.some(id => vendors.find((v: any) => v.id === id)?.source === "web");
+        if (!auth.currentUser && !hasWebVendor) {
             Alert.alert(
                 "Login Required",
                 "Please login to request quotes.",
@@ -810,64 +814,86 @@ export default function ResultsScreen() {
                     {`"${item.fullCategoryDescription || "Professional service provider available for call-outs."}"`}
                 </Text>
 
-                <View style={styles.credentialsPanel}>
-                    <Text style={styles.credentialsTitle}>Credentials</Text>
-                    <View style={styles.credentialsWrap}>
-                        {!item.isIndependentContractor && item.cipcRegistrationNumber ? (
-                            <TouchableOpacity
-                                disabled={!cipcDocumentUrl}
-                                onPress={() => openDocumentUrl(cipcDocumentUrl)}
-                                style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}
-                            >
-                                <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>CIPC: {item.cipcRegistrationNumber}{cipcDocumentUrl ? " | VIEW" : ""}</Text>
-                            </TouchableOpacity>
-                        ) : null}
-                        {credentials.mapping && credentials.serviceNumber ? (
-                            <TouchableOpacity
-                                disabled={!serviceDocumentUrl}
-                                onPress={() => openDocumentUrl(serviceDocumentUrl)}
-                                style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}
-                            >
-                                <Text style={[styles.verifiedText, { color: '#1565C0' }]}>{credentials.mapping.label}: {credentials.serviceNumber}{serviceDocumentUrl ? " | VIEW" : ""}</Text>
-                            </TouchableOpacity>
-                        ) : null}
-                        {credentials.additionalCerts.map((cert: any, index: number) => {
-                            const certUrl = getSafeImageUrl(cert.url);
-                            return (
+                {!isWebVendor ? (
+                    <View style={styles.credentialsPanel}>
+                        <Text style={styles.credentialsTitle}>Credentials</Text>
+                        <View style={styles.credentialsWrap}>
+                            {!item.isIndependentContractor && item.cipcRegistrationNumber ? (
                                 <TouchableOpacity
-                                    key={`visible-cert-${index}`}
-                                    disabled={!certUrl}
-                                    onPress={() => openDocumentUrl(certUrl)}
-                                    style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}
+                                    disabled={!cipcDocumentUrl}
+                                    onPress={() => openDocumentUrl(cipcDocumentUrl)}
+                                    style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E8F5E9', borderColor: '#A5D6A7' }]}
                                 >
-                                    <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>{cert.name}{certUrl ? " | VIEW" : ""}</Text>
+                                    <Text style={[styles.verifiedText, { color: '#1B5E20' }]}>CIPC: {item.cipcRegistrationNumber}{cipcDocumentUrl ? " | VIEW" : ""}</Text>
                                 </TouchableOpacity>
-                            );
-                        })}
-                        {item.isIndependentContractor ? (
-                            <View style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
-                                <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>INDEPENDENT CONTRACTOR</Text>
-                            </View>
-                        ) : null}
-                        {!item.isIndependentContractor && !item.cipcRegistrationNumber && !credentials.serviceNumber && credentials.additionalCerts.length === 0 ? (
-                            <Text style={styles.noCredentialText}>Verification details pending review.</Text>
-                        ) : null}
+                            ) : null}
+                            {credentials.mapping && credentials.serviceNumber ? (
+                                <TouchableOpacity
+                                    disabled={!serviceDocumentUrl}
+                                    onPress={() => openDocumentUrl(serviceDocumentUrl)}
+                                    style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}
+                                >
+                                    <Text style={[styles.verifiedText, { color: '#1565C0' }]}>{credentials.mapping.label}: {credentials.serviceNumber}{serviceDocumentUrl ? " | VIEW" : ""}</Text>
+                                </TouchableOpacity>
+                            ) : null}
+                            {credentials.additionalCerts.map((cert: any, index: number) => {
+                                const certUrl = getSafeImageUrl(cert.url);
+                                return (
+                                    <TouchableOpacity
+                                        key={`visible-cert-${index}`}
+                                        disabled={!certUrl}
+                                        onPress={() => openDocumentUrl(certUrl)}
+                                        style={[styles.verifiedBadge, styles.credentialProofBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}
+                                    >
+                                        <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>{cert.name}{certUrl ? " | VIEW" : ""}</Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                            {item.isIndependentContractor ? (
+                                <View style={[styles.verifiedBadge, { backgroundColor: '#F3E5F5', borderColor: '#E1BEE7' }]}>
+                                    <Text style={[styles.verifiedText, { color: '#7B1FA2' }]}>INDEPENDENT CONTRACTOR</Text>
+                                </View>
+                            ) : null}
+                            {!item.isIndependentContractor && !item.cipcRegistrationNumber && !credentials.serviceNumber && credentials.additionalCerts.length === 0 ? (
+                                <Text style={styles.noCredentialText}>Verification details pending review.</Text>
+                            ) : null}
+                        </View>
                     </View>
-                </View>
+                ) : (
+                    <View style={[styles.credentialsPanel, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                            <Text style={[styles.credentialsTitle, { color: '#1565C0' }]}>Sourced Online</Text>
+                            <Text style={[styles.noCredentialText, { color: '#42A5F5', fontSize: 8 }]}>VERIFIED BY GOOGLE</Text>
+                        </View>
+                        <Text style={[styles.noCredentialText, { color: '#1976D2' }]}>
+                            🌐 Found online{item.emailFound ? " — email on file for quote outreach" : " — we'll share your details when you request a quote"}.
+                        </Text>
+                    </View>
+                )}
 
                 <View style={styles.cardFooter}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
+                        <TouchableOpacity onPress={() => fetchReviews(item)}>
+                            <Text style={styles.reviewsLink}>REVIEWS</Text>
+                        </TouchableOpacity>
                         {!isWebVendor && (
-                            <TouchableOpacity onPress={() => fetchReviews(item)}>
-                                <Text style={styles.reviewsLink}>REVIEWS</Text>
+                            <TouchableOpacity onPress={() => setViewingCredentials(item)}>
+                                <Text style={[styles.reviewsLink, { color: THEME.gold }]}>PROOFS</Text>
                             </TouchableOpacity>
                         )}
-                        <TouchableOpacity onPress={() => setViewingCredentials(item)}>
-                            <Text style={[styles.reviewsLink, { color: THEME.gold }]}>PROOFS</Text>
-                        </TouchableOpacity>
+                        {isWebVendor && item.phone && (
+                            <TouchableOpacity onPress={async () => await Linking.openURL(`tel:${item.phone}`)}>
+                                <Text style={styles.reviewsLink}>CALL</Text>
+                            </TouchableOpacity>
+                        )}
                         {item.website && (
                             <TouchableOpacity onPress={async () => await WebBrowser.openBrowserAsync(item.website)}>
                                 <Text style={styles.reviewsLink}>WEBSITE</Text>
+                            </TouchableOpacity>
+                        )}
+                        {isWebVendor && item.mapsUrl && (
+                            <TouchableOpacity onPress={async () => await WebBrowser.openBrowserAsync(item.mapsUrl)}>
+                                <Text style={styles.reviewsLink}>MAPS</Text>
                             </TouchableOpacity>
                         )}
                     </View>
