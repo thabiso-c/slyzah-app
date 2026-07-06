@@ -26,7 +26,7 @@ import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 're
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth, db, storage } from '../firebaseConfig';
 import { GOOGLE_MAPS_API_KEY } from '../lib/secrets';
-import { sendPushNotification } from '../lib/api_client';
+import { sendPushNotification, WEB_API_BASE_URL } from '../lib/api_client';
 import { sendResendEmail } from '../lib/services';
 
 const { width, height } = Dimensions.get('window');
@@ -172,6 +172,14 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                 imageUrl = await getDownloadURL(snapshot.ref);
             }
 
+            // Split vendors into registered (Firestore) and web (scraped)
+            const registeredVendorIds = selectedVendorIds.filter(
+                (id: string) => !availableVendors?.find((v: any) => v.id === id && v.source === "web")
+            );
+            const webVendorsSelected = (availableVendors || []).filter(
+                (v: any) => v.source === "web" && selectedVendorIds.includes(v.id)
+            );
+
             console.log("Creating lead document...");
             const docRef = await addDoc(collection(db, "leads"), {
                 customerId: user?.uid || "guest",
@@ -179,42 +187,38 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                 customerPhone: formData.phone,
                 customerEmail: formData.email,
                 category: category,
-                issueDescription: formData.issue, // Aligned with Web
-                address: formData.address,        // Aligned with Web
+                issueDescription: formData.issue,
+                address: formData.address,
                 imageUrl: imageUrl,
                 urgency: urgency,
                 town: formData.town,
-                vendorIds: selectedVendorIds,
-                status: "open",                   // Aligned with Web
+                vendorIds: registeredVendorIds,
+                webVendorIds: webVendorsSelected.map((v: any) => v.id),
+                status: "open",
                 createdAt: serverTimestamp(),
                 platform: "mobile",
-                quotes: {}                        // Initialize empty map for quotes
+                quotes: {},
+                legal: {
+                    termsAgreed: true,
+                    privacyPolicyAccepted: true,
+                    consentTimestamp: new Date().toISOString(),
+                    processingPurpose: "Lead generation and vendor connection",
+                    platformRole: "Intermediary / Marketplace Provider"
+                }
             });
             console.log("Lead created successfully with ID:", docRef.id);
 
-            // Create Notifications & Trigger Emails for Vendors
-            console.log("Processing vendors:", selectedVendorIds);
-            if (selectedVendorIds.length > 0) {
-                // Process vendors sequentially to avoid rate limiting/concurrency issues with email API
-                for (const vendorId of selectedVendorIds) {
+            // ── 1. Process Registered (Firestore) Vendors ────────────────────────
+            if (registeredVendorIds.length > 0) {
+                for (const vendorId of registeredVendorIds) {
                     try {
-                        console.log(`Processing vendor ID: ${vendorId}`);
-                        // Optimization: Use passed vendor data if available, else fetch
                         let vendorData = availableVendors?.find((v: any) => v.id === vendorId);
-
                         if (!vendorData) {
                             const vendorSnap = await getDoc(doc(db, "professionals", vendorId));
-                            if (vendorSnap.exists()) {
-                                vendorData = vendorSnap.data();
-                            }
+                            if (vendorSnap.exists()) vendorData = vendorSnap.data();
                         }
+                        if (!vendorData) { console.warn(`Vendor data not found: ${vendorId}`); continue; }
 
-                        if (!vendorData) {
-                            console.warn(`Vendor data not found for ID: ${vendorId}`);
-                            continue;
-                        };
-
-                        // Send Email via Resend
                         if (vendorData?.email) {
                             await sendResendEmail(
                                 vendorData.email,
@@ -228,11 +232,9 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                                 vendorId,
                                 imageUrl,
                                 urgency,
-                                "thabilet@slyza.co.za" // Pass the custom reply-to address
+                                "thabilet@slyza.co.za"
                             );
                         }
-
-                        // Create dashboard notification
                         await addDoc(collection(db, "professionals", vendorId, "notifications"), {
                             type: "lead",
                             notificationMessage: `New Request: ${formData.issue} in ${formData.town}`,
@@ -240,17 +242,47 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
                             createdAt: serverTimestamp(),
                             leadId: docRef.id
                         });
-
-                        // Send Push Notification
                         if (vendorData.expoPushToken) {
-                            await sendPushNotification(vendorData.expoPushToken, `New Lead: ${category}`, formData.issue, { leadId: docRef.id, urgency: urgency });
+                            await sendPushNotification(vendorData.expoPushToken, `New Lead: ${category}`, formData.issue, { leadId: docRef.id, urgency });
                         }
-
                     } catch (e) {
-                        console.error("Error notifying vendor:", vendorId, e);
+                        console.error("Error notifying registered vendor:", vendorId, e);
                     }
                 }
-                console.log("All vendor notifications processed.");
+            }
+
+            // ── 2. Process Web (Scraped) Vendors via Deployed Web API ─────────────
+            if (webVendorsSelected.length > 0) {
+                for (const webVendor of webVendorsSelected) {
+                    try {
+                        await fetch(`${WEB_API_BASE_URL}/api/send-outreach-email`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                vendor: webVendor,
+                                customerName: formData.name,
+                                customerPhone: formData.phone,
+                                customerEmail: formData.email,
+                                category,
+                                issue: formData.issue,
+                                address: formData.address,
+                                town: formData.town,
+                                imageUrls: imageUrl ? [imageUrl] : [],
+                                urgency,
+                                leadId: docRef.id,
+                                platform: "mobile",
+                                legal: {
+                                    termsAgreed: true,
+                                    privacyPolicyAccepted: true,
+                                    consentTimestamp: new Date().toISOString()
+                                }
+                            })
+                        });
+                        console.log(`Web vendor outreach sent for: ${webVendor.name}`);
+                    } catch (e) {
+                        console.error("Error sending outreach for web vendor:", webVendor.name, e);
+                    }
+                }
             }
 
             Alert.alert("Success", "Your quote request has been sent! You will be redirected to your dashboard to view replies.", [
@@ -646,9 +678,26 @@ export default function ResultsScreen() {
                     status = "global";
                 }
 
-                if (finalSet.length > 0) {
-                    setVendors(processAndSort(finalSet));
-                    setSearchStatus(status);
+                // Fetch Web Vendors
+                let webVendors: any[] = [];
+                try {
+                    const location = [uReg, uProv].filter(Boolean).join(", ");
+                    const params = new URLSearchParams({ category, location });
+                    const res = await fetch(`${WEB_API_BASE_URL}/api/search-web-vendors?${params.toString()}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.vendors) {
+                            webVendors = data.vendors.sort((a: any, b: any) => (b.rating ?? -1) - (a.rating ?? -1));
+                        }
+                    }
+                } catch (webErr) {
+                    console.error("Web vendor fetch error:", webErr);
+                }
+
+                if (finalSet.length > 0 || webVendors.length > 0) {
+                    const processedDB = processAndSort(finalSet);
+                    setVendors([...processedDB, ...webVendors]);
+                    setSearchStatus(finalSet.length > 0 ? status : "global");
                 } else {
                     setVendors([]);
                     setSearchStatus("none");
@@ -684,7 +733,8 @@ export default function ResultsScreen() {
     };
 
     const renderVendor = ({ item }: { item: any }) => {
-        const isSponsored = ["One Region", "Three Regions", "Provincial", "Multi-Province"].includes(item.tier);
+        const isWebVendor = item.source === "web";
+        const isSponsored = !isWebVendor && ["One Region", "Three Regions", "Provincial", "Multi-Province"].includes(item.tier);
         const isSelected = selectedForQuote.includes(item.id);
         const credentialInfo = resolveCredentialMapping(item.category);
         const additionalCerts = Array.isArray(item.additionalCertifications) ? item.additionalCertifications : [];
@@ -708,6 +758,11 @@ export default function ResultsScreen() {
                 {isSponsored && (
                     <View style={styles.sponsoredBadge}>
                         <Text style={styles.sponsoredText}>✨ SPONSORED</Text>
+                    </View>
+                )}
+                {isWebVendor && (
+                    <View style={[styles.sponsoredBadge, { backgroundColor: '#E8F0FE', borderColor: '#4285F4' }]}>
+                        <Text style={[styles.sponsoredText, { color: '#1A73E8' }]}>🌐 FOUND ONLINE</Text>
                     </View>
                 )}
 
@@ -802,9 +857,11 @@ export default function ResultsScreen() {
 
                 <View style={styles.cardFooter}>
                     <View style={{ flexDirection: 'row', gap: 15 }}>
-                        <TouchableOpacity onPress={() => fetchReviews(item)}>
-                            <Text style={styles.reviewsLink}>REVIEWS</Text>
-                        </TouchableOpacity>
+                        {!isWebVendor && (
+                            <TouchableOpacity onPress={() => fetchReviews(item)}>
+                                <Text style={styles.reviewsLink}>REVIEWS</Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity onPress={() => setViewingCredentials(item)}>
                             <Text style={[styles.reviewsLink, { color: THEME.gold }]}>PROOFS</Text>
                         </TouchableOpacity>
