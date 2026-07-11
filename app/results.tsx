@@ -687,15 +687,22 @@ export default function ResultsScreen() {
                     const params = new URLSearchParams();
                     if (category) params.append("category", category);
                     if (location) params.append("location", location);
-                    const res = await fetch(`${WEB_API_BASE_URL}/api/search-web-vendors?${params.toString()}`);
+                    
+                    const apiUrl = `${WEB_API_BASE_URL}/api/search-web-vendors?${params.toString()}`;
+                    const res = await fetch(apiUrl);
+                    
                     if (res.ok) {
                         const data = await res.json();
                         if (data.vendors) {
                             webVendors = data.vendors.sort((a: any, b: any) => (b.rating ?? -1) - (a.rating ?? -1));
                         }
+                    } else {
+                        const errText = await res.text();
+                        Alert.alert("Web API Error", `Status: ${res.status}\nURL: ${apiUrl}\nResponse: ${errText.substring(0, 200)}`);
                     }
-                } catch (webErr) {
+                } catch (webErr: any) {
                     console.error("Web vendor fetch error:", webErr);
+                    Alert.alert("Web API Crash", `Failed to fetch web vendors: ${webErr?.message || String(webErr)}`);
                 }
 
                 if (finalSet.length > 0 || webVendors.length > 0) {
