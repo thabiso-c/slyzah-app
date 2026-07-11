@@ -26,6 +26,9 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.thabilet.slyzahapp",
       "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
         "RECEIVE_BOOT_COMPLETED",
         "WAKE_LOCK"
       ]
