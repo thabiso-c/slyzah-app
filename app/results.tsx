@@ -693,7 +693,9 @@ export default function ResultsScreen() {
                     
                     if (res.ok) {
                         const data = await res.json();
-                        if (data.vendors) {
+                        if (data.error || (data.status && data.status !== "OK" && data.status !== "ZERO_RESULTS")) {
+                            Alert.alert("Google API Error", `Google Places returned an error to the backend:\nStatus: ${data.status}\nError: ${data.error || "Unknown"}\nHint: ${data.hint || "None"}`);
+                        } else if (data.vendors) {
                             webVendors = data.vendors.sort((a: any, b: any) => (b.rating ?? -1) - (a.rating ?? -1));
                         }
                     } else {
