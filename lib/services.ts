@@ -1,4 +1,4 @@
-const WEB_API_BASE_URL = "https://slyzah-web.vercel.app";
+const WEB_API_BASE_URL = process.env.EXPO_PUBLIC_WEB_API_URL || "https://slyzah-web.vercel.app";
 
 export const sendResendEmail = async (
   to: string,

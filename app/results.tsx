@@ -684,7 +684,9 @@ export default function ResultsScreen() {
                 let webVendors: any[] = [];
                 try {
                     const location = [uReg, uProv].filter(Boolean).join(", ");
-                    const params = new URLSearchParams({ category, location });
+                    const params = new URLSearchParams();
+                    if (category) params.append("category", category);
+                    if (location) params.append("location", location);
                     const res = await fetch(`${WEB_API_BASE_URL}/api/search-web-vendors?${params.toString()}`);
                     if (res.ok) {
                         const data = await res.json();

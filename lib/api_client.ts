@@ -7,7 +7,7 @@
  */
 
 // This matches the URL found in your login.tsx
-export const WEB_API_BASE_URL = "https://slyzah-web.vercel.app";
+export const WEB_API_BASE_URL = process.env.EXPO_PUBLIC_WEB_API_URL || "https://slyzah-web.vercel.app";
 
 export const verifyCipcBusiness = async (registrationNumber: string) => {
     try {
