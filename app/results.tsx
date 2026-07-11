@@ -253,35 +253,34 @@ const RequestQuoteModal = ({ visible, onClose, category, selectedVendorIds, init
 
             // ── 2. Process Web (Scraped) Vendors via Deployed Web API ─────────────
             if (webVendorsSelected.length > 0) {
-                for (const webVendor of webVendorsSelected) {
-                    try {
-                        await fetch(`${WEB_API_BASE_URL}/api/send-outreach-email`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                vendor: webVendor,
-                                customerName: formData.name,
-                                customerPhone: formData.phone,
-                                customerEmail: formData.email,
-                                category,
-                                issue: formData.issue,
-                                address: formData.address,
-                                town: formData.town,
-                                imageUrls: imageUrl ? [imageUrl] : [],
-                                urgency,
-                                leadId: docRef.id,
-                                platform: "mobile",
-                                legal: {
-                                    termsAgreed: true,
-                                    privacyPolicyAccepted: true,
-                                    consentTimestamp: new Date().toISOString()
-                                }
-                            })
-                        });
-                        console.log(`Web vendor outreach sent for: ${webVendor.name}`);
-                    } catch (e) {
-                        console.error("Error sending outreach for web vendor:", webVendor.name, e);
-                    }
+                try {
+                    await fetch(`${WEB_API_BASE_URL}/api/send-outreach-email`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customerName: formData.name,
+                            customerPhone: formData.phone,
+                            customerEmail: formData.email,
+                            category,
+                            issue: formData.issue,
+                            address: formData.address,
+                            town: formData.town,
+                            imageUrls: imageUrl ? [imageUrl] : [],
+                            urgency,
+                            customerId: user?.uid,
+                            externalVendors: webVendorsSelected,
+                            leadId: docRef.id,
+                            platform: "mobile",
+                            legal: {
+                                termsAgreed: true,
+                                privacyPolicyAccepted: true,
+                                consentTimestamp: new Date().toISOString()
+                            }
+                        })
+                    });
+                    console.log(`Web vendor outreach sent for ${webVendorsSelected.length} vendors`);
+                } catch (e) {
+                    console.error("Error sending outreach for web vendors:", e);
                 }
             }
 
