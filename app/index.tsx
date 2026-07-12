@@ -604,22 +604,11 @@ export default function HomeScreen() {
     const finalCat = searchCat || category;
     if (!finalCat) return;
 
-    // Check if location is set before searching
-    if (!locationCity && !locationProvince) {
-      Alert.alert(
-        "Location Required",
-        "Please tap 'Detect Location' first to find professionals near you.",
-        [
-          { text: "OK" }
-        ]
-      );
-      return;
-    }
-
-    // Navigate to Results
+    // Navigate to Results — location is optional.
+    // If no location is detected, web vendors will still show using a South Africa-wide fallback.
     router.push({
       pathname: "/results",
-      params: { cat: finalCat, region: locationCity, province: locationProvince }
+      params: { cat: finalCat, region: locationCity || "", province: locationProvince || "" }
     });
   };
 

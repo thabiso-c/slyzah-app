@@ -13,6 +13,13 @@
                 "buildType": "apk"
             }
         },
+        "production-apk": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk",
+                "gradleCommand": ":app:assembleRelease"
+            }
+        },
         "production": {}
     },
     "submit": {
