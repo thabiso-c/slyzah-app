@@ -1228,7 +1228,7 @@ const styles = StyleSheet.create({
 
     // Card Styles
     card: {
-        backgroundColor: THEME.white,
+        backgroundColor: THEME.navy,
         borderRadius: 25,
         padding: 20,
         marginBottom: 16,
@@ -1242,7 +1242,7 @@ const styles = StyleSheet.create({
     },
     cardSelected: {
         borderColor: THEME.gold,
-        backgroundColor: '#FFFDF0',
+        borderWidth: 2,
     },
     sponsoredBadge: {
         position: 'absolute',
