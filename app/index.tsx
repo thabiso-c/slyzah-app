@@ -378,6 +378,7 @@ export default function HomeScreen() {
   const [category, setCategory] = useState("");
   const [locationCity, setLocationCity] = useState("");
   const [locationProvince, setLocationProvince] = useState("");
+  const [locationRawSuburb, setLocationRawSuburb] = useState("");
   const [geoLoading, setGeoLoading] = useState(false);
   const [featuredVendors, setFeaturedVendors] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
@@ -593,6 +594,10 @@ export default function HomeScreen() {
 
       setLocationCity(finalRegion);
       setLocationProvince(finalProvince);
+      // Also store the raw suburb/city from Nominatim as a fallback.
+      // This is used by web-vendor search when the lookup table doesn't find a mapped region.
+      const rawSuburb = potentialSuburbs[0] || "";
+      setLocationRawSuburb(rawSuburb);
     } catch (error) {
       console.log(error);
     } finally {
@@ -604,11 +609,25 @@ export default function HomeScreen() {
     const finalCat = searchCat || category;
     if (!finalCat) return;
 
-    // Navigate to Results — location is optional.
-    // If no location is detected, web vendors will still show using a South Africa-wide fallback.
+    // Require location before searching, consistent with slyzah-web.
+    if (!locationCity && !locationProvince && !locationRawSuburb) {
+      Alert.alert(
+        "Location Required",
+        "Please tap 'Detect Location' first to find professionals near you.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    // Navigate to Results, passing region, province AND raw suburb as fallback.
     router.push({
       pathname: "/results",
-      params: { cat: finalCat, region: locationCity || "", province: locationProvince || "" }
+      params: {
+        cat: finalCat,
+        region: locationCity || "",
+        province: locationProvince || "",
+        suburb: locationRawSuburb || "",
+      }
     });
   };
 

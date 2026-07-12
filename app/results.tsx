@@ -462,6 +462,7 @@ export default function ResultsScreen() {
     const category = rawCategory.trim();
     const userRegion = Array.isArray(params.region) ? params.region[0] : params.region || "";
     const userProvince = Array.isArray(params.province) ? params.province[0] : params.province || "";
+    const userSuburb = Array.isArray(params.suburb) ? params.suburb[0] : params.suburb || "";
 
     const [vendors, setVendors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -683,7 +684,9 @@ export default function ResultsScreen() {
                 // Fetch Web Vendors
                 let webVendors: any[] = [];
                 try {
-                    const location = [uReg, uProv].filter(Boolean).join(", ");
+                    // Build location: prefer mapped region/province, fall back to raw suburb from Nominatim.
+                    // This mirrors slyzah-web behaviour where [userRegion, userProvince] is joined.
+                    const location = [uReg, uProv].filter(Boolean).join(", ") || userSuburb;
                     const params = new URLSearchParams();
                     if (category) params.append("category", category);
                     if (location) params.append("location", location);
