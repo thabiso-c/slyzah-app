@@ -8,8 +8,11 @@ import { useAssets } from 'expo-asset';
 import { auth } from '../firebaseConfig';
 
 const THEME = {
-    navy: '#001f3f',
-    gold: '#FFD700',
+    navy: '#000046',
+    gold: '#D5AD36',
+    navy800: '#000046',
+    gold400: '#D5AD36',
+    surface: '#1A1A2E',
     white: '#FFFFFF',
     gray: '#F3F4F6',
 };

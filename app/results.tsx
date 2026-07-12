@@ -32,12 +32,15 @@ import { sendResendEmail } from '../lib/services';
 const { width, height } = Dimensions.get('window');
 
 const THEME = {
-    navy: '#001f3f',
-    gold: '#FFD700',
+    navy: '#000046',
+    gold: '#D5AD36',
+    navy800: '#000046',
+    gold400: '#D5AD36',
+    surface: '#1A1A2E',
     white: '#FFFFFF',
     gray: '#F3F4F6',
     placeholder: '#9CA3AF',
-    text: '#001f3f'
+    text: '#000046'
 };
 
 const CREDENTIAL_MAPPING: Record<string, { label: string; field: string; docField: string }> = {
@@ -595,18 +598,46 @@ export default function ResultsScreen() {
                 // Note: Firestore's `array-contains-any` is limited to 10 values.
                 const queryKeywords = searchKeywords.slice(0, 10);
 
-                // FIREBASE LIMITATION: You cannot combine array-contains and array-contains-any.
-                // Combining == with array-contains-any also requires a composite index.
-                // So we query BY KEYWORDS ONLY, and filter by location IN MEMORY (which we already do below).
-                if (queryKeywords.length > 0) {
-                    q = query(professionalsRef, where("keywords", "array-contains-any", queryKeywords), limit(100));
-                } else {
-                    // Fallback to fetch some if no keywords matched perfectly
-                    q = query(professionalsRef, limit(50));
+                // Try querying by standard category field first (extremely scalable & direct for registered vendors), with fallback options.
+                let matchedVendors: any[] = [];
+                try {
+                    const qCategory = query(professionalsRef, where("category", "==", category), limit(150));
+                    const snapCategory = await getDocs(qCategory);
+                    matchedVendors = snapCategory.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                } catch (catErr) {
+                    console.warn("Failed to query by category directly, falling back...", catErr);
                 }
 
-                const querySnapshot = await getDocs(q);
-                let matchedVendors = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+                // Fallback 1: Query by keywords if category direct match yields nothing
+                if (matchedVendors.length === 0 && queryKeywords.length > 0) {
+                    try {
+                        const qKeywords = query(professionalsRef, where("keywords", "array-contains-any", queryKeywords), limit(100));
+                        const snapKeywords = await getDocs(qKeywords);
+                        matchedVendors = snapKeywords.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    } catch (keyErr) {
+                        console.warn("Failed to query by keywords, falling back...", keyErr);
+                    }
+                }
+
+                // Fallback 2: Retrieve a list of vendors and filter in-memory if still empty (ensures zero silent search failures)
+                if (matchedVendors.length === 0) {
+                    try {
+                        const qAll = query(professionalsRef, limit(150));
+                        const snapAll = await getDocs(qAll);
+                        matchedVendors = snapAll.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    } catch (allErr) {
+                        console.error("Failed to fetch fallback vendors:", allErr);
+                    }
+                }
+
+                // Filter in-memory by category or keyword substring to ensure absolute sync with search intent
+                matchedVendors = matchedVendors.filter(v => {
+                    const vCat = String(v.category || "").toLowerCase();
+                    const vDesc = String(v.description || "").toLowerCase();
+                    const vName = String(v.name || "").toLowerCase();
+                    const searchLower = category.toLowerCase();
+                    return vCat.includes(searchLower) || vDesc.includes(searchLower) || vName.includes(searchLower);
+                });
 
                 const processAndSort = (vendorList: any[]) => {
                     const clean = (str: any) => String(str || "").toLowerCase().trim();
@@ -1233,7 +1264,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: 20,
         marginBottom: 16,
-        shadowColor: "#001f3f",
+        shadowColor: "#000046",
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.08,
         shadowRadius: 20,
