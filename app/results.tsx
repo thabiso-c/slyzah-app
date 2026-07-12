@@ -595,13 +595,14 @@ export default function ResultsScreen() {
                 // Note: Firestore's `array-contains-any` is limited to 10 values.
                 const queryKeywords = searchKeywords.slice(0, 10);
 
-                if (uReg && queryKeywords.length > 0) {
-                    q = query(professionalsRef, where("regions", "array-contains", uReg), where("keywords", "array-contains-any", queryKeywords), limit(50));
-                } else if (uProv && queryKeywords.length > 0) {
-                    q = query(professionalsRef, where("province", "==", uProv), where("keywords", "array-contains-any", queryKeywords), limit(50));
+                // FIREBASE LIMITATION: You cannot combine array-contains and array-contains-any.
+                // Combining == with array-contains-any also requires a composite index.
+                // So we query BY KEYWORDS ONLY, and filter by location IN MEMORY (which we already do below).
+                if (queryKeywords.length > 0) {
+                    q = query(professionalsRef, where("keywords", "array-contains-any", queryKeywords), limit(100));
                 } else {
-                    // Fallback or broader search if needed, but the initial check should prevent this.
-                    q = query(professionalsRef, where("keywords", "array-contains-any", queryKeywords), limit(50));
+                    // Fallback to fetch some if no keywords matched perfectly
+                    q = query(professionalsRef, limit(50));
                 }
 
                 const querySnapshot = await getDocs(q);
