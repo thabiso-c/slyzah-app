@@ -71,11 +71,12 @@ fi
 # Function to format target URL with auth token
 format_auth_url() {
     local raw_url="$1"
-    # Remove https://
+    # Remove any scheme or prefix
     local clean="${raw_url#https://}"
-    # Remove git@github.com:
+    clean="${clean#http://}"
     clean="${clean#git@github.com:}"
-    # Remove .git ending
+    clean="${clean#github.com/}"
+    clean="${clean#github.com:}"
     clean="${clean%.git}"
     echo "https://${USERNAME}:${TOKEN}@github.com/${clean}.git"
 }
