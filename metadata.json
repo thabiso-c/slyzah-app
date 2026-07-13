@@ -1,0 +1,6 @@
+{
+  "name": "Slyzah Client App",
+  "description": "The client-facing platform for South Africa's elite service marketplace. Connect with verified local pros, request instant quotes, and manage real-time chat conversations.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

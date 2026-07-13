@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production
+.expo/
+dist/
+web-build/
+
+# Environment variables
+.env
+.env*.local
+
+# Native Build
+android/app/build/
+android/.gradle/
+ios/Pods/
+ios/build/
+
+# Misc
+.DS_Store
+*.jks
+*.keystore
+*.pem
+
+# Secrets
+*-firebase-adminsdk-*.json
+secrets.ts
