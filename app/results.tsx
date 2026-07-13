@@ -905,6 +905,27 @@ export default function ResultsScreen() {
                     <View style={[styles.credentialsPanel, { backgroundColor: '#E3F2FD', borderColor: '#90CAF9' }]}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                             <Text style={[styles.credentialsTitle, { color: '#1565C0' }]}>Sourced Online</Text>
+                        </View>
+                        <Text style={[styles.noCredentialText, { color: '#1976D2' }]}>
+                            🌐 Found online{item.emailFound ? " — email on file for quote outreach" : " — we'll share your details when you request a quote"}.
+                        </Text>
+                    </View>
+                    <View style={[styles.credentialsPanel, { backgroundColor: '#FFFBEB', borderColor: '#FEF3C7', padding: 12, marginTop: 8 }]}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                            <Text style={[styles.credentialsTitle, { color: '#B45309', fontSize: 10 }]}>Is this your business?</Text>
+                            <TouchableOpacity 
+                                onPress={() => router.push('/register')}
+                                style={{ backgroundColor: THEME.navy, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 }}
+                            >
+                                <Text style={{ color: THEME.white, fontSize: 8, fontWeight: '900' }}>CLAIM PROFILE</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={[styles.noCredentialText, { color: '#D97706', fontSize: 9, lineHeight: 13 }]}>
+                            Register to claim your profile, import your reviews, and gain priority results positions!
+                        </Text>
+                    </View>
+                    <View style={{ display: 'none' }}>
+                        <View>
                             <Text style={[styles.noCredentialText, { color: '#42A5F5', fontSize: 8 }]}>VERIFIED BY GOOGLE</Text>
                         </View>
                         <Text style={[styles.noCredentialText, { color: '#1976D2' }]}>
