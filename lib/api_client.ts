@@ -32,16 +32,25 @@ export const verifyCipcBusiness = async (registrationNumber: string) => {
     }
 };
 
+import { auth } from '../firebaseConfig';
+
 /**
  * Dispatches push notification through the centralized Slyzah Server API.
  */
 export const sendPushNotification = async (expoPushToken: string, title: string, body: string, data: any) => {
     try {
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+
+        const token = await auth.currentUser?.getIdToken();
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
         await fetch(`${WEB_API_BASE_URL}/api/admin/notifications/send`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify({
                 to: expoPushToken,
                 title,

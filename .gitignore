@@ -38,3 +38,6 @@ ios/build/
 
 expo-env.d.ts
 # @end expo-cli
+# Sub-repo exclusions
+slyzah-web/
+slyzah-pro/
