@@ -81,13 +81,9 @@ format_auth_url() {
     echo "https://${USERNAME}:${TOKEN}@github.com/${clean}.git"
 }
 
-# Set git global identity if not set
-if ! git config --global user.name >/dev/null 2>&1; then
-    git config --global user.name "Slyzah Deployer"
-fi
-if ! git config --global user.email >/dev/null 2>&1; then
-    git config --global user.email "deploy@slyzah.co.za"
-fi
+# Set git global identity
+git config --global user.name "thabiso-c"
+git config --global user.email "slyzahofficial@gmail.com"
 
 # ==============================================================================
 # DEPLOYMENT STEP 1: SLYZAH-APP (Root Workspace)
@@ -115,7 +111,7 @@ if [ -n "$APP_REPO_INPUT" ]; then
     # Setup branch and commit
     git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
     git add -A
-    git commit -m "feat: audit and core platform synchronization" || echo "No changes to commit in slyzah-app."
+    git commit -m "feat: audit and core platform synchronization" || git commit --amend --reset-author --no-edit || echo "No changes to commit in slyzah-app."
     
     echo "🚀 Pushing slyzah-app to origin/$BRANCH..."
     git push -u origin "$BRANCH" --force
@@ -141,7 +137,7 @@ if [ -n "$WEB_REPO_INPUT" ]; then
     
     git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
     git add -A
-    git commit -m "feat: secure notification dispatcher and admin auth verification" || echo "No changes to commit in slyzah-web."
+    git commit -m "feat: secure notification dispatcher and admin auth verification" || git commit --amend --reset-author --no-edit || echo "No changes to commit in slyzah-web."
     
     echo "🚀 Pushing slyzah-web to origin/$BRANCH..."
     git push -u origin "$BRANCH" --force
@@ -168,7 +164,7 @@ if [ -n "$PRO_REPO_INPUT" ]; then
     
     git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
     git add -A
-    git commit -m "feat: initial API client setup for secure cross-platform push and CIPC validation" || echo "No changes to commit in slyzah-pro."
+    git commit -m "feat: initial API client setup for secure cross-platform push and CIPC validation" || git commit --amend --reset-author --no-edit || echo "No changes to commit in slyzah-pro."
     
     echo "🚀 Pushing slyzah-pro to origin/$BRANCH..."
     git push -u origin "$BRANCH" --force
