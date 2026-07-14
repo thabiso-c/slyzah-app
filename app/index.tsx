@@ -484,6 +484,7 @@ export default function HomeScreen() {
   // 2. Fetch Featured Vendors
   useEffect(() => {
     const fetchFeatured = async () => {
+      try {
       const q = query(collection(db, "professionals"), limit(100));
       const snapshot = await getDocs(q);
       const allPros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -510,6 +511,9 @@ export default function HomeScreen() {
       });
 
       setFeaturedVendors(sortedFeatured);
+      } catch (error) {
+        console.error("Error fetching featured professionals on home mount:", error);
+      }
     };
     fetchFeatured();
   }, []);

@@ -33,43 +33,51 @@ Notifications.setNotificationHandler({
 });
 
 async function registerForPushNotificationsAsync() {
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
+  try {
+    if (Platform.OS === 'android') {
+      try {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
 
-    // Custom Slyzah Alert Channel
-    await Notifications.setNotificationChannelAsync('slyzah_alert', {
-      name: 'Slyzah Alerts',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FFD700',
-      sound: 'notification_sound.mp3',
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification!');
-      return undefined;
+        // Custom Slyzah Alert Channel
+        await Notifications.setNotificationChannelAsync('slyzah_alert', {
+          name: 'Slyzah Alerts',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FFD700',
+          sound: 'notification_sound.mp3',
+        });
+      } catch (channelError) {
+        console.warn('Failed to set up Android notification channels:', channelError);
+      }
     }
 
-    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        console.log('Failed to get push token for push notification!');
+        return undefined;
+      }
 
-    try {
-      return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-    } catch (e) {
-      logError("Error fetching push token", e, { projectId }, "low", "client-app");
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
+      try {
+        return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+      } catch (e) {
+        logError("Error fetching push token", e, { projectId }, "low", "client-app");
+      }
     }
+  } catch (error) {
+    console.error('Error in registerForPushNotificationsAsync:', error);
   }
   return undefined;
 }
@@ -102,6 +110,8 @@ export function usePushNotifications(user: User | null, router: any) {
             console.log("Error syncing push token:", err);
           }
         }
+      }).catch(err => {
+        console.error("Error in usePushNotifications registry promise:", err);
       });
     }
   }, [user]);

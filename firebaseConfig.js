@@ -2,9 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp, getApps, initializeApp } from "firebase/app";
 import {
     getReactNativePersistence,
-    initializeAuth
+    initializeAuth,
+    getAuth
 } from 'firebase/auth';
-import { initializeFirestore } from "firebase/firestore";
+import { initializeFirestore, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Firebase Configuration — read from EAS env vars (aligned with slyzah-pro)
@@ -21,15 +22,35 @@ const firebaseConfig = {
 // Initialize Firebase App
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize Auth with Persistence (The "Stay Logged In" fix)
-const auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage)
-});
+// Safe Auth initialization with persistence
+let auth;
+try {
+    auth = getAuth(app);
+} catch (error) {
+    try {
+        auth = initializeAuth(app, {
+            persistence: getReactNativePersistence(AsyncStorage)
+        });
+    } catch (initError) {
+        console.error("Failed to initialize Firebase Auth with AsyncStorage persistence, falling back to default:", initError);
+        auth = initializeAuth(app);
+    }
+}
 
-// Initialize Firestore with Long Polling (The VPN/Zscaler fix)
-const db = initializeFirestore(app, {
-    experimentalForceLongPolling: true,
-});
+// Safe Firestore initialization with Long Polling
+let db;
+try {
+    db = getFirestore(app);
+} catch (error) {
+    try {
+        db = initializeFirestore(app, {
+            experimentalForceLongPolling: true,
+        });
+    } catch (initError) {
+        console.error("Failed to initialize Firestore with long polling, falling back to default:", initError);
+        db = initializeFirestore(app, {});
+    }
+}
 
 // Initialize Storage
 const storage = getStorage(app);

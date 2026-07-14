@@ -92,21 +92,46 @@ export default function RootLayout() {
   useEffect(() => {
     if (!user) return;
 
-    const unsubscribe = onSnapshot(doc(db, "users", user.uid), async (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data?.role === 'vendor') {
-          await signOut(auth);
-          Alert.alert("Access Denied", "Vendor accounts cannot log into the Client app. Please register a new client account.");
-        } else {
-          setIsTermsAccepted(data?.hasAcceptedTerms === true);
+    const unsubscribe = onSnapshot(
+      doc(db, "users", user.uid),
+      async (docSnap) => {
+        try {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data?.role === 'vendor') {
+              await signOut(auth);
+              Alert.alert("Access Denied", "Vendor accounts cannot log into the Client app. Please register a new client account.");
+            } else {
+              setIsTermsAccepted(data?.hasAcceptedTerms === true);
+            }
+          } else {
+            console.log("Client user profile does not exist yet.");
+          }
+        } catch (err) {
+          console.error("Error processing user profile in onSnapshot:", err);
+        } finally {
+          setLoading(false);
         }
+      },
+      (error) => {
+        console.error("onSnapshot error in RootLayout:", error);
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    );
 
     return () => unsubscribe();
   }, [user]);
+
+  // Safety fallback: prevent the splash screen from freezing the app if initialization hangs
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      console.warn("Initialization took too long. Forcing loading to false as safety fallback.");
+      setLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   useEffect(() => {
     if (loading) return;
