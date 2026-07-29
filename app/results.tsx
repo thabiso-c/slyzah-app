@@ -910,28 +910,6 @@ export default function ResultsScreen() {
                             🌐 Found online{item.emailFound ? " — email on file for quote outreach" : " — we'll share your details when you request a quote"}.
                         </Text>
                     </View>
-                    <View style={[styles.credentialsPanel, { backgroundColor: '#FFFBEB', borderColor: '#FEF3C7', padding: 12, marginTop: 8 }]}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                            <Text style={[styles.credentialsTitle, { color: '#B45309', fontSize: 10 }]}>Is this your business?</Text>
-                            <TouchableOpacity 
-                                onPress={() => router.push('/register')}
-                                style={{ backgroundColor: THEME.navy, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 }}
-                            >
-                                <Text style={{ color: THEME.white, fontSize: 8, fontWeight: '900' }}>CLAIM PROFILE</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={[styles.noCredentialText, { color: '#D97706', fontSize: 9, lineHeight: 13 }]}>
-                            Register to claim your profile, import your reviews, and gain priority results positions!
-                        </Text>
-                    </View>
-                    <View style={{ display: 'none' }}>
-                        <View>
-                            <Text style={[styles.noCredentialText, { color: '#42A5F5', fontSize: 8 }]}>VERIFIED BY GOOGLE</Text>
-                        </View>
-                        <Text style={[styles.noCredentialText, { color: '#1976D2' }]}>
-                            🌐 Found online{item.emailFound ? " — email on file for quote outreach" : " — we'll share your details when you request a quote"}.
-                        </Text>
-                    </View>
                 )}
 
                 <View style={styles.cardFooter}>
@@ -1211,8 +1189,8 @@ export default function ResultsScreen() {
                         <Ionicons name="close" size={32} color="white" />
                     </TouchableOpacity>
                     {viewingGallery && (
-                        <Image 
-                            source={{ uri: viewingGallery.images[viewingGallery.index] }} 
+                        <Image
+                            source={{ uri: viewingGallery.images[viewingGallery.index] }}
                             style={styles.fullImage}
                             resizeMode="contain"
                             onError={() => markImageFailed(viewingGallery.images[viewingGallery.index])}
@@ -1221,7 +1199,7 @@ export default function ResultsScreen() {
                     <View style={styles.galleryNav}>
                         {viewingGallery && viewingGallery.images.length > 1 && (
                             <>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => setViewingGallery(prev => prev ? { ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length } : null)}
                                     style={styles.navButton}
                                 >
@@ -1230,7 +1208,7 @@ export default function ResultsScreen() {
                                 <Text style={styles.galleryCounter}>
                                     {viewingGallery.index + 1} / {viewingGallery.images.length}
                                 </Text>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => setViewingGallery(prev => prev ? { ...prev, index: (prev.index + 1) % prev.images.length } : null)}
                                     style={styles.navButton}
                                 >
