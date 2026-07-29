@@ -2,10 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { db, auth } from './firebaseConfig';
 import { collection, query, limit, getDocs, onSnapshot, orderBy, doc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { 
-  Search, MapPin, Star, ShieldCheck, Zap, Award, 
-  Menu, X, Home, FileText, MessageSquare, User, 
-  LogOut, Phone, Sparkles, Check, Info, Bell, InfoIcon 
+import {
+  Search, MapPin, Star, ShieldCheck, Zap, Award,
+  Menu, X, Home, FileText, MessageSquare, User,
+  LogOut, Phone, Sparkles, Check, Info, Bell, InfoIcon,
+  ArrowLeft
 } from 'lucide-react';
 
 // Subcomponents
@@ -150,10 +151,10 @@ export default function App() {
 
   // Fetch auth & database status
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser: any) => {
       if (currentUser) {
         setUser(currentUser);
-        
+
         // Listen to client account meta
         const userDocRef = doc(db, "users", currentUser.uid);
         const unsubUser = onSnapshot(userDocRef, (docSnap) => {
@@ -161,7 +162,7 @@ export default function App() {
             const data = docSnap.data();
             setUserRole(data.role || 'client');
             setHasAcceptedTerms(data.hasAcceptedTerms !== false);
-            
+
             if (data.role === 'vendor') {
               alert("Access Denied: Vendor accounts cannot log into the Client app. Please register a new client account.");
               signOut(auth);
@@ -195,7 +196,7 @@ export default function App() {
       try {
         const querySnapshot = await getDocs(collection(db, "professionals"));
         const vendorsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
+
         const validVendors = vendorsList.length > 0 ? vendorsList : FALLBACK_PROFESSIONALS;
         setAllVendors(validVendors);
 
@@ -205,7 +206,7 @@ export default function App() {
           const targetTiers = ["multi-province", "provincial", "three regions", "one region"];
           return targetTiers.includes(tier) && v.isApproved !== false;
         });
-        
+
         setFeaturedVendors(featured.length > 0 ? featured : FALLBACK_PROFESSIONALS);
       } catch (err) {
         console.warn("Could not query professionals Firestore collection, defaulting to local fallbacks:", err);
@@ -354,14 +355,14 @@ export default function App() {
       if (tier === 'multi-province') return true;
 
       const vendorProv = String(vendor.province || "").toLowerCase().trim();
-      const vendorProvinces: string[] = Array.isArray(vendor.provinces) 
-        ? vendor.provinces.map(p => String(p).toLowerCase().trim()) 
+      const vendorProvinces: string[] = Array.isArray(vendor.provinces)
+        ? vendor.provinces.map((p: any) => String(p).toLowerCase().trim())
         : [];
       if (vendorProv === userProv || vendorProvinces.includes(userProv)) return true;
 
       const vendorRegion = String(vendor.region || "").toLowerCase().trim();
-      const vendorRegions: string[] = Array.isArray(vendor.regions) 
-        ? vendor.regions.map(r => String(r).toLowerCase().trim()) 
+      const vendorRegions: string[] = Array.isArray(vendor.regions)
+        ? vendor.regions.map((r: any) => String(r).toLowerCase().trim())
         : [];
       if (vendorRegion === userCity || vendorRegions.includes(userCity)) return true;
 
@@ -383,12 +384,12 @@ export default function App() {
   const matchingProsList = useMemo(() => {
     return allVendors.filter((pro: any) => {
       const matchesCategory = String(pro.category || "").toLowerCase().includes(selectedCategory.toLowerCase());
-      
+
       if (!matchesCategory) return false;
 
       // Location match
       if (!locationProvince && !locationCity) return true;
-      
+
       const proProv = String(pro.province || "").toLowerCase().trim();
       const proCity = String(pro.region || "").toLowerCase().trim();
       const userProv = locationProvince.toLowerCase().trim();
@@ -429,11 +430,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans flex flex-col selection:bg-gold-500 selection:text-navy-950">
-      
+
       {/* GLOBAL SLYZAH HEADER BAR */}
       <header className="sticky top-0 z-40 shrink-0 border-b border-navy-900 bg-navy-950/80 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          
+
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setCurrentPage('home'); setQuoteRequestMode(false); }}>
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy-900 to-navy-850 border border-gold-500/30 text-gold-500">
               <span className="font-display text-xl font-black">S</span>
@@ -448,20 +449,20 @@ export default function App() {
 
           {/* Desktop Nav Actions */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-black tracking-wider uppercase">
-            <button 
-              onClick={() => { setCurrentPage('home'); setQuoteRequestMode(false); }} 
+            <button
+              onClick={() => { setCurrentPage('home'); setQuoteRequestMode(false); }}
               className={`flex items-center gap-2 hover:text-gold-500 transition ${currentPage === 'home' ? 'text-gold-500' : 'text-slate-300'}`}
             >
               <Home className="h-4 w-4" /> Home
             </button>
-            <button 
-              onClick={() => { setCurrentPage('dashboard'); setQuoteRequestMode(false); }} 
+            <button
+              onClick={() => { setCurrentPage('dashboard'); setQuoteRequestMode(false); }}
               className={`flex items-center gap-2 hover:text-gold-500 transition ${currentPage === 'dashboard' ? 'text-gold-500' : 'text-slate-300'}`}
             >
               <FileText className="h-4 w-4" /> My Requests
             </button>
-            <button 
-              onClick={() => { setCurrentPage('profile'); setQuoteRequestMode(false); }} 
+            <button
+              onClick={() => { setCurrentPage('profile'); setQuoteRequestMode(false); }}
               className={`flex items-center gap-2 hover:text-gold-500 transition ${currentPage === 'profile' ? 'text-gold-500' : 'text-slate-300'}`}
             >
               <User className="h-4 w-4" /> My Profile
@@ -470,7 +471,7 @@ export default function App() {
 
           <div className="flex items-center gap-4">
             {/* Geolocation selector display in Header */}
-            <div 
+            <div
               onClick={handleDetectLocation}
               className="hidden sm:flex items-center gap-2 rounded-xl border border-navy-800 bg-navy-900/40 px-4 py-2 hover:border-gold-500/30 cursor-pointer transition text-xs font-semibold"
             >
@@ -480,8 +481,8 @@ export default function App() {
               </span>
             </div>
 
-            <button 
-              onClick={handleLogout} 
+            <button
+              onClick={handleLogout}
               className="hidden md:flex p-2.5 rounded-xl border border-navy-800 bg-navy-900/30 hover:border-red-500/30 hover:text-red-400 transition"
               title="Logout Securely"
             >
@@ -489,8 +490,8 @@ export default function App() {
             </button>
 
             {/* Mobile menu button */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 md:hidden text-slate-300 hover:text-white"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -503,31 +504,31 @@ export default function App() {
       {/* MOBILE NAV DROPDOWN */}
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-navy-900 bg-navy-950 p-4 space-y-3 z-30 flex flex-col text-sm font-bold uppercase tracking-wider">
-          <button 
+          <button
             onClick={() => { setCurrentPage('home'); setQuoteRequestMode(false); setMobileMenuOpen(false); }}
             className={`flex items-center gap-3 py-2 ${currentPage === 'home' ? 'text-gold-500' : 'text-slate-300'}`}
           >
             <Home className="h-5 w-5" /> Home
           </button>
-          <button 
+          <button
             onClick={() => { setCurrentPage('dashboard'); setQuoteRequestMode(false); setMobileMenuOpen(false); }}
             className={`flex items-center gap-3 py-2 ${currentPage === 'dashboard' ? 'text-gold-500' : 'text-slate-300'}`}
           >
             <FileText className="h-5 w-5" /> My Requests
           </button>
-          <button 
+          <button
             onClick={() => { setCurrentPage('profile'); setQuoteRequestMode(false); setMobileMenuOpen(false); }}
             className={`flex items-center gap-3 py-2 ${currentPage === 'profile' ? 'text-gold-500' : 'text-slate-300'}`}
           >
             <User className="h-5 w-5" /> Profile
           </button>
-          <button 
+          <button
             onClick={handleDetectLocation}
             className="flex items-center gap-3 py-2 text-slate-300"
           >
             <MapPin className="h-5 w-5 text-gold-500" /> Location: {locationCity || "Not set"}
           </button>
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 py-2 text-red-400 border-t border-navy-900 pt-3"
           >
@@ -550,10 +551,10 @@ export default function App() {
 
       {/* MAIN CONTAINER */}
       <main className="flex-1 overflow-y-auto">
-        
+
         {/* VIEW: QUOTE REQUEST MODE OVERLAY (Wizard overrides other views) */}
         {quoteRequestMode ? (
-          <RequestQuote 
+          <RequestQuote
             category={selectedCategory}
             userRegion={locationCity || "Cape Town CBD"}
             selectedVendorIds={directQuoteVendorId ? [directQuoteVendorId] : []}
@@ -569,11 +570,11 @@ export default function App() {
             {/* VIEW: HOME PAGE */}
             {currentPage === 'home' && (
               <div className="space-y-12 pb-16">
-                
+
                 {/* HERO BANNER SECTION */}
                 <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 to-slate-950 py-16 md:py-24 border-b border-navy-900/40">
                   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center gap-12">
-                    
+
                     <div className="flex-1 space-y-6 text-center md:text-left">
                       <div className="inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-gold-500/5 px-4 py-1.5 text-xs font-bold text-gold-500 tracking-wider uppercase">
                         <Sparkles className="h-4 w-4 animate-spin-slow" />
@@ -595,7 +596,7 @@ export default function App() {
                             {locationCity ? `${locationCity}, ${locationProvince}` : "No Location Detected"}
                           </span>
                         </div>
-                        <button 
+                        <button
                           onClick={handleDetectLocation}
                           disabled={geoLoading}
                           className="w-full sm:w-auto bg-gold-500 text-navy-950 font-display font-black text-xs px-6 py-3.5 rounded-2xl uppercase tracking-wider whitespace-nowrap shrink-0 transition active:scale-95 hover:bg-gold-600"
@@ -611,7 +612,7 @@ export default function App() {
                         <h4 className="font-display font-black text-white text-sm uppercase tracking-wider">Trusted Ecosystem Guarantees</h4>
                         <Award className="h-5 w-5 text-gold-500" />
                       </div>
-                      
+
                       <div className="space-y-4 text-xs font-semibold">
                         <div className="flex items-start gap-3">
                           <div className="h-6 w-6 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0"><Check className="h-4 w-4" /></div>
@@ -649,7 +650,7 @@ export default function App() {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {CATEGORIES.map((cat) => (
-                      <div 
+                      <div
                         key={cat.name}
                         onClick={() => handleSearch(cat.name)}
                         className="p-5 rounded-3xl bg-navy-950 border border-navy-850 hover:border-gold-500/50 cursor-pointer group transition duration-300 hover:shadow-xl hover:shadow-black/40"
@@ -673,7 +674,7 @@ export default function App() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {filteredFeaturedVendors.map((vendor) => (
-                      <div 
+                      <div
                         key={vendor.id}
                         className="bg-navy-950 border border-navy-850 rounded-3xl overflow-hidden shadow-lg hover:border-slate-800 transition duration-300"
                       >
@@ -690,7 +691,7 @@ export default function App() {
                         {/* Info details */}
                         <div className="p-5 space-y-4">
                           <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{vendor.description}</p>
-                          
+
                           <div className="flex items-center justify-between text-xs font-bold border-t border-navy-900 pt-3">
                             <span className="flex items-center gap-1 text-gold-500">
                               ★ <span className="text-slate-300">{vendor.rating || "5.0"}</span>
@@ -698,7 +699,7 @@ export default function App() {
                             <span className="text-slate-400">📍 {vendor.region || vendor.province}</span>
                           </div>
 
-                          <button 
+                          <button
                             onClick={() => setSelectedVendorDetail(vendor)}
                             className="w-full py-2.5 rounded-2xl bg-navy-900 text-gold-500 border border-gold-500/20 text-xs font-black font-display tracking-widest uppercase transition hover:bg-gold-500 hover:text-navy-950"
                           >
@@ -716,11 +717,11 @@ export default function App() {
             {/* VIEW: RESULTS PAGE */}
             {currentPage === 'results' && (
               <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-                
+
                 {/* Back Link & Info header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-navy-900 pb-5 gap-4">
                   <div>
-                    <button 
+                    <button
                       onClick={() => setCurrentPage('home')}
                       className="flex items-center gap-2 text-slate-400 hover:text-white text-xs font-semibold mb-2"
                     >
@@ -750,7 +751,7 @@ export default function App() {
                 {matchingProsList.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {matchingProsList.map((pro) => (
-                      <div 
+                      <div
                         key={pro.id}
                         className="bg-navy-950 border border-navy-850 hover:border-slate-800 rounded-3xl p-6 flex flex-col justify-between shadow-lg"
                       >
@@ -759,7 +760,7 @@ export default function App() {
                             <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-navy-900 text-white font-black text-sm uppercase border border-navy-850">
                               {pro.name.charAt(0)}
                             </div>
-                            
+
                             <div className="flex gap-2">
                               {pro.rapidResponder && (
                                 <span className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[8px] font-black tracking-widest px-2 py-0.5 rounded uppercase">⚡ 15m</span>
@@ -785,13 +786,13 @@ export default function App() {
                           </div>
 
                           <div className="grid grid-cols-2 gap-3">
-                            <button 
+                            <button
                               onClick={() => setSelectedVendorDetail(pro)}
                               className="py-2.5 rounded-xl border border-navy-800 bg-navy-900/40 text-slate-300 font-display font-black text-[10px] uppercase tracking-wider hover:border-slate-700 hover:text-white"
                             >
                               Details
                             </button>
-                            <button 
+                            <button
                               onClick={() => {
                                 setDirectQuoteVendorId(pro.id);
                                 setQuoteRequestMode(true);
@@ -829,7 +830,7 @@ export default function App() {
 
             {/* VIEW: REQUESTS DASHBOARD */}
             {currentPage === 'dashboard' && (
-              <Dashboard 
+              <Dashboard
                 onOpenChat={(chatId) => {
                   setActiveChatId(chatId);
                   setCurrentPage('chat');
@@ -839,7 +840,7 @@ export default function App() {
 
             {/* VIEW: ACTIVE CHAT SCREEN */}
             {currentPage === 'chat' && activeChatId && (
-              <Chat 
+              <Chat
                 chatId={activeChatId}
                 onBack={() => setCurrentPage('dashboard')}
               />
@@ -848,7 +849,7 @@ export default function App() {
             {/* VIEW: USER PROFILE PAGE */}
             {currentPage === 'profile' && (
               <div className="mx-auto max-w-5xl px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-                
+
                 {/* Left Column: Account Profile Info */}
                 <div className="bg-navy-950 border border-navy-850 rounded-3xl p-6 md:p-8 space-y-6 h-fit">
                   <div className="text-center">
@@ -876,7 +877,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 text-xs font-black font-display tracking-widest uppercase transition"
                   >
@@ -963,21 +964,21 @@ export default function App() {
 
       {/* MOBILE NAV FOOTER FLOATING RAIL */}
       <div className="md:hidden border-t border-navy-900 bg-navy-950 py-2.5 px-6 flex justify-around items-center sticky bottom-0 z-40 backdrop-blur-md">
-        <button 
+        <button
           onClick={() => { setCurrentPage('home'); setQuoteRequestMode(false); }}
           className={`flex flex-col items-center gap-1 ${currentPage === 'home' ? 'text-gold-500' : 'text-slate-400'}`}
         >
           <Home className="h-5 w-5" />
           <span className="text-[9px] font-bold tracking-wide uppercase">Home</span>
         </button>
-        <button 
+        <button
           onClick={() => { setCurrentPage('dashboard'); setQuoteRequestMode(false); }}
           className={`flex flex-col items-center gap-1 ${currentPage === 'dashboard' ? 'text-gold-500' : 'text-slate-400'}`}
         >
           <FileText className="h-5 w-5" />
           <span className="text-[9px] font-bold tracking-wide uppercase">Requests</span>
         </button>
-        <button 
+        <button
           onClick={() => { setCurrentPage('profile'); setQuoteRequestMode(false); }}
           className={`flex flex-col items-center gap-1 ${currentPage === 'profile' ? 'text-gold-500' : 'text-slate-400'}`}
         >
@@ -990,7 +991,7 @@ export default function App() {
       {selectedVendorDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm overflow-y-auto">
           <div className="w-full max-w-lg bg-navy-950 border border-navy-850 rounded-3xl p-6 md:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
-            
+
             <div className="flex justify-between items-start border-b border-navy-900 pb-4">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-navy-900 text-gold-500 border border-gold-500/20 font-black text-lg">
@@ -1001,8 +1002,8 @@ export default function App() {
                   <span className="text-xs text-gold-500 font-bold uppercase tracking-wider">{selectedVendorDetail.category}</span>
                 </div>
               </div>
-              <button 
-                onClick={() => setSelectedVendorDetail(null)} 
+              <button
+                onClick={() => setSelectedVendorDetail(null)}
                 className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-navy-900"
               >
                 <X className="h-5 w-5" />
@@ -1039,10 +1040,10 @@ export default function App() {
               {selectedVendorDetail.website && (
                 <div>
                   <span className="text-xs text-slate-500 font-bold uppercase block mb-1">Professional Website</span>
-                  <a 
-                    href={selectedVendorDetail.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={selectedVendorDetail.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-gold-500 hover:underline font-bold"
                   >
                     {selectedVendorDetail.website}
@@ -1051,7 +1052,7 @@ export default function App() {
               )}
             </div>
 
-            <button 
+            <button
               onClick={() => {
                 setDirectQuoteVendorId(selectedVendorDetail.id);
                 setSelectedVendorDetail(null);

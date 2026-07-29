@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebaseConfig';
-import { 
-  collection, query, where, orderBy, onSnapshot, 
+import {
+  collection, query, where, orderBy, onSnapshot,
   doc, updateDoc, setDoc, addDoc, serverTimestamp, getDocs
 } from 'firebase/firestore';
-import { 
-  Calendar, Clock, ShieldCheck, Star, MessageSquare, 
-  User, CheckCircle, Mail, AlertCircle, FileText, ChevronRight, X 
+import {
+  Calendar, Clock, ShieldCheck, Star, MessageSquare,
+  User, CheckCircle, Mail, AlertCircle, FileText, ChevronRight, X,
+  ArrowLeft
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -18,11 +19,11 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
   const [leads, setLeads] = useState<any[]>([]);
   const [chats, setChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Tab/view toggles
   const [activeTab, setActiveTab] = useState<'active' | 'history' | 'messages' | 'support'>('active');
   const [selectedLead, setSelectedLead] = useState<any>(null);
-  
+
   // Rejection/Selection Modal
   const [showSelectModal, setShowSelectModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
@@ -39,7 +40,7 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
   const [supportSuccess, setSupportSuccess] = useState(false);
 
   useEffect(() => {
-    const unsubAuth = auth.onAuthStateChanged((currentUser) => {
+    const unsubAuth = auth.onAuthStateChanged((currentUser: any) => {
       if (currentUser) {
         setUser(currentUser);
 
@@ -210,7 +211,7 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 font-sans">
-      
+
       {/* Title */}
       <div className="mb-8">
         <h2 className="text-3xl font-black font-display text-white uppercase tracking-tight">
@@ -225,69 +226,63 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
       <div className="flex border-b border-navy-900 mb-8 overflow-x-auto gap-2">
         <button
           onClick={() => { setActiveTab('active'); setSelectedLead(null); }}
-          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${
-            activeTab === 'active' 
-              ? 'border-gold-500 text-gold-500' 
+          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${activeTab === 'active'
+              ? 'border-gold-500 text-gold-500'
               : 'border-transparent text-slate-400 hover:text-white'
-          }`}
+            }`}
         >
           Active Requests ({activeLeads.length})
         </button>
         <button
           onClick={() => { setActiveTab('history'); setSelectedLead(null); }}
-          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${
-            activeTab === 'history' 
-              ? 'border-gold-500 text-gold-500' 
+          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${activeTab === 'history'
+              ? 'border-gold-500 text-gold-500'
               : 'border-transparent text-slate-400 hover:text-white'
-          }`}
+            }`}
         >
           History ({pastLeads.length})
         </button>
         <button
           onClick={() => { setActiveTab('messages'); setSelectedLead(null); }}
-          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${
-            activeTab === 'messages' 
-              ? 'border-gold-500 text-gold-500' 
+          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${activeTab === 'messages'
+              ? 'border-gold-500 text-gold-500'
               : 'border-transparent text-slate-400 hover:text-white'
-          }`}
+            }`}
         >
           Direct Messages ({chats.length})
         </button>
         <button
           onClick={() => { setActiveTab('support'); setSelectedLead(null); }}
-          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${
-            activeTab === 'support' 
-              ? 'border-gold-500 text-gold-500' 
+          className={`pb-4 px-4 font-bold text-sm tracking-wider uppercase whitespace-nowrap transition border-b-2 ${activeTab === 'support'
+              ? 'border-gold-500 text-gold-500'
               : 'border-transparent text-slate-400 hover:text-white'
-          }`}
+            }`}
         >
           Support Hub
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* LEFT COLUMN: LISTS */}
         <div className={`lg:col-span-1 space-y-4 ${selectedLead ? 'hidden lg:block' : 'block'}`}>
-          
+
           {/* Active Tab List */}
           {activeTab === 'active' && (
             activeLeads.length > 0 ? (
               activeLeads.map((lead) => (
-                <div 
+                <div
                   key={lead.id}
                   onClick={() => setSelectedLead(lead)}
-                  className={`p-5 rounded-2xl border transition cursor-pointer ${
-                    selectedLead?.id === lead.id 
-                      ? 'bg-navy-900 border-gold-500' 
+                  className={`p-5 rounded-2xl border transition cursor-pointer ${selectedLead?.id === lead.id
+                      ? 'bg-navy-900 border-gold-500'
                       : 'bg-navy-950 border-navy-850 hover:border-slate-800'
-                  }`}
+                    }`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-black tracking-widest text-gold-500 uppercase">{lead.category}</span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-                      lead.status === 'assigned' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gold-500/10 text-gold-500'
-                    }`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${lead.status === 'assigned' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gold-500/10 text-gold-500'
+                      }`}>
                       {lead.status}
                     </span>
                   </div>
@@ -310,14 +305,13 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
           {activeTab === 'history' && (
             pastLeads.length > 0 ? (
               pastLeads.map((lead) => (
-                <div 
+                <div
                   key={lead.id}
                   onClick={() => setSelectedLead(lead)}
-                  className={`p-5 rounded-2xl border transition cursor-pointer ${
-                    selectedLead?.id === lead.id 
-                      ? 'bg-navy-900 border-gold-500' 
+                  className={`p-5 rounded-2xl border transition cursor-pointer ${selectedLead?.id === lead.id
+                      ? 'bg-navy-900 border-gold-500'
                       : 'bg-navy-950 border-navy-850 hover:border-slate-800'
-                  }`}
+                    }`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-black tracking-widest text-gold-500 uppercase">{lead.category}</span>
@@ -331,7 +325,7 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
                     {lead.hasReviewed ? (
                       <span className="flex items-center gap-0.5 text-emerald-400 font-bold"><Star className="h-3 w-3 fill-emerald-400" /> Reviewed</span>
                     ) : (
-                      <button 
+                      <button
                         onClick={(e) => { e.stopPropagation(); handleOpenReview(lead); }}
                         className="text-gold-500 font-bold hover:underline"
                       >
@@ -353,7 +347,7 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
           {activeTab === 'messages' && (
             chats.length > 0 ? (
               chats.map((chat) => (
-                <div 
+                <div
                   key={chat.id}
                   onClick={() => onOpenChat(chat.id)}
                   className="p-5 rounded-2xl border border-navy-850 bg-navy-950 hover:border-slate-800 transition cursor-pointer flex justify-between items-center"
@@ -420,9 +414,9 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
         <div className="lg:col-span-2">
           {selectedLead ? (
             <div className="rounded-3xl bg-navy-950 border border-navy-850 p-6 md:p-8 space-y-6">
-              
+
               {/* Back button for mobile */}
-              <button 
+              <button
                 onClick={() => setSelectedLead(null)}
                 className="lg:hidden flex items-center gap-2 text-slate-400 hover:text-white text-xs font-semibold mb-4"
               >
@@ -535,7 +529,7 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
             </div>
 
             <p className="text-sm text-slate-300">
-              You are selecting <span className="font-bold text-gold-500">{targetVendor.name}</span> for your request. 
+              You are selecting <span className="font-bold text-gold-500">{targetVendor.name}</span> for your request.
               A secure direct chat channel will open immediately.
             </p>
 
@@ -614,11 +608,11 @@ export default function Dashboard({ onOpenChat }: DashboardProps) {
 // Minimal MapPin Icon helper to avoid additional imports
 function MapPinIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
+    <svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
       className={props.className || "w-4 h-4"}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

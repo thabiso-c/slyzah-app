@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebaseConfig';
-import { 
-  doc, onSnapshot, collection, query, orderBy, addDoc, 
-  updateDoc, serverTimestamp 
+import {
+  doc, onSnapshot, collection, query, orderBy, addDoc,
+  updateDoc, serverTimestamp
 } from 'firebase/firestore';
-import { 
-  ArrowLeft, Send, ShieldCheck, User, Sparkles, Clock 
+import {
+  ArrowLeft, Send, ShieldCheck, User, Sparkles, Clock
 } from 'lucide-react';
 
 interface ChatProps {
@@ -23,7 +23,7 @@ export default function Chat({ chatId, onBack }: ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const unsubAuth = auth.onAuthStateChanged((u) => {
+    const unsubAuth = auth.onAuthStateChanged((u: any) => {
       if (!u) return;
       setUser(u);
 
@@ -146,17 +146,17 @@ export default function Chat({ chatId, onBack }: ChatProps) {
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] md:h-screen bg-slate-950 text-white font-sans">
-      
+
       {/* HEADER BAR */}
       <div className="flex items-center justify-between border-b border-navy-900 bg-navy-950/80 px-4 py-4 md:px-8 backdrop-blur-md sticky top-0 z-10 shrink-0">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={onBack}
             className="p-2 -ml-2 rounded-xl text-slate-400 hover:text-white hover:bg-navy-900 transition"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          
+
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy-900 to-navy-850 border border-gold-500/30 text-gold-500 font-bold uppercase shadow-md shadow-black/30">
               {otherName.charAt(0)}
@@ -179,7 +179,7 @@ export default function Chat({ chatId, onBack }: ChatProps) {
 
       {/* MESSAGES SCROLL CONTAINER */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-        
+
         {/* Connection Notice */}
         <div className="mx-auto max-w-sm rounded-2xl border border-navy-900 bg-navy-950/40 p-4 text-center">
           <Sparkles className="mx-auto h-5 w-5 text-gold-500 mb-1" />
@@ -190,30 +190,28 @@ export default function Chat({ chatId, onBack }: ChatProps) {
         {/* Message bubbles */}
         {messages.map((msg) => {
           const isMe = msg.senderId === user?.uid;
-          
+
           return (
-            <div 
+            <div
               key={msg.id}
               className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
             >
-              <div className={`max-w-[85%] md:max-w-[70%] rounded-2xl p-4 shadow-lg ${
-                isMe 
-                  ? 'bg-gold-500 text-navy-950 rounded-tr-none font-medium' 
+              <div className={`max-w-[85%] md:max-w-[70%] rounded-2xl p-4 shadow-lg ${isMe
+                  ? 'bg-gold-500 text-navy-950 rounded-tr-none font-medium'
                   : 'bg-navy-900 text-slate-100 rounded-tl-none border border-navy-850'
-              }`}>
+                }`}>
                 {!isMe && (
                   <span className="text-[10px] text-gold-500 font-bold uppercase tracking-wider block mb-1">
                     {otherName}
                   </span>
                 )}
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                
-                <div className={`flex items-center gap-1 mt-1.5 justify-end text-[9px] ${
-                  isMe ? 'text-navy-900/60' : 'text-slate-500'
-                }`}>
+
+                <div className={`flex items-center gap-1 mt-1.5 justify-end text-[9px] ${isMe ? 'text-navy-900/60' : 'text-slate-500'
+                  }`}>
                   <Clock className="h-2.5 w-2.5" />
                   <span>
-                    {msg.timestamp?.seconds 
+                    {msg.timestamp?.seconds
                       ? new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                       : 'Just now'}
                   </span>
@@ -238,7 +236,7 @@ export default function Chat({ chatId, onBack }: ChatProps) {
       </div>
 
       {/* INPUT FORM CONTAINER */}
-      <form 
+      <form
         onSubmit={handleSend}
         className="border-t border-navy-900 bg-navy-950 p-4 md:px-8 shrink-0"
       >
