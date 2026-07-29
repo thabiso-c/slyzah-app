@@ -36,19 +36,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../firebaseConfig';
 import { sendAwardEmail } from '../lib/services';
 import { sendPushNotification } from '../lib/api_client';
+import { THEME } from '../constants/theme';
 
 const { width, height } = Dimensions.get('window');
-
-const THEME = {
-    navy: '#000046',
-    gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
-    white: '#FFFFFF',
-    gray: '#F3F4F6',
-    placeholder: '#9CA3AF',
-};
 
 export default function UserDashboard() {
     const router = useRouter();

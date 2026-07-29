@@ -10,16 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { auth, db } from '../firebaseConfig';
-
-const THEME = {
-  navy: '#000046',
-  gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
-  white: '#FFFFFF',
-};
-
+import { THEME } from '../constants/theme';
 
 function CustomDrawerContent(props: any) {
   const router = useRouter();

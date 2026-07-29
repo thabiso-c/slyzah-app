@@ -28,20 +28,9 @@ import { auth, db, storage } from '../firebaseConfig';
 import { GOOGLE_MAPS_API_KEY } from '../lib/secrets';
 import { sendPushNotification, WEB_API_BASE_URL } from '../lib/api_client';
 import { sendResendEmail } from '../lib/services';
+import { THEME } from '../constants/theme';
 
 const { width, height } = Dimensions.get('window');
-
-const THEME = {
-    navy: '#000046',
-    gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
-    white: '#FFFFFF',
-    gray: '#F3F4F6',
-    placeholder: '#9CA3AF',
-    text: '#000046'
-};
 
 const CREDENTIAL_MAPPING: Record<string, { label: string; field: string; docField: string }> = {
     "Plumber": { label: "PIRB Licensed", field: "pirbNumber", docField: "pirbDocumentUrl" },

@@ -18,19 +18,9 @@ import { Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 // FIXED: Correct import path (one level up)
 import { auth, db } from '../firebaseConfig';
+import { THEME } from '../constants/theme';
 
 const { width } = Dimensions.get('window');
-
-const THEME = {
-  navy: '#000046',
-  gold: '#D5AD36',
-  navy800: '#000046',
-  gold400: '#D5AD36',
-  surface: '#1A1A2E',
-  white: '#FFFFFF',
-  gray: '#F3F4F6',
-  placeholder: '#9CA3AF',
-};
 
 const CREDENTIAL_MAPPING: Record<string, { label: string; field: string }> = {
   "Plumber": { label: "PIRB Licensed", field: "pirbNumber" },

@@ -18,20 +18,9 @@ import {
 import { ResizeMode, Video } from 'expo-av';
 import { useAssets } from 'expo-asset';
 import { auth, db } from '../firebaseConfig';
+import { THEME } from '../constants/theme';
 
 const { width } = Dimensions.get('window');
-
-const THEME = {
-    navy: '#000046',
-    gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
-    white: '#FFFFFF',
-    gray: '#F3F4F6',
-    textGray: '#4B5563',
-    disabled: '#9CA3AF',
-};
 
 export default function TermsScreen() {
     const router = useRouter();

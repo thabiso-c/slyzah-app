@@ -32,22 +32,12 @@ import {
 // Import the centralized auth instance
 import { auth, db } from '../firebaseConfig';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '../lib/secrets';
+import { THEME } from '../constants/theme';
 
 // This is necessary for the auth session to work correctly on web and mobile.
 WebBrowser.maybeCompleteAuthSession();
 
 const { width, height } = Dimensions.get('window');
-
-const THEME = {
-    navy: '#000046',
-    gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
-    white: '#FFFFFF',
-    gray: '#F3F4F6',
-    placeholder: '#9CA3AF',
-};
 
 export default function LoginScreen() {
     // Note: We don't need { navigation } prop here because we use router in _layout.tsx 

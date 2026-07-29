@@ -9,6 +9,7 @@ const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
 export const THEME = {
+  // Canonical Slyzah Luxury Palette (matches slyzah-web globals.css)
   navy900: '#000046',
   navy800: '#001F3F',
   gold500: '#D5AD36',
@@ -18,6 +19,10 @@ export const THEME = {
   white: '#FFFFFF',
   gray: '#F3F4F6',
   placeholder: '#9CA3AF',
+  // Backward-compatible aliases (used by legacy screen files)
+  navy: '#000046',
+  gold: '#D5AD36',
+  text: '#000046',
 };
 
 export const Colors = {
