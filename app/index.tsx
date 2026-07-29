@@ -24,9 +24,9 @@ const { width } = Dimensions.get('window');
 const THEME = {
   navy: '#000046',
   gold: '#D5AD36',
-    navy800: '#000046',
-    gold400: '#D5AD36',
-    surface: '#1A1A2E',
+  navy800: '#000046',
+  gold400: '#D5AD36',
+  surface: '#1A1A2E',
   white: '#FFFFFF',
   gray: '#F3F4F6',
   placeholder: '#9CA3AF',
@@ -485,32 +485,32 @@ export default function HomeScreen() {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-      const q = query(collection(db, "professionals"), limit(100));
-      const snapshot = await getDocs(q);
-      const allPros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const q = query(collection(db, "professionals"), limit(100));
+        const snapshot = await getDocs(q);
+        const allPros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      const targetTiers = ["multi-province", "provincial", "three regions", "one region"];
+        const targetTiers = ["multi-province", "provincial", "three regions", "one region"];
 
-      const featured = allPros.filter((vendor: any) => {
-        const vendorTier = String(vendor.tier || "").toLowerCase().trim();
-        const isPaidTier = targetTiers.includes(vendorTier);
-        const isApprovedOrNew = vendor.isApproved !== false;
-        return isPaidTier && isApprovedOrNew;
-      });
+        const featured = allPros.filter((vendor: any) => {
+          const vendorTier = String(vendor.tier || "").toLowerCase().trim();
+          const isPaidTier = targetTiers.includes(vendorTier);
+          const isApprovedOrNew = vendor.isApproved !== false;
+          return isPaidTier && isApprovedOrNew;
+        });
 
-      const sortedFeatured = featured.sort((a: any, b: any) => {
-        const hierarchy: Record<string, number> = {
-          "multi-province": 1,
-          "provincial": 2,
-          "three regions": 3,
-          "one region": 4
-        };
-        const tierA = String(a.tier || "").toLowerCase().trim();
-        const tierB = String(b.tier || "").toLowerCase().trim();
-        return (hierarchy[tierA] || 99) - (hierarchy[tierB] || 99);
-      });
+        const sortedFeatured = featured.sort((a: any, b: any) => {
+          const hierarchy: Record<string, number> = {
+            "multi-province": 1,
+            "provincial": 2,
+            "three regions": 3,
+            "one region": 4
+          };
+          const tierA = String(a.tier || "").toLowerCase().trim();
+          const tierB = String(b.tier || "").toLowerCase().trim();
+          return (hierarchy[tierA] || 99) - (hierarchy[tierB] || 99);
+        });
 
-      setFeaturedVendors(sortedFeatured);
+        setFeaturedVendors(sortedFeatured);
       } catch (error) {
         console.error("Error fetching featured professionals on home mount:", error);
       }
@@ -530,7 +530,7 @@ export default function HomeScreen() {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      
+
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.coords.latitude}&lon=${location.coords.longitude}&zoom=18`,
         { headers: { 'User-Agent': 'Slyzah-App/1.0' } }
@@ -700,7 +700,7 @@ export default function HomeScreen() {
 
       <SafeAreaView style={{ flex: 1, zIndex: 1 }} edges={['top']}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          
+
           <PulseTicker />
 
           {/* --- HERO SECTION --- */}
@@ -748,7 +748,7 @@ export default function HomeScreen() {
           <View style={styles.gridContainer}>
             <Text style={styles.gridTitle}>POPULAR SERVICES</Text>
             <View style={styles.categoryGrid}>
-              {CATEGORIES.slice(0, 6).map((cat: {name: string, icon: string}, index: number) => (
+              {CATEGORIES.slice(0, 6).map((cat: { name: string, icon: string }, index: number) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.gridItem}
@@ -768,18 +768,18 @@ export default function HomeScreen() {
 
           {/* --- SERVICE GUARANTEES --- */}
           <View style={styles.guaranteeSection}>
-             <View style={styles.guaranteeItem}>
-                <Ionicons name="shield-checkmark" size={24} color={THEME.gold} />
-                <Text style={styles.guaranteeText}>VERIFIED PROS</Text>
-             </View>
-             <View style={styles.guaranteeItem}>
-                <Ionicons name="flash" size={24} color={THEME.gold} />
-                <Text style={styles.guaranteeText}>RAPID QUOTES</Text>
-             </View>
-             <View style={styles.guaranteeItem}>
-                <Ionicons name="star" size={24} color={THEME.gold} />
-                <Text style={styles.guaranteeText}>ELITE QUALITY</Text>
-             </View>
+            <View style={styles.guaranteeItem}>
+              <Ionicons name="shield-checkmark" size={24} color={THEME.gold} />
+              <Text style={styles.guaranteeText}>VERIFIED PROS</Text>
+            </View>
+            <View style={styles.guaranteeItem}>
+              <Ionicons name="flash" size={24} color={THEME.gold} />
+              <Text style={styles.guaranteeText}>RAPID QUOTES</Text>
+            </View>
+            <View style={styles.guaranteeItem}>
+              <Ionicons name="star" size={24} color={THEME.gold} />
+              <Text style={styles.guaranteeText}>ELITE QUALITY</Text>
+            </View>
           </View>
 
           {/* --- FEATURED SECTION --- */}
@@ -932,7 +932,7 @@ export default function HomeScreen() {
               </ScrollView>
 
               <TouchableOpacity style={styles.modalCloseButton} onPress={() => setSelectedVendor(null)}>
-                    <Text style={styles.modalCloseButtonText}>CLOSE</Text>
+                <Text style={styles.modalCloseButtonText}>CLOSE</Text>
               </TouchableOpacity>
             </View>
           </View>
