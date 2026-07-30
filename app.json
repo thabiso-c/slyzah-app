@@ -30,7 +30,8 @@
         "ACCESS_COARSE_LOCATION",
         "INTERNET",
         "RECEIVE_BOOT_COMPLETED",
-        "WAKE_LOCK"
+        "WAKE_LOCK",
+        "POST_NOTIFICATIONS"
       ]
     },
     "web": {
@@ -42,9 +43,9 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/notification_icon.png",
+          "icon": "./assets/notification-icon.png",
           "sounds": [
-            "./assets/notification_sound.mp3"
+            "./assets/notification-sound.mp3"
           ],
           "color": "#FFFFFF"
         }
