@@ -1,0 +1,1 @@
+app/chat/[id].tsx(29,23): error TS2307: Cannot find module '../constants/theme' or its corresponding type declarations.

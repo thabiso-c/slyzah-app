@@ -133,7 +133,7 @@ export default function ProfileScreen() {
                             value={formData.firstName}
                             onChangeText={(t) => setFormData({ ...formData, firstName: t })}
                             placeholder="First Name"
-                            placeholderTextColor="rgba(255,255,255,0.4)"
+                            placeholderTextColor={THEME.placeholder}
                         />
 
                         <Text style={styles.label}>SURNAME</Text>
@@ -142,7 +142,7 @@ export default function ProfileScreen() {
                             value={formData.surname}
                             onChangeText={(t) => setFormData({ ...formData, surname: t })}
                             placeholder="Surname"
-                            placeholderTextColor="rgba(255,255,255,0.4)"
+                            placeholderTextColor={THEME.placeholder}
                         />
 
                         <Text style={styles.label}>PHONE NUMBER</Text>
@@ -152,7 +152,7 @@ export default function ProfileScreen() {
                             onChangeText={(t) => setFormData({ ...formData, phone: t })}
                             keyboardType="phone-pad"
                             placeholder="+27..."
-                            placeholderTextColor="rgba(255,255,255,0.4)"
+                            placeholderTextColor={THEME.placeholder}
                         />
 
                         <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     headerTitle: { color: THEME.white, fontSize: 18, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 },
     content: { padding: 20 },
     avatarContainer: { alignItems: 'center', marginBottom: 30 },
-    avatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
-    avatarText: { color: THEME.gold, fontSize: 40, fontWeight: '900' },
+    avatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: THEME.gold, justifyContent: 'center', alignItems: 'center', marginBottom: 15, borderWidth: 2, borderColor: THEME.gold },
+    avatarText: { color: THEME.navy, fontSize: 40, fontWeight: '900' },
     emailText: { color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: '600' },
-    form: { backgroundColor: 'rgba(255,255,255,0.05)', padding: 30, borderRadius: 32, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+    form: { backgroundColor: THEME.navy, padding: 30, borderRadius: 32, borderWidth: 1, borderColor: THEME.gold },
     label: { fontSize: 10, fontWeight: '900', color: THEME.gold, marginBottom: 8, marginTop: 15, letterSpacing: 1 },
-    input: { backgroundColor: 'rgba(255,255,255,0.05)', padding: 18, borderRadius: 20, fontSize: 16, fontWeight: '600', color: THEME.white, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+    input: { backgroundColor: '#0B2A4A', padding: 18, borderRadius: 20, fontSize: 16, fontWeight: '600', color: THEME.white, borderWidth: 1, borderColor: '#173A5E' },
     saveButton: { backgroundColor: THEME.gold, padding: 18, borderRadius: 25, alignItems: 'center', marginTop: 30, shadowColor: THEME.gold, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5 },
     saveButtonText: { color: THEME.navy, fontWeight: '900', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase' },
     logoutButton: { marginTop: 25, alignItems: 'center', padding: 15, backgroundColor: 'rgba(255, 59, 48, 0.1)', borderRadius: 20 },

@@ -244,8 +244,8 @@ export default function LoginScreen() {
                         />
 
                         {!isRegistering && (
-                            <TouchableOpacity 
-                                onPress={handleForgotPassword} 
+                            <TouchableOpacity
+                                onPress={handleForgotPassword}
                                 style={styles.forgotPasswordButton}
                                 hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
                                 activeOpacity={0.6}
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: 1,
-        opacity: 0.7,
+        opacity: 0.8,
     },
     separatorContainer: {
         flexDirection: 'row',
@@ -474,12 +474,17 @@ const styles = StyleSheet.create({
         gap: 12,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.1)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
     },
     googleButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: '#FFFFFF',
     },
     facebookButton: {
-        backgroundColor: 'rgba(24, 119, 242, 0.8)', // Semi-transparent Facebook Blue
+        backgroundColor: '#1877F2', // Solid Facebook Blue
     },
     socialIcon: {
         width: 20,

@@ -362,238 +362,238 @@ export default function UserDashboard() {
                     </TouchableOpacity>
                 </View>
 
-            {/* TABS */}
-            <View style={styles.tabsContainer}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollViewRef}>
-                    <TabBtn active={activeTab === "active"} label="Active" icon="flash" onClick={() => setActiveTab("active")} />
-                    <TabBtn active={activeTab === "history"} label="History" icon="time" onClick={() => setActiveTab("history")} />
-                    <TabBtn active={activeTab === "messages"} label="Messages" icon="chatbubbles" badge={unreadCount} onClick={() => setActiveTab("messages")} />
-                    <TabBtn active={activeTab === "reviews"} label="Reviews" icon="star" badge={pendingReviewsCount} onClick={() => setActiveTab("reviews")} />
-                    <TabBtn active={activeTab === "support"} label="Support" icon="help-buoy" onClick={() => setActiveTab("support")} />
-                </ScrollView>
-            </View>
-
-            <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 50 }]}>
-                {/* MESSAGES TAB */}
-                {activeTab === "messages" && (
-                    <View>
-                        {chats.length > 0 ? chats.map((chat) => (
-                            <TouchableOpacity
-                                key={chat.id}
-                                style={[styles.card, chat.customerUnreadCount > 0 && styles.cardActive]}
-                                onPress={() => router.push({ pathname: '/chat/[id]', params: { id: chat.id } } as any)}
-                            >
-                                <View style={styles.row}>
-                                    <View style={styles.avatar}>
-                                        <Text style={styles.avatarText}>{chat.vendorName?.charAt(0) || "P"}</Text>
-                                    </View>
-                                    <View style={{ flex: 1, marginLeft: 10 }}>
-                                        <Text style={styles.cardTitle}>{chat.vendorName}</Text>
-                                        <Text style={styles.cardSubtitle} numberOfLines={1}>
-                                            {chat.lastSenderId === user?.uid ? "You: " : ""} {chat.lastMessage}
-                                        </Text>
-                                    </View>
-                                    {chat.customerUnreadCount > 0 && (
-                                        <View style={styles.badge}>
-                                            <Text style={styles.badgeText}>{chat.customerUnreadCount}</Text>
-                                        </View>
-                                    )}
-                                </View>
-                            </TouchableOpacity>
-                        )) : (
-                            <Text style={styles.emptyText}>No active conversations.</Text>
-                        )}
-                    </View>
-                )}
-
-                {/* ACTIVE & HISTORY LEADS */}
-                {(activeTab === "active" || activeTab === "history") && (
-                    <View>
-                        {leads
-                            .filter(l => activeTab === "active" ? l.status === "open" : l.status === "assigned")
-                            .map((lead) => (
-                                <View key={lead.id} style={styles.card}>
-                                    <View style={styles.rowBetween}>
-                                        <View style={styles.tag}>
-                                            <Text style={styles.tagText}>{lead.category}</Text>
-                                        </View>
-                                        <Text style={styles.dateText}>
-                                            {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleDateString() : ''}
-                                        </Text>
-                                    </View>
-                                    <Text style={styles.cardTitle}>{lead.issueDescription}</Text>
-                                    <Text style={styles.cardSubtitle}>📍 {lead.region}</Text>
-
-                                    {lead.status === "assigned" && (
-                                        <TouchableOpacity
-                                            style={styles.actionButton}
-                                            onPress={() => handleOpenChat(lead)}
-                                        >
-                                            <Text style={styles.actionButtonText}>Open Project Chat</Text>
-                                        </TouchableOpacity>
-                                    )}
-
-                                    {/* Quotes Section */}
-                                    <View style={styles.quotesSection}>
-                                        <Text style={styles.sectionHeader}>Received Quotes</Text>
-                                        {lead.quotes ? Object.entries(lead.quotes).map(([vId, quote]: [string, any]) => (
-                                            <View key={vId} style={[styles.quoteItem, lead.winnerId === vId && styles.quoteWinner]}>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.quoteVendor} numberOfLines={1}>{quote.vendorName || "Pro"}</Text>
-                                                    <Text style={styles.quotePrice}>R{quote.amount}</Text>
-                                                </View>
-                                                {quote.message && (
-                                                    <Text style={styles.quoteMessage}>{`"${quote.message}"`}</Text>
-                                                )}
-                                                {lead.status === "open" && (
-                                                    <TouchableOpacity
-                                                        style={[styles.selectButton, lead.urgency === 'comparing' && styles.disabledButton]}
-                                                        onPress={() => initiateSelectWinner(lead.id, vId, quote.vendorName)}
-                                                        disabled={lead.urgency === 'comparing'}
-                                                    >
-                                                        <Text style={styles.selectButtonText}>
-                                                            {lead.urgency === 'comparing' ? 'Comparing Only' : 'Select Winner'}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                )}
-                                            </View>
-                                        )) : <Text style={styles.emptyText}>Waiting for quotes...</Text>}
-                                    </View>
-                                </View>
-                            ))}
-                    </View>
-                )}
-
-                {/* REVIEWS TAB */}
-                {activeTab === "reviews" && (
-                    <View>
-                        {leads.filter(l => l.winnerId && !l.hasReviewed).map((lead) => {
-                            const winningQuote = lead.quotes?.[lead.winnerId];
-                            return (
-                                <View key={lead.id} style={styles.card}>
-                                    <Text style={styles.cardTitle}>{winningQuote?.vendorName || "Professional"}</Text>
-                                    <Text style={styles.cardSubtitle}>Job: {lead.issueDescription}</Text>
-                                    <TouchableOpacity style={styles.actionButton} onPress={() => openReviewModal(lead)}>
-                                        <Text style={styles.actionButtonText}>Rate & Review</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            );
-                        })}
-                        {leads.filter(l => l.winnerId && !l.hasReviewed).length === 0 && (
-                            <Text style={styles.emptyText}>No completed jobs to review.</Text>
-                        )}
-                    </View>
-                )}
-
-                {/* SUPPORT TAB */}
-                {activeTab === "support" && (
-                    <View style={styles.card}>
-                        <Text style={styles.cardTitle}>Contact Support</Text>
-                        <TextInput
-                            style={styles.textArea}
-                            placeholder="Describe your issue..."
-                            placeholderTextColor="#9CA3AF"
-                            multiline
-                            numberOfLines={5}
-                            value={supportMessage}
-                            onChangeText={setSupportMessage}
-                        />
-                        <TouchableOpacity style={styles.actionButton} onPress={handleSendSupport}>
-                            <Text style={styles.actionButtonText}>Send Ticket</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-            </ScrollView>
-
-            {/* MODALS */}
-            <Modal visible={showRejectionModal} transparent animationType="slide">
-                <View style={styles.modalOverlay}>
-                    <View style={styles.solidModalContent}>
-                        <Text style={styles.modalTitle}>Confirm Winner</Text>
-                        <Text style={styles.modalSubtitle}>Why were others not selected?</Text>
-                        <TextInput
-                            style={styles.textArea}
-                            placeholder="Price too high, etc..."
-                            placeholderTextColor="#9CA3AF"
-                            value={rejectionReason}
-                            onChangeText={setRejectionReason}
-                        />
-                        <TouchableOpacity style={styles.actionButton} onPress={handleFinalizeSelection}>
-                            <Text style={styles.actionButtonText}>Confirm</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.cancelButton} onPress={() => setShowRejectionModal(false)}>
-                            <Text style={styles.cancelButtonText}>Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
+                {/* TABS */}
+                <View style={styles.tabsContainer}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollViewRef}>
+                        <TabBtn active={activeTab === "active"} label="Active" icon="flash" onClick={() => setActiveTab("active")} />
+                        <TabBtn active={activeTab === "history"} label="History" icon="time" onClick={() => setActiveTab("history")} />
+                        <TabBtn active={activeTab === "messages"} label="Messages" icon="chatbubbles" badge={unreadCount} onClick={() => setActiveTab("messages")} />
+                        <TabBtn active={activeTab === "reviews"} label="Reviews" icon="star" badge={pendingReviewsCount} onClick={() => setActiveTab("reviews")} />
+                        <TabBtn active={activeTab === "support"} label="Support" icon="help-buoy" onClick={() => setActiveTab("support")} />
+                    </ScrollView>
                 </View>
-            </Modal>
 
-            <Modal visible={showReviewModal} transparent animationType="slide">
-                <View style={styles.modalOverlay}>
-                    <View style={styles.solidModalContent}>
-                        <Text style={styles.modalTitle}>Rate {targetReview?.vendorName}</Text>
-                        <View style={styles.starsRow}>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <TouchableOpacity key={star} onPress={() => setReviewData({ ...reviewData, rating: star })}>
-                                    <Ionicons name="star" size={32} color={reviewData.rating >= star ? THEME.gold : "#ccc"} />
+                <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 50 }]}>
+                    {/* MESSAGES TAB */}
+                    {activeTab === "messages" && (
+                        <View>
+                            {chats.length > 0 ? chats.map((chat) => (
+                                <TouchableOpacity
+                                    key={chat.id}
+                                    style={[styles.card, chat.customerUnreadCount > 0 && styles.cardActive]}
+                                    onPress={() => router.push({ pathname: '/chat/[id]', params: { id: chat.id } } as any)}
+                                >
+                                    <View style={styles.row}>
+                                        <View style={styles.avatar}>
+                                            <Text style={styles.avatarText}>{chat.vendorName?.charAt(0) || "P"}</Text>
+                                        </View>
+                                        <View style={{ flex: 1, marginLeft: 10 }}>
+                                            <Text style={styles.cardTitle}>{chat.vendorName}</Text>
+                                            <Text style={styles.cardSubtitle} numberOfLines={1}>
+                                                {chat.lastSenderId === user?.uid ? "You: " : ""} {chat.lastMessage}
+                                            </Text>
+                                        </View>
+                                        {chat.customerUnreadCount > 0 && (
+                                            <View style={styles.badge}>
+                                                <Text style={styles.badgeText}>{chat.customerUnreadCount}</Text>
+                                            </View>
+                                        )}
+                                    </View>
                                 </TouchableOpacity>
-                            ))}
-                        </View>
-                        <TextInput
-                            style={styles.textArea}
-                            placeholder="Write your review..."
-                            placeholderTextColor="#9CA3AF"
-                            value={reviewData.comment}
-                            onChangeText={(t) => setReviewData({ ...reviewData, comment: t })}
-                        />
-                        <TouchableOpacity style={styles.actionButton} onPress={submitReview}>
-                            <Text style={styles.actionButtonText}>Submit Review</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.cancelButton} onPress={() => setShowReviewModal(false)}>
-                            <Text style={styles.cancelButtonText}>Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-
-            <Modal visible={showAlertsModal} transparent animationType="fade">
-                <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowAlertsModal(false)}>
-                    <View style={[styles.solidModalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
-                        <Text style={styles.modalTitle}>Notifications</Text>
-                        <ScrollView>
-                            {chats.filter(c => c.customerUnreadCount > 0).length > 0 ? (
-                                chats.filter(c => c.customerUnreadCount > 0).map(chat => (
-                                    <TouchableOpacity
-                                        key={chat.id}
-                                        style={styles.notificationItem}
-                                        onPress={() => {
-                                            setShowAlertsModal(false);
-                                            router.push({ pathname: '/chat/[id]', params: { id: chat.id } } as any);
-                                        }}
-                                    >
-                                        <View style={styles.row}>
-                                            <View style={styles.avatar}>
-                                                <Text style={styles.avatarText}>{chat.vendorName?.charAt(0) || "P"}</Text>
-                                            </View>
-                                            <View style={{ flex: 1, marginLeft: 10 }}>
-                                                <Text style={styles.notificationTitle} numberOfLines={1}>New message from {chat.vendorName}</Text>
-                                                <Text style={styles.cardSubtitle} numberOfLines={1}>{chat.lastMessage}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                ))
-                            ) : (
-                                <Text style={styles.emptyText}>No new alerts.</Text>
+                            )) : (
+                                <Text style={styles.emptyText}>No active conversations.</Text>
                             )}
-                        </ScrollView>
-                        <TouchableOpacity style={styles.cancelButton} onPress={() => setShowAlertsModal(false)}>
-                            <Text style={styles.cancelButtonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+                        </View>
+                    )}
 
-        </SafeAreaView>
+                    {/* ACTIVE & HISTORY LEADS */}
+                    {(activeTab === "active" || activeTab === "history") && (
+                        <View>
+                            {leads
+                                .filter(l => activeTab === "active" ? l.status === "open" : l.status === "assigned")
+                                .map((lead) => (
+                                    <View key={lead.id} style={styles.card}>
+                                        <View style={styles.rowBetween}>
+                                            <View style={styles.tag}>
+                                                <Text style={styles.tagText}>{lead.category}</Text>
+                                            </View>
+                                            <Text style={styles.dateText}>
+                                                {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleDateString() : ''}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.cardTitle}>{lead.issueDescription}</Text>
+                                        <Text style={styles.cardSubtitle}>📍 {lead.region}</Text>
+
+                                        {lead.status === "assigned" && (
+                                            <TouchableOpacity
+                                                style={styles.actionButton}
+                                                onPress={() => handleOpenChat(lead)}
+                                            >
+                                                <Text style={styles.actionButtonText}>Open Project Chat</Text>
+                                            </TouchableOpacity>
+                                        )}
+
+                                        {/* Quotes Section */}
+                                        <View style={styles.quotesSection}>
+                                            <Text style={styles.sectionHeader}>Received Quotes</Text>
+                                            {lead.quotes ? Object.entries(lead.quotes).map(([vId, quote]: [string, any]) => (
+                                                <View key={vId} style={[styles.quoteItem, lead.winnerId === vId && styles.quoteWinner]}>
+                                                    <View style={styles.rowBetween}>
+                                                        <Text style={styles.quoteVendor} numberOfLines={1}>{quote.vendorName || "Pro"}</Text>
+                                                        <Text style={styles.quotePrice}>R{quote.amount}</Text>
+                                                    </View>
+                                                    {quote.message && (
+                                                        <Text style={styles.quoteMessage}>{`"${quote.message}"`}</Text>
+                                                    )}
+                                                    {lead.status === "open" && (
+                                                        <TouchableOpacity
+                                                            style={[styles.selectButton, lead.urgency === 'comparing' && styles.disabledButton]}
+                                                            onPress={() => initiateSelectWinner(lead.id, vId, quote.vendorName)}
+                                                            disabled={lead.urgency === 'comparing'}
+                                                        >
+                                                            <Text style={styles.selectButtonText}>
+                                                                {lead.urgency === 'comparing' ? 'Comparing Only' : 'Select Winner'}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                </View>
+                                            )) : <Text style={styles.emptyText}>Waiting for quotes...</Text>}
+                                        </View>
+                                    </View>
+                                ))}
+                        </View>
+                    )}
+
+                    {/* REVIEWS TAB */}
+                    {activeTab === "reviews" && (
+                        <View>
+                            {leads.filter(l => l.winnerId && !l.hasReviewed).map((lead) => {
+                                const winningQuote = lead.quotes?.[lead.winnerId];
+                                return (
+                                    <View key={lead.id} style={styles.card}>
+                                        <Text style={styles.cardTitle}>{winningQuote?.vendorName || "Professional"}</Text>
+                                        <Text style={styles.cardSubtitle}>Job: {lead.issueDescription}</Text>
+                                        <TouchableOpacity style={styles.actionButton} onPress={() => openReviewModal(lead)}>
+                                            <Text style={styles.actionButtonText}>Rate & Review</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            })}
+                            {leads.filter(l => l.winnerId && !l.hasReviewed).length === 0 && (
+                                <Text style={styles.emptyText}>No completed jobs to review.</Text>
+                            )}
+                        </View>
+                    )}
+
+                    {/* SUPPORT TAB */}
+                    {activeTab === "support" && (
+                        <View style={styles.card}>
+                            <Text style={styles.cardTitle}>Contact Support</Text>
+                            <TextInput
+                                style={styles.textArea}
+                                placeholder="Describe your issue..."
+                                placeholderTextColor="#9CA3AF"
+                                multiline
+                                numberOfLines={5}
+                                value={supportMessage}
+                                onChangeText={setSupportMessage}
+                            />
+                            <TouchableOpacity style={styles.actionButton} onPress={handleSendSupport}>
+                                <Text style={styles.actionButtonText}>Send Ticket</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </ScrollView>
+
+                {/* MODALS */}
+                <Modal visible={showRejectionModal} transparent animationType="slide">
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.solidModalContent}>
+                            <Text style={styles.modalTitle}>Confirm Winner</Text>
+                            <Text style={styles.modalSubtitle}>Why were others not selected?</Text>
+                            <TextInput
+                                style={styles.textArea}
+                                placeholder="Price too high, etc..."
+                                placeholderTextColor="#9CA3AF"
+                                value={rejectionReason}
+                                onChangeText={setRejectionReason}
+                            />
+                            <TouchableOpacity style={styles.actionButton} onPress={handleFinalizeSelection}>
+                                <Text style={styles.actionButtonText}>Confirm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setShowRejectionModal(false)}>
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal visible={showReviewModal} transparent animationType="slide">
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.solidModalContent}>
+                            <Text style={styles.modalTitle}>Rate {targetReview?.vendorName}</Text>
+                            <View style={styles.starsRow}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <TouchableOpacity key={star} onPress={() => setReviewData({ ...reviewData, rating: star })}>
+                                        <Ionicons name="star" size={32} color={reviewData.rating >= star ? THEME.gold : "#ccc"} />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                            <TextInput
+                                style={styles.textArea}
+                                placeholder="Write your review..."
+                                placeholderTextColor="#9CA3AF"
+                                value={reviewData.comment}
+                                onChangeText={(t) => setReviewData({ ...reviewData, comment: t })}
+                            />
+                            <TouchableOpacity style={styles.actionButton} onPress={submitReview}>
+                                <Text style={styles.actionButtonText}>Submit Review</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setShowReviewModal(false)}>
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal visible={showAlertsModal} transparent animationType="fade">
+                    <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowAlertsModal(false)}>
+                        <View style={[styles.solidModalContent, { position: 'absolute', top: 110, right: 20, width: 320 }]}>
+                            <Text style={styles.modalTitle}>Notifications</Text>
+                            <ScrollView>
+                                {chats.filter(c => c.customerUnreadCount > 0).length > 0 ? (
+                                    chats.filter(c => c.customerUnreadCount > 0).map(chat => (
+                                        <TouchableOpacity
+                                            key={chat.id}
+                                            style={styles.notificationItem}
+                                            onPress={() => {
+                                                setShowAlertsModal(false);
+                                                router.push({ pathname: '/chat/[id]', params: { id: chat.id } } as any);
+                                            }}
+                                        >
+                                            <View style={styles.row}>
+                                                <View style={styles.avatar}>
+                                                    <Text style={styles.avatarText}>{chat.vendorName?.charAt(0) || "P"}</Text>
+                                                </View>
+                                                <View style={{ flex: 1, marginLeft: 10 }}>
+                                                    <Text style={styles.notificationTitle} numberOfLines={1}>New message from {chat.vendorName}</Text>
+                                                    <Text style={styles.cardSubtitle} numberOfLines={1}>{chat.lastMessage}</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    ))
+                                ) : (
+                                    <Text style={styles.emptyText}>No new alerts.</Text>
+                                )}
+                            </ScrollView>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setShowAlertsModal(false)}>
+                                <Text style={styles.cancelButtonText}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+            </SafeAreaView>
         </View>
     );
 }
@@ -642,15 +642,15 @@ const styles = StyleSheet.create({
     },
     tabBtnActive: { backgroundColor: THEME.navy },
     tabText: { fontSize: 12, fontWeight: 'bold', color: '#999', marginLeft: 5, textTransform: 'uppercase' },
-    tabTextActive: { color: THEME.white },
-    tabBadge: { position: 'absolute', top: -5, right: -5, backgroundColor: 'red', borderRadius: 10, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' },
+    tabTextActive: { color: THEME.gold },
+    tabBadge: { position: 'absolute', top: -5, right: -5, backgroundColor: THEME.gold, borderRadius: 10, width: 18, height: 18, justifyContent: 'center', alignItems: 'center' },
     tabBadgeText: { color: 'white', fontSize: 10, fontWeight: 'bold' },
     content: { padding: 15, paddingBottom: 50 },
-    card: { 
-        backgroundColor: 'rgba(255, 255, 255, 0.05)', 
-        borderRadius: 24, 
-        padding: 20, 
-        marginBottom: 15, 
+    card: {
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderRadius: 24,
+        padding: 20,
+        marginBottom: 15,
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.1)',
     },
@@ -667,8 +667,8 @@ const styles = StyleSheet.create({
     tag: { backgroundColor: THEME.navy, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10 },
     tagText: { color: THEME.white, fontSize: 10, fontWeight: 'bold', textTransform: 'uppercase' },
     dateText: { fontSize: 10, color: '#999', fontWeight: 'bold' },
-    actionButton: { backgroundColor: THEME.navy, padding: 12, borderRadius: 12, alignItems: 'center', marginTop: 10 },
-    actionButtonText: { color: THEME.white, fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12 },
+    actionButton: { backgroundColor: THEME.gold, padding: 12, borderRadius: 12, alignItems: 'center', marginTop: 10 },
+    actionButtonText: { color: THEME.navy, fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12 },
     quotesSection: { marginTop: 15, backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: 10, borderRadius: 12 },
     sectionHeader: { fontSize: 10, fontWeight: '900', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase', marginBottom: 10 },
     quoteItem: { backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: 10, borderRadius: 10, marginBottom: 8, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.05)' },
