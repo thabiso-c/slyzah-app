@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { auth, db } from '../firebaseConfig';
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  sendPasswordResetEmail,
-  updateProfile 
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile
 } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Lock, Mail, User, Phone, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
@@ -37,12 +36,12 @@ export default function Auth({ onSuccess }: AuthProps) {
         if (!displayName.trim() || !phone.trim()) {
           throw new Error("Full Name and Phone Number are required");
         }
-        
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        
+
         await updateProfile(user, { displayName });
-        
+
         // Save client profile to Firestore
         await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
@@ -56,9 +55,18 @@ export default function Auth({ onSuccess }: AuthProps) {
 
         onSuccess?.();
       } else if (mode === 'forgot') {
-        await sendPasswordResetEmail(auth, email);
-        setSuccessMsg("Password reset email sent! Please check your inbox.");
-        setTimeout(() => setMode('login'), 4000);
+        const response = await fetch('https://slyzah.co.za/api/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim().toLowerCase() }),
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setSuccessMsg("Password reset email sent! Please check your inbox.");
+          setTimeout(() => setMode('login'), 4000);
+        } else {
+          throw new Error(data.error || "Failed to send reset email.");
+        }
       }
     } catch (err: any) {
       console.error(err);
@@ -79,7 +87,7 @@ export default function Auth({ onSuccess }: AuthProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 font-sans">
       <div className="w-full max-w-md space-y-8 rounded-3xl border border-navy-800 bg-navy-950 p-8 shadow-2xl shadow-black/50">
-        
+
         {/* Header logo / slogan */}
         <div className="text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-navy-900 to-navy-850 border border-gold-500/30 text-gold-500">
