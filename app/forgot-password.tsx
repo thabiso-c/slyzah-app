@@ -1,11 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import { useAssets } from 'expo-asset';
-import { auth } from '../firebaseConfig';
 import { THEME } from '../constants/theme';
 
 export default function ForgotPassword() {
@@ -23,14 +21,23 @@ export default function ForgotPassword() {
         }
         setLoading(true);
         try {
-            await sendPasswordResetEmail(auth, cleanEmail);
-            setResetSent(true);
-        } catch (error: any) {
-            if (error.code === 'auth/user-not-found') {
-                Alert.alert("Account Not Found", "No account found with this email.");
+            const response = await fetch('https://slyzah.co.za/api/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: cleanEmail }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setResetSent(true);
             } else {
-                Alert.alert("Error", error.message);
+                Alert.alert("Error", data.error || "Failed to send reset email. Please try again.");
             }
+        } catch (error: any) {
+            Alert.alert("Error", error.message || "Network error. Please try again.");
         } finally {
             setLoading(false);
         }
