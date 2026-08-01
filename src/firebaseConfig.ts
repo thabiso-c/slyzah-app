@@ -16,8 +16,7 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Safe Auth initialization with persistence
-/** @type {import('firebase/auth').Auth} */
-let auth;
+let auth: import('firebase/auth').Auth;
 try {
   auth = getAuth(app);
 } catch (error) {
@@ -33,8 +32,7 @@ try {
 }
 
 // Safe Firestore initialization with Long Polling
-/** @type {import('firebase/firestore').Firestore} */
-let db;
+let db: import('firebase/firestore').Firestore;
 try {
   db = getFirestore(app);
 } catch (error) {
