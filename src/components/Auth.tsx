@@ -58,7 +58,7 @@ export default function Auth({ onSuccess }: AuthProps) {
         const response = await fetch('https://slyzah.co.za/api/forgot-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim().toLowerCase() }),
+          body: JSON.stringify({ email: email.trim().toLowerCase(), platform: 'slyzah-app' }),
         });
         const data = await response.json();
         if (response.ok && data.success) {

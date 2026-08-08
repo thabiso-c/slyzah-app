@@ -28,6 +28,9 @@
     "src",
     "app",
     "vite-env.d.ts",
-    "firebaseConfig.d.ts"
-  ]
+    "firebaseConfig.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }

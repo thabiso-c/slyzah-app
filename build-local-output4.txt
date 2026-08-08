@@ -1,0 +1,840 @@
+=== Building Slyzah app APK ===
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :gradle-plugin:settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:shared:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:shared:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:processResources NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:classes UP-TO-DATE
+> Task :gradle-plugin:shared:processResources NO-SOURCE
+> Task :gradle-plugin:shared:classes UP-TO-DATE
+> Task :gradle-plugin:shared:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:settings-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:settings-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileKotlin UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:classes UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-launcher-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-module-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-updates-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-launcher-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-module-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-updates-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-module-gradle-plugin:processResources UP-TO-DATE
+> Task :expo-dev-launcher-gradle-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-updates-gradle-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileKotlin UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:classes UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:jar UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:react-native-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:jar UP-TO-DATE
+> Task :expo-module-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :expo-module-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-module-gradle-plugin:classes UP-TO-DATE
+> Task :expo-dev-launcher-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :expo-dev-launcher-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-dev-launcher-gradle-plugin:classes UP-TO-DATE
+> Task :expo-module-gradle-plugin:jar UP-TO-DATE
+> Task :expo-dev-launcher-gradle-plugin:jar UP-TO-DATE
+> Task :expo-updates-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :expo-updates-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-updates-gradle-plugin:classes UP-TO-DATE
+> Task :expo-updates-gradle-plugin:jar UP-TO-DATE
+
+> Configure project :
+[32m[ExpoRootProject][0m Using the following versions:
+  - buildTools:  [32m36.0.0[0m
+  - minSdk:      [32m24[0m
+  - compileSdk:  [32m36[0m
+  - targetSdk:   [32m36[0m
+  - ndk:         [32m27.1.12297006[0m
+  - kotlin:      [32m2.1.20[0m
+  - ksp:         [32m2.1.20-2.0.1[0m
+
+> Configure project :app
+ ℹ️  [33mApplying gradle plugin[0m '[32mexpo-dev-launcher-gradle-plugin[0m'
+ ℹ️  [33mApplying gradle plugin[0m '[32mexpo-updates-gradle-plugin[0m'
+
+> Configure project :expo
+
+Using expo modules
+  - [32mexpo-constants[0m (18.0.13)
+  - [32mexpo-dev-client[0m (6.0.21)
+  - [32mexpo-dev-launcher[0m (6.0.21)
+  - [32mexpo-dev-menu[0m (7.0.19)
+  - [32mexpo-dev-menu-interface[0m (2.0.0)
+  - [32mexpo-eas-client[0m (1.0.8)
+  - [32mexpo-json-utils[0m (0.15.0)
+  - [32mexpo-manifests[0m (1.0.11)
+  - [32mexpo-modules-core[0m (3.0.30)
+  - [32mexpo-structured-headers[0m (5.0.0)
+  - [32mexpo-updates[0m (29.0.18)
+  - [32mexpo-updates-interface[0m (2.0.0)
+  - [33m[📦][0m [32mexpo-application[0m (7.0.8)
+  - [33m[📦][0m [32mexpo-asset[0m (57.0.7)
+  - [33m[📦][0m [32mexpo-av[0m (16.0.8)
+  - [33m[📦][0m [32mexpo-crypto[0m (15.0.9)
+  - [33m[📦][0m [32mexpo-device[0m (8.0.10)
+  - [33m[📦][0m [32mexpo-file-system[0m (19.0.23)
+  - [33m[📦][0m [32mexpo-font[0m (14.0.12)
+  - [33m[📦][0m [32mexpo-haptics[0m (15.0.8)
+  - [33m[📦][0m [32mexpo-image[0m (3.0.11)
+  - [33m[📦][0m [32mexpo-image-loader[0m (6.0.0)
+  - [33m[📦][0m [32mexpo-image-picker[0m (17.0.11)
+  - [33m[📦][0m [32mexpo-keep-awake[0m (15.0.8)
+  - [33m[📦][0m [32mexpo-linking[0m (8.0.12)
+  - [33m[📦][0m [32mexpo-location[0m (19.0.8)
+  - [33m[📦][0m [32mexpo-notifications[0m (0.32.17)
+  - [33m[📦][0m [32mexpo-splash-screen[0m (31.0.13)
+  - [33m[📦][0m [32mexpo-system-ui[0m (6.0.9)
+  - [33m[📦][0m [32mexpo-task-manager[0m (14.0.9)
+  - [33m[📦][0m [32mexpo-web-browser[0m (15.0.11)
+  - [33m[📦][0m [32munimodules-app-loader[0m (6.0.8)
+
+
+> Task :app:generateAutolinkingNewArchitectureFiles UP-TO-DATE
+> Task :app:generateAutolinkingPackageList UP-TO-DATE
+> Task :app:generateCodegenSchemaFromJavaScript SKIPPED
+> Task :app:generateCodegenArtifactsFromSchema SKIPPED
+> Task :app:generateReactNativeEntryPoint UP-TO-DATE
+> Task :expo:generatePackagesList UP-TO-DATE
+> Task :expo:preBuild UP-TO-DATE
+
+> Task :expo-constants:createExpoConfig
+The NODE_ENV environment variable is required but was not specified. Ensure the project is bundled with Expo CLI or NODE_ENV is set. Using only .env.local and .env
+
+> Task :expo-constants:preBuild
+> Task :expo-dev-client:preBuild UP-TO-DATE
+> Task :expo-dev-launcher:preBuild UP-TO-DATE
+> Task :expo-dev-menu:preBuild UP-TO-DATE
+> Task :expo-dev-menu-interface:preBuild UP-TO-DATE
+> Task :expo-eas-client:preBuild UP-TO-DATE
+> Task :expo-json-utils:preBuild UP-TO-DATE
+> Task :expo-manifests:preBuild UP-TO-DATE
+> Task :expo-modules-core:preBuild UP-TO-DATE
+> Task :expo-structured-headers:preBuild UP-TO-DATE
+> Task :expo-updates:preBuild UP-TO-DATE
+> Task :expo-updates-interface:preBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preBuild UP-TO-DATE
+> Task :react-native-gesture-handler:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-gesture-handler:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-gesture-handler:preBuild UP-TO-DATE
+> Task :react-native-reanimated:assertMinimalReactNativeVersionTask
+> Task :react-native-reanimated:assertNewArchitectureEnabledTask SKIPPED
+> Task :react-native-reanimated:assertWorkletsVersionTask
+> Task :react-native-reanimated:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-reanimated:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-reanimated:prepareReanimatedHeadersForPrefabs UP-TO-DATE
+> Task :react-native-reanimated:preBuild
+> Task :react-native-safe-area-context:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-safe-area-context:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-safe-area-context:preBuild UP-TO-DATE
+> Task :react-native-screens:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-screens:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-screens:preBuild UP-TO-DATE
+> Task :react-native-worklets:assertMinimalReactNativeVersionTask
+> Task :react-native-worklets:assertNewArchitectureEnabledTask SKIPPED
+> Task :react-native-worklets:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-worklets:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-worklets:prepareWorkletsHeadersForPrefabs UP-TO-DATE
+> Task :react-native-worklets:preBuild
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :expo:preDebugBuild UP-TO-DATE
+> Task :expo:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-constants:preDebugBuild
+> Task :expo-constants:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-dev-client:preDebugBuild UP-TO-DATE
+> Task :expo-dev-client:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-dev-launcher:preDebugBuild UP-TO-DATE
+> Task :expo-dev-launcher:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-dev-menu:preDebugBuild UP-TO-DATE
+> Task :expo-dev-menu:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-dev-menu-interface:preDebugBuild UP-TO-DATE
+> Task :expo-dev-menu-interface:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-eas-client:preDebugBuild UP-TO-DATE
+> Task :expo-eas-client:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-json-utils:preDebugBuild UP-TO-DATE
+> Task :expo-json-utils:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-manifests:preDebugBuild UP-TO-DATE
+> Task :expo-manifests:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-modules-core:preDebugBuild UP-TO-DATE
+> Task :expo-modules-core:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-structured-headers:preDebugBuild UP-TO-DATE
+> Task :expo-structured-headers:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-updates:preDebugBuild UP-TO-DATE
+> Task :expo-updates:writeDebugAarMetadata UP-TO-DATE
+> Task :expo-updates-interface:preDebugBuild UP-TO-DATE
+> Task :expo-updates-interface:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preDebugBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-gesture-handler:preDebugBuild UP-TO-DATE
+> Task :react-native-gesture-handler:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-reanimated:preDebugBuild
+> Task :react-native-reanimated:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-safe-area-context:preDebugBuild UP-TO-DATE
+> Task :react-native-safe-area-context:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-screens:preDebugBuild UP-TO-DATE
+> Task :react-native-screens:writeDebugAarMetadata UP-TO-DATE
+> Task :react-native-worklets:preDebugBuild
+> Task :react-native-worklets:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :expo:generateDebugResValues UP-TO-DATE
+> Task :expo:generateDebugResources UP-TO-DATE
+> Task :expo:packageDebugResources UP-TO-DATE
+> Task :expo-constants:generateDebugResValues UP-TO-DATE
+> Task :expo-constants:generateDebugResources UP-TO-DATE
+> Task :expo-constants:packageDebugResources UP-TO-DATE
+> Task :expo-dev-client:generateDebugResValues UP-TO-DATE
+> Task :expo-dev-client:generateDebugResources UP-TO-DATE
+> Task :expo-dev-client:packageDebugResources UP-TO-DATE
+> Task :expo-dev-launcher:generateDebugResValues UP-TO-DATE
+> Task :expo-dev-launcher:generateDebugResources UP-TO-DATE
+> Task :expo-dev-launcher:packageDebugResources UP-TO-DATE
+> Task :expo-dev-menu:generateDebugResValues UP-TO-DATE
+> Task :expo-dev-menu:generateDebugResources UP-TO-DATE
+> Task :expo-dev-menu:packageDebugResources UP-TO-DATE
+> Task :expo-dev-menu-interface:generateDebugResValues UP-TO-DATE
+> Task :expo-dev-menu-interface:generateDebugResources UP-TO-DATE
+> Task :expo-dev-menu-interface:packageDebugResources UP-TO-DATE
+> Task :expo-eas-client:generateDebugResValues UP-TO-DATE
+> Task :expo-eas-client:generateDebugResources UP-TO-DATE
+> Task :expo-eas-client:packageDebugResources UP-TO-DATE
+> Task :expo-json-utils:generateDebugResValues UP-TO-DATE
+> Task :expo-json-utils:generateDebugResources UP-TO-DATE
+> Task :expo-json-utils:packageDebugResources UP-TO-DATE
+> Task :expo-manifests:generateDebugResValues UP-TO-DATE
+> Task :expo-manifests:generateDebugResources UP-TO-DATE
+> Task :expo-manifests:packageDebugResources UP-TO-DATE
+> Task :expo-modules-core:generateDebugResValues UP-TO-DATE
+> Task :expo-modules-core:generateDebugResources UP-TO-DATE
+> Task :expo-modules-core:packageDebugResources UP-TO-DATE
+> Task :expo-structured-headers:generateDebugResValues UP-TO-DATE
+> Task :expo-structured-headers:generateDebugResources UP-TO-DATE
+> Task :expo-structured-headers:packageDebugResources UP-TO-DATE
+> Task :expo-updates:generateDebugResValues UP-TO-DATE
+> Task :expo-updates:generateDebugResources UP-TO-DATE
+> Task :expo-updates:packageDebugResources UP-TO-DATE
+> Task :expo-updates-interface:generateDebugResValues UP-TO-DATE
+> Task :expo-updates-interface:generateDebugResources UP-TO-DATE
+> Task :expo-updates-interface:packageDebugResources UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateDebugResValues UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateDebugResources UP-TO-DATE
+> Task :react-native-async-storage_async-storage:packageDebugResources UP-TO-DATE
+> Task :react-native-gesture-handler:generateDebugResValues UP-TO-DATE
+> Task :react-native-gesture-handler:generateDebugResources UP-TO-DATE
+> Task :react-native-gesture-handler:packageDebugResources UP-TO-DATE
+> Task :react-native-reanimated:generateDebugResValues UP-TO-DATE
+> Task :react-native-reanimated:generateDebugResources UP-TO-DATE
+> Task :react-native-reanimated:packageDebugResources UP-TO-DATE
+> Task :react-native-safe-area-context:generateDebugResValues UP-TO-DATE
+> Task :react-native-safe-area-context:generateDebugResources UP-TO-DATE
+> Task :react-native-safe-area-context:packageDebugResources UP-TO-DATE
+> Task :react-native-screens:generateDebugResValues UP-TO-DATE
+> Task :react-native-screens:generateDebugResources UP-TO-DATE
+> Task :react-native-screens:packageDebugResources UP-TO-DATE
+> Task :react-native-worklets:generateDebugResValues UP-TO-DATE
+> Task :react-native-worklets:generateDebugResources UP-TO-DATE
+> Task :react-native-worklets:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :expo:extractDeepLinksDebug UP-TO-DATE
+> Task :expo:processDebugManifest UP-TO-DATE
+> Task :expo-constants:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-constants:processDebugManifest UP-TO-DATE
+> Task :expo-dev-client:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-dev-client:processDebugManifest UP-TO-DATE
+> Task :expo-dev-launcher:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-dev-launcher:processDebugManifest UP-TO-DATE
+> Task :expo-dev-menu:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-dev-menu:processDebugManifest UP-TO-DATE
+> Task :expo-dev-menu-interface:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-dev-menu-interface:processDebugManifest UP-TO-DATE
+> Task :expo-eas-client:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-eas-client:processDebugManifest UP-TO-DATE
+> Task :expo-json-utils:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-json-utils:processDebugManifest UP-TO-DATE
+> Task :expo-manifests:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-manifests:processDebugManifest UP-TO-DATE
+> Task :expo-modules-core:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-modules-core:processDebugManifest UP-TO-DATE
+> Task :expo-structured-headers:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-structured-headers:processDebugManifest UP-TO-DATE
+> Task :expo-updates:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-updates:processDebugManifest UP-TO-DATE
+> Task :expo-updates-interface:extractDeepLinksDebug UP-TO-DATE
+> Task :expo-updates-interface:processDebugManifest UP-TO-DATE
+> Task :react-native-async-storage_async-storage:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-async-storage_async-storage:processDebugManifest UP-TO-DATE
+> Task :react-native-gesture-handler:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-gesture-handler:processDebugManifest UP-TO-DATE
+> Task :react-native-reanimated:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-reanimated:processDebugManifest UP-TO-DATE
+> Task :react-native-safe-area-context:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-safe-area-context:processDebugManifest UP-TO-DATE
+> Task :react-native-screens:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-screens:processDebugManifest UP-TO-DATE
+> Task :react-native-worklets:extractDeepLinksDebug UP-TO-DATE
+> Task :react-native-worklets:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :expo:compileDebugLibraryResources UP-TO-DATE
+> Task :expo:parseDebugLocalResources UP-TO-DATE
+> Task :expo:generateDebugRFile UP-TO-DATE
+> Task :expo-constants:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-constants:parseDebugLocalResources UP-TO-DATE
+> Task :expo-constants:generateDebugRFile UP-TO-DATE
+> Task :expo-dev-client:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-dev-client:parseDebugLocalResources UP-TO-DATE
+> Task :expo-dev-client:generateDebugRFile UP-TO-DATE
+> Task :expo-dev-launcher:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-dev-launcher:parseDebugLocalResources UP-TO-DATE
+> Task :expo-dev-launcher:generateDebugRFile UP-TO-DATE
+> Task :expo-dev-menu:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-dev-menu:parseDebugLocalResources UP-TO-DATE
+> Task :expo-dev-menu:generateDebugRFile UP-TO-DATE
+> Task :expo-dev-menu-interface:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-dev-menu-interface:parseDebugLocalResources UP-TO-DATE
+> Task :expo-dev-menu-interface:generateDebugRFile UP-TO-DATE
+> Task :expo-eas-client:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-eas-client:parseDebugLocalResources UP-TO-DATE
+> Task :expo-eas-client:generateDebugRFile UP-TO-DATE
+> Task :expo-json-utils:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-json-utils:parseDebugLocalResources UP-TO-DATE
+> Task :expo-json-utils:generateDebugRFile UP-TO-DATE
+> Task :expo-manifests:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-manifests:parseDebugLocalResources UP-TO-DATE
+> Task :expo-manifests:generateDebugRFile UP-TO-DATE
+> Task :expo-modules-core:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-modules-core:parseDebugLocalResources UP-TO-DATE
+> Task :expo-modules-core:generateDebugRFile UP-TO-DATE
+> Task :expo-structured-headers:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-structured-headers:parseDebugLocalResources UP-TO-DATE
+> Task :expo-structured-headers:generateDebugRFile UP-TO-DATE
+> Task :expo-updates:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-updates:parseDebugLocalResources UP-TO-DATE
+> Task :expo-updates:generateDebugRFile UP-TO-DATE
+> Task :expo-updates-interface:compileDebugLibraryResources UP-TO-DATE
+> Task :expo-updates-interface:parseDebugLocalResources UP-TO-DATE
+> Task :expo-updates-interface:generateDebugRFile UP-TO-DATE
+> Task :react-native-async-storage_async-storage:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-async-storage_async-storage:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateDebugRFile UP-TO-DATE
+> Task :react-native-gesture-handler:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-gesture-handler:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-gesture-handler:generateDebugRFile UP-TO-DATE
+> Task :react-native-reanimated:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-reanimated:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-reanimated:generateDebugRFile UP-TO-DATE
+> Task :react-native-safe-area-context:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-safe-area-context:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-safe-area-context:generateDebugRFile UP-TO-DATE
+> Task :react-native-screens:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-screens:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-screens:generateDebugRFile UP-TO-DATE
+> Task :react-native-worklets:compileDebugLibraryResources UP-TO-DATE
+> Task :react-native-worklets:parseDebugLocalResources UP-TO-DATE
+> Task :react-native-worklets:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :expo:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-constants:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-constants:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-modules-core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-modules-core:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-modules-core:compileDebugKotlin UP-TO-DATE
+> Task :expo-modules-core:javaPreCompileDebug UP-TO-DATE
+> Task :expo-modules-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-modules-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-constants:compileDebugKotlin UP-TO-DATE
+> Task :expo-constants:javaPreCompileDebug UP-TO-DATE
+> Task :expo-constants:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-constants:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-dev-client:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-client:dataBindingMergeDependencyArtifactsDebug UP-TO-DATE
+> Task :expo-dev-client:dataBindingGenBaseClassesDebug UP-TO-DATE
+> Task :expo-dev-client:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-dev-client:compileDebugKotlin NO-SOURCE
+> Task :expo-dev-client:javaPreCompileDebug UP-TO-DATE
+> Task :expo-dev-client:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-dev-client:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-dev-launcher:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-launcher:dataBindingMergeDependencyArtifactsDebug UP-TO-DATE
+> Task :expo-dev-launcher:dataBindingGenBaseClassesDebug UP-TO-DATE
+> Task :expo-dev-launcher:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-dev-launcher:checkApolloVersions UP-TO-DATE
+> Task :expo-dev-launcher:generateServiceApolloOptions UP-TO-DATE
+> Task :expo-dev-launcher:generateServiceApolloSources UP-TO-DATE
+> Task :expo-dev-menu:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-menu:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-dev-menu-interface:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dev-menu-interface:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-dev-menu-interface:compileDebugKotlin UP-TO-DATE
+> Task :expo-dev-menu-interface:javaPreCompileDebug UP-TO-DATE
+> Task :expo-dev-menu-interface:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-dev-menu-interface:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-json-utils:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-json-utils:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-json-utils:compileDebugKotlin UP-TO-DATE
+> Task :expo-json-utils:javaPreCompileDebug UP-TO-DATE
+> Task :expo-json-utils:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-json-utils:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-manifests:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-manifests:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-manifests:compileDebugKotlin UP-TO-DATE
+> Task :expo-manifests:javaPreCompileDebug UP-TO-DATE
+> Task :expo-manifests:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-manifests:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-dev-menu:compileDebugKotlin UP-TO-DATE
+> Task :expo-dev-menu:javaPreCompileDebug UP-TO-DATE
+> Task :expo-dev-menu:compileDebugJavaWithJavac
+> Task :expo-updates-interface:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-updates-interface:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-updates-interface:compileDebugKotlin UP-TO-DATE
+> Task :expo-updates-interface:javaPreCompileDebug UP-TO-DATE
+> Task :expo-updates-interface:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-updates-interface:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-dev-launcher:javaPreCompileDebug UP-TO-DATE
+> Task :expo-eas-client:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-eas-client:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-eas-client:compileDebugKotlin UP-TO-DATE
+> Task :expo-eas-client:javaPreCompileDebug UP-TO-DATE
+> Task :expo-eas-client:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-eas-client:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-structured-headers:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-structured-headers:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-dev-menu:bundleLibCompileToJarDebug
+> Task :expo-structured-headers:compileDebugKotlin NO-SOURCE
+> Task :expo-structured-headers:javaPreCompileDebug UP-TO-DATE
+> Task :expo-structured-headers:compileDebugJavaWithJavac UP-TO-DATE
+> Task :expo-structured-headers:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :expo-updates:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-updates:generateDebugBuildConfig UP-TO-DATE
+> Task :expo-updates:javaPreCompileDebug UP-TO-DATE
+> Task :expo:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-async-storage_async-storage:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-async-storage_async-storage:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-async-storage_async-storage:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :react-native-gesture-handler:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-gesture-handler:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-reanimated:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-reanimated:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-worklets:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-worklets:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-worklets:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-worklets:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :react-native-reanimated:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-reanimated:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :react-native-gesture-handler:compileDebugKotlin UP-TO-DATE
+> Task :react-native-gesture-handler:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-gesture-handler:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-gesture-handler:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-safe-area-context:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-safe-area-context:compileDebugKotlin UP-TO-DATE
+> Task :react-native-safe-area-context:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-safe-area-context:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-safe-area-context:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :react-native-screens:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-screens:generateDebugBuildConfig UP-TO-DATE
+> Task :react-native-screens:compileDebugKotlin UP-TO-DATE
+> Task :react-native-screens:javaPreCompileDebug UP-TO-DATE
+> Task :react-native-screens:compileDebugJavaWithJavac UP-TO-DATE
+> Task :react-native-screens:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:createDebugUpdatesResources UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :expo:mergeDebugShaders UP-TO-DATE
+> Task :expo:compileDebugShaders NO-SOURCE
+> Task :expo:generateDebugAssets UP-TO-DATE
+> Task :expo:mergeDebugAssets UP-TO-DATE
+> Task :expo-constants:mergeDebugShaders UP-TO-DATE
+> Task :expo-constants:compileDebugShaders NO-SOURCE
+> Task :expo-constants:generateDebugAssets UP-TO-DATE
+> Task :expo-constants:mergeDebugAssets UP-TO-DATE
+> Task :expo-dev-client:mergeDebugShaders UP-TO-DATE
+> Task :expo-dev-client:compileDebugShaders NO-SOURCE
+> Task :expo-dev-client:generateDebugAssets UP-TO-DATE
+> Task :expo-dev-client:mergeDebugAssets UP-TO-DATE
+> Task :expo-dev-launcher:mergeDebugShaders UP-TO-DATE
+> Task :expo-dev-launcher:compileDebugShaders NO-SOURCE
+> Task :expo-dev-launcher:generateDebugAssets UP-TO-DATE
+> Task :expo-dev-launcher:mergeDebugAssets UP-TO-DATE
+> Task :expo-dev-menu:mergeDebugShaders UP-TO-DATE
+> Task :expo-dev-menu:compileDebugShaders NO-SOURCE
+> Task :expo-dev-menu:generateDebugAssets UP-TO-DATE
+> Task :expo-dev-menu:mergeDebugAssets UP-TO-DATE
+> Task :expo-dev-menu-interface:mergeDebugShaders UP-TO-DATE
+> Task :expo-dev-menu-interface:compileDebugShaders NO-SOURCE
+> Task :expo-dev-menu-interface:generateDebugAssets UP-TO-DATE
+> Task :expo-dev-menu-interface:mergeDebugAssets UP-TO-DATE
+> Task :expo-eas-client:mergeDebugShaders UP-TO-DATE
+> Task :expo-eas-client:compileDebugShaders NO-SOURCE
+> Task :expo-eas-client:generateDebugAssets UP-TO-DATE
+> Task :expo-eas-client:mergeDebugAssets UP-TO-DATE
+> Task :expo-json-utils:mergeDebugShaders UP-TO-DATE
+> Task :expo-json-utils:compileDebugShaders NO-SOURCE
+> Task :expo-json-utils:generateDebugAssets UP-TO-DATE
+> Task :expo-json-utils:mergeDebugAssets UP-TO-DATE
+> Task :expo-manifests:mergeDebugShaders UP-TO-DATE
+> Task :expo-manifests:compileDebugShaders NO-SOURCE
+> Task :expo-manifests:generateDebugAssets UP-TO-DATE
+> Task :expo-manifests:mergeDebugAssets UP-TO-DATE
+> Task :expo-modules-core:mergeDebugShaders UP-TO-DATE
+> Task :expo-modules-core:compileDebugShaders NO-SOURCE
+> Task :expo-modules-core:generateDebugAssets UP-TO-DATE
+> Task :expo-modules-core:mergeDebugAssets UP-TO-DATE
+> Task :expo-structured-headers:mergeDebugShaders UP-TO-DATE
+> Task :expo-structured-headers:compileDebugShaders NO-SOURCE
+> Task :expo-structured-headers:generateDebugAssets UP-TO-DATE
+> Task :expo-structured-headers:mergeDebugAssets UP-TO-DATE
+> Task :expo-updates:mergeDebugShaders UP-TO-DATE
+> Task :expo-updates:compileDebugShaders NO-SOURCE
+> Task :expo-updates:generateDebugAssets UP-TO-DATE
+> Task :expo-updates:mergeDebugAssets UP-TO-DATE
+> Task :expo-updates-interface:mergeDebugShaders UP-TO-DATE
+> Task :expo-updates-interface:compileDebugShaders NO-SOURCE
+> Task :expo-updates-interface:generateDebugAssets UP-TO-DATE
+> Task :expo-updates-interface:mergeDebugAssets UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeDebugShaders UP-TO-DATE
+> Task :react-native-async-storage_async-storage:compileDebugShaders NO-SOURCE
+> Task :react-native-async-storage_async-storage:generateDebugAssets UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeDebugAssets UP-TO-DATE
+> Task :react-native-gesture-handler:mergeDebugShaders UP-TO-DATE
+> Task :react-native-gesture-handler:compileDebugShaders NO-SOURCE
+> Task :react-native-gesture-handler:generateDebugAssets UP-TO-DATE
+> Task :react-native-gesture-handler:mergeDebugAssets UP-TO-DATE
+> Task :react-native-reanimated:mergeDebugShaders UP-TO-DATE
+> Task :react-native-reanimated:compileDebugShaders NO-SOURCE
+> Task :react-native-reanimated:generateDebugAssets UP-TO-DATE
+> Task :react-native-reanimated:mergeDebugAssets UP-TO-DATE
+> Task :react-native-safe-area-context:mergeDebugShaders UP-TO-DATE
+> Task :react-native-safe-area-context:compileDebugShaders NO-SOURCE
+> Task :react-native-safe-area-context:generateDebugAssets UP-TO-DATE
+> Task :react-native-safe-area-context:mergeDebugAssets UP-TO-DATE
+> Task :react-native-screens:mergeDebugShaders UP-TO-DATE
+> Task :react-native-screens:compileDebugShaders NO-SOURCE
+> Task :react-native-screens:generateDebugAssets UP-TO-DATE
+> Task :react-native-screens:mergeDebugAssets UP-TO-DATE
+> Task :react-native-worklets:mergeDebugShaders UP-TO-DATE
+> Task :react-native-worklets:compileDebugShaders NO-SOURCE
+> Task :react-native-worklets:generateDebugAssets UP-TO-DATE
+> Task :react-native-worklets:mergeDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :react-native-gesture-handler:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :react-native-reanimated:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :react-native-worklets:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :react-native-safe-area-context:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :react-native-screens:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :react-native-async-storage_async-storage:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-constants:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-dev-client:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-dev-menu-interface:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-eas-client:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-json-utils:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-manifests:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-modules-core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-structured-headers:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :expo-updates-interface:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :expo-dev-menu:bundleLibRuntimeToJarDebug
+> Task :expo-constants:processDebugJavaRes UP-TO-DATE
+> Task :expo-dev-client:processDebugJavaRes NO-SOURCE
+> Task :expo-dev-menu:processDebugJavaRes
+> Task :expo-dev-menu-interface:processDebugJavaRes UP-TO-DATE
+> Task :expo-eas-client:processDebugJavaRes UP-TO-DATE
+> Task :expo-json-utils:processDebugJavaRes UP-TO-DATE
+> Task :expo-manifests:processDebugJavaRes UP-TO-DATE
+> Task :expo-modules-core:processDebugJavaRes UP-TO-DATE
+> Task :expo-structured-headers:processDebugJavaRes NO-SOURCE
+> Task :expo-updates-interface:processDebugJavaRes UP-TO-DATE
+> Task :react-native-async-storage_async-storage:processDebugJavaRes NO-SOURCE
+> Task :react-native-gesture-handler:processDebugJavaRes UP-TO-DATE
+> Task :react-native-reanimated:processDebugJavaRes NO-SOURCE
+> Task :react-native-safe-area-context:processDebugJavaRes UP-TO-DATE
+> Task :react-native-screens:processDebugJavaRes UP-TO-DATE
+> Task :react-native-worklets:processDebugJavaRes NO-SOURCE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+
+> Task :react-native-worklets:configureCMakeDebug[x86_64]
+[CXX5304] This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+[CXX5304] This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+
+> Task :react-native-worklets:generateJsonModelDebug
+> Task :react-native-worklets:prefabDebugConfigurePackage UP-TO-DATE
+> Task :expo-dev-launcher:compileDebugKotlin
+> Task :expo-updates:kspDebugKotlin
+> Task :react-native-reanimated:configureCMakeDebug[x86_64]
+> Task :react-native-reanimated:generateJsonModelDebug
+> Task :react-native-reanimated:prefabDebugConfigurePackage UP-TO-DATE
+The Daemon will expire after the build after running out of JVM Metaspace.
+The project memory settings are likely not configured or are configured to an insufficient value.
+The daemon will restart for the next build, which may increase subsequent build times.
+These settings can be adjusted by setting 'org.gradle.jvmargs' in 'gradle.properties'.
+The currently configured max heap space is '1 GiB' and the configured max metaspace is '256 MiB'.
+For more information on how to set these values, please refer to https://docs.gradle.org/8.14.3/userguide/build_environment.html#sec:configuring_jvm_memory in the Gradle documentation.
+To disable this warning, set 'org.gradle.daemon.performance.disable-logging=true'.
+> Task :app:configureCMakeDebug[x86_64]
+> Task :react-native-worklets:buildCMakeDebug[x86_64][worklets]
+> Task :react-native-worklets:externalNativeBuildDebug
+> Task :react-native-worklets:prefabDebugPackage
+
+> Task :expo-dev-launcher:compileDebugKotlin
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/DevLauncherController.kt:474:81 'val reactNativeHost: ReactNativeHost' is deprecated. You should not use ReactNativeHost directly in the New Architecture. Use ReactHost instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/compose/models/BranchViewModel.kt:80:31 'val runtimeVersion: String' is deprecated. Use 'runtime' field .
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/helpers/DevLauncherReactUtils.kt:7:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/helpers/DevLauncherReactUtils.kt:78:20 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/helpers/DevLauncherReactUtils.kt:155:20 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/helpers/DevLauncherReactUtils.kt:246:11 'fun newInstance(): CapturedType(*)!' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/launcher/DevLauncherActivity.kt:19:5 'fun overridePendingTransition(p0: Int, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/launcher/DevLauncherActivity.kt:36:5 'fun overridePendingTransition(p0: Int, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/modules/DevLauncherModule.kt:16:29 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherBridgeDevSupportManager.kt:49:38 This code uses error suppression for 'NOTHING_TO_OVERRIDE'. While it might compile and work, the compiler behavior is UNSPECIFIED and WILL NOT BE PRESERVED. Please report your use case to the Kotlin issue tracker instead: https://kotl.in/issue
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherBridgelessDevSupportManager.kt:48:38 This code uses error suppression for 'NOTHING_TO_OVERRIDE'. While it might compile and work, the compiler behavior is UNSPECIFIED and WILL NOT BE PRESERVED. Please report your use case to the Kotlin issue tracker instead: https://kotl.in/issue
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherDevSupportManagerFactory.kt:19:5 The corresponding parameter in the supertype 'DevSupportManagerFactory' is named 'reactInstanceManagerHelper'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherDevSupportManagerFactory.kt:48:5 The corresponding parameter in the supertype 'DevSupportManagerFactory' is named 'reactInstanceManagerHelper'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherDevSupportManagerSwapper.kt:6:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/debug/java/expo/modules/devlauncher/react/DevLauncherDevSupportManagerSwapper.kt:34:58 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/DevLauncherPackage.kt:15:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/DevLauncherRecentlyOpenedAppsRegistry.kt:33:47 Unchecked cast of 'MutableMap<Any?, Any?>' to 'MutableMap<String, Any>'.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/DevLauncherRecentlyOpenedAppsRegistry.kt:51:27 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:37:23 'constructor(p0: String!, p1: Bitmap!, p2: Int): ActivityManager.TaskDescription' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:63:61 'static field FLAG_TRANSLUCENT_STATUS: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:92:45 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:95:68 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:99:67 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:103:67 'static field SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:107:15 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:115:59 'static field FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:116:61 'static field FLAG_FORCE_NOT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:118:59 'static field FLAG_FORCE_NOT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:119:61 'static field FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:131:23 'fun replaceSystemWindowInsets(p0: Int, p1: Int, p2: Int, p3: Int): WindowInsets' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:132:25 'val systemWindowInsetLeft: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:134:25 'val systemWindowInsetRight: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:135:25 'val systemWindowInsetBottom: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:150:15 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:160:63 'static field FLAG_TRANSLUCENT_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:161:25 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:171:63 'static field FLAG_TRANSLUCENT_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:175:33 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:176:33 'static field SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:177:21 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:190:29 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:191:62 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:191:101 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:192:63 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:192:102 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:192:136 'static field SYSTEM_UI_FLAG_IMMERSIVE: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:193:70 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:193:109 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:193:143 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-dev-launcher/android/src/main/java/expo/modules/devlauncher/launcher/configurators/DevLauncherExpoActivityConfigurator.kt:196:17 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+
+> Task :react-native-reanimated:buildCMakeDebug[x86_64][reanimated]
+> Task :expo-dev-launcher:compileDebugJavaWithJavac
+> Task :expo-dev-launcher:bundleLibCompileToJarDebug
+> Task :expo-dev-launcher:bundleLibRuntimeToJarDebug
+> Task :expo-dev-launcher:processDebugJavaRes
+> Task :react-native-worklets:mergeDebugJniLibFolders
+> Task :app:mergeDebugJniLibFolders
+> Task :expo:mergeDebugJniLibFolders
+> Task :expo:mergeDebugNativeLibs NO-SOURCE
+> Task :expo:copyDebugJniLibsProjectOnly
+> Task :react-native-worklets:mergeDebugNativeLibs
+> Task :expo-constants:mergeDebugJniLibFolders
+> Task :expo-constants:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-constants:copyDebugJniLibsProjectOnly
+> Task :react-native-worklets:copyDebugJniLibsProjectOnly
+> Task :expo-dev-client:mergeDebugJniLibFolders
+> Task :react-native-reanimated:externalNativeBuildDebug
+> Task :react-native-reanimated:prefabDebugPackage
+> Task :expo-updates:compileDebugKotlin
+> Task :app:buildCMakeDebug[x86_64]
+
+> Task :expo-updates:compileDebugKotlin
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesConfiguration.kt:317:13 'fun get(p0: String!): Any?' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesController.kt:40:39 'val reactNativeHost: ReactNativeHost' is deprecated. You should not use ReactNativeHost directly in the New Architecture. Use ReactHost instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesDevLauncherController.kt:195:133 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesModule.kt:49:5 'fun Constants(legacyConstantsProvider: () -> Map<String, Any?>): Unit' is deprecated. Use `Constant` or `Property` instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesModule.kt:98:38 'fun toString(): String' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesPackage.kt:7:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/UpdatesPackage.kt:56:85 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/db/Converters.kt:56:30 Java type mismatch: inferred type is 'ByteArray?', but 'ByteArray' was expected.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/db/DatabaseIntegrityCheck.kt:38:39 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/db/Reaper.kt:50:41 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/db/Reaper.kt:68:41 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/Loader.kt:246:63 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/LoaderTask.kt:360:101 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/manifest/EmbeddedUpdate.kt:33:89 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/manifest/ExpoUpdatesUpdate.kt:37:92 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/CheckForUpdateProcedure.kt:141:100 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/CheckForUpdateProcedure.kt:174:100 'fun getRawJson(): JSONObject' is deprecated. Prefer to use specific field getters.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/RelaunchProcedure.kt:137:44 'val reactNativeHost: ReactNativeHost' is deprecated. You should not use ReactNativeHost directly in the New Architecture. Use ReactHost instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/RestartReactAppExtensions.kt:25:3 'val reactNativeHost: ReactNativeHost' is deprecated. You should not use ReactNativeHost directly in the New Architecture. Use ReactHost instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/StartupProcedure.kt:158:36 'fun getCurrentState(): UpdatesStateValue' is deprecated. Avoid needing to access current state to know how to transition to next state.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/StartupProcedure.kt:192:34 'fun getCurrentState(): UpdatesStateValue' is deprecated. Avoid needing to access current state to know how to transition to next state.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo-updates/android/src/main/java/expo/modules/updates/procedures/StateMachineSerialExecutorQueue.kt:64:45 'fun getCurrentState(): UpdatesStateValue' is deprecated. Avoid needing to access current state to know how to transition to next state.
+
+> Task :expo-updates:compileDebugJavaWithJavac
+> Task :expo-updates:processDebugJavaRes
+> Task :expo-dev-client:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-dev-client:copyDebugJniLibsProjectOnly
+> Task :expo-updates:bundleLibCompileToJarDebug
+> Task :expo-dev-launcher:mergeDebugJniLibFolders
+> Task :expo-updates:bundleLibRuntimeToJarDebug
+> Task :expo-dev-launcher:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-dev-launcher:copyDebugJniLibsProjectOnly
+> Task :expo-dev-menu:mergeDebugJniLibFolders
+> Task :expo-dev-menu:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-dev-menu:copyDebugJniLibsProjectOnly
+> Task :expo-dev-menu-interface:mergeDebugJniLibFolders
+> Task :expo-dev-menu-interface:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-dev-menu-interface:copyDebugJniLibsProjectOnly
+> Task :expo-eas-client:mergeDebugJniLibFolders
+> Task :expo-eas-client:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-eas-client:copyDebugJniLibsProjectOnly
+> Task :expo-json-utils:mergeDebugJniLibFolders
+> Task :expo-json-utils:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-json-utils:copyDebugJniLibsProjectOnly
+> Task :expo-manifests:mergeDebugJniLibFolders
+> Task :expo-manifests:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-manifests:copyDebugJniLibsProjectOnly
+> Task :expo-modules-core:configureCMakeDebug[x86_64]
+> Task :expo-modules-core:buildCMakeDebug[x86_64]
+> Task :expo-modules-core:mergeDebugJniLibFolders
+> Task :expo-structured-headers:mergeDebugJniLibFolders
+> Task :expo-structured-headers:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-structured-headers:copyDebugJniLibsProjectOnly
+> Task :expo-updates:mergeDebugJniLibFolders
+> Task :expo-updates:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-modules-core:mergeDebugNativeLibs
+> Task :expo-updates:copyDebugJniLibsProjectOnly
+> Task :expo-updates-interface:mergeDebugJniLibFolders
+> Task :expo-updates-interface:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-updates-interface:copyDebugJniLibsProjectOnly
+> Task :react-native-async-storage_async-storage:mergeDebugJniLibFolders
+> Task :react-native-async-storage_async-storage:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-async-storage_async-storage:copyDebugJniLibsProjectOnly
+> Task :expo-modules-core:copyDebugJniLibsProjectOnly
+> Task :react-native-gesture-handler:configureCMakeDebug[x86_64]
+
+> Task :expo:compileDebugKotlin
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ExpoModulesPackage.kt:34:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ExpoReactHostFactory.kt:8:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ExpoReactHostFactory.kt:80:22 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:24:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:58:33 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:105:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:105:38 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:113:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:114:21 'val reactInstanceManager: ReactInstanceManager' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:168:36 'constructor(activity: Activity, reactNativeHost: ReactNativeHost?, appKey: String?, launchOptions: Bundle?, fabricEnabled: Boolean): ReactDelegate' is deprecated. Deprecated since 0.81.0, use one of the other constructors instead.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:279:77 'val reactInstanceManager: ReactInstanceManager' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:282:22 'val reactInstanceManager: ReactInstanceManager' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactActivityDelegateWrapper.kt:286:54 'val reactInstanceManager: ReactInstanceManager' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapper.kt:6:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapper.kt:15:9 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapper.kt:47:60 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapperBase.kt:7:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapperBase.kt:16:23 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapperBase.kt:89:16 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/ReactNativeHostWrapperBase.kt:101:38 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/fetch/ExpoFetchModule.kt:30:39 'constructor(reactContext: ReactContext): ForwardingCookieHandler' is deprecated. Use the default constructor.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/fetch/NativeResponse.kt:42:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/node_modules/expo/android/src/main/java/expo/modules/fetch/NativeResponse.kt:44:11 'fun deallocate(): Unit' is deprecated. Use sharedObjectDidRelease() instead.
+
+> Task :react-native-gesture-handler:buildCMakeDebug[x86_64]
+> Task :expo:compileDebugJavaWithJavac
+> Task :expo:bundleLibCompileToJarDebug
+> Task :expo:processDebugJavaRes
+> Task :expo:bundleLibRuntimeToJarDebug
+> Task :react-native-gesture-handler:mergeDebugJniLibFolders
+> Task :react-native-reanimated:mergeDebugJniLibFolders
+> Task :react-native-gesture-handler:mergeDebugNativeLibs
+> Task :react-native-gesture-handler:copyDebugJniLibsProjectOnly
+> Task :react-native-safe-area-context:mergeDebugJniLibFolders
+> Task :react-native-safe-area-context:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-safe-area-context:copyDebugJniLibsProjectOnly
+> Task :react-native-screens:configureCMakeDebug[x86_64]
+> Task :react-native-reanimated:mergeDebugNativeLibs
+> Task :app:mergeLibDexDebug
+
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/android/app/src/main/java/com/thabilet/slyzahapp/MainApplication.kt:9:8 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/android/app/src/main/java/com/thabilet/slyzahapp/MainApplication.kt:21:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/android/app/src/main/java/com/thabilet/slyzahapp/MainApplication.kt:21:33 'class ReactNativeHost : Any' is deprecated. Deprecated in Java.
+
+> Task :react-native-screens:buildCMakeDebug[x86_64]
+> Task :react-native-screens:mergeDebugJniLibFolders
+> Task :react-native-screens:mergeDebugNativeLibs
+> Task :react-native-reanimated:copyDebugJniLibsProjectOnly
+> Task :app:compileDebugJavaWithJavac
+> Task :app:processDebugJavaRes
+> Task :app:validateSigningDebug
+> Task :react-native-screens:copyDebugJniLibsProjectOnly
+> Task :app:writeDebugAppMetadata
+> Task :app:transformDebugClassesWithAsm
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+w: Detected multiple Kotlin daemon sessions at 
+
+[Incubating] Problems report is available at: file:///C:/Users/Thabiso/OneDrive/Documents/Development/slyzah-app/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 8m 53s
+494 actionable tasks: 100 executed, 394 up-to-date
+=== BUILD EXIT CODE: 0 ===
+APK_SUCCESS

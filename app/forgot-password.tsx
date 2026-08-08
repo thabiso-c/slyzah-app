@@ -26,7 +26,7 @@ export default function ForgotPassword() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: cleanEmail }),
+                body: JSON.stringify({ email: cleanEmail, platform: 'slyzah-app' }),
             });
 
             const data = await response.json();
